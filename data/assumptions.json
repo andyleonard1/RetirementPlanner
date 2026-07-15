@@ -1,0 +1,23 @@
+{
+    "current_age": 62,
+    "retirement_age": 63,
+    "projection_end_age": 85,
+
+    "starting_pension": 665000,
+
+    "target_net_income": 35000,
+
+    "inflation": 0.025,
+
+    "pension_growth": 0.04,
+
+    "savings_interest": 0.035,
+
+    "isa_growth": 0.04,
+
+    "property_sale": 350000,
+
+    "property_sale_age": 67,
+
+    "annual_isa_contribution": 40000
+}
