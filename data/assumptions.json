@@ -19,5 +19,9 @@
 
     "property_sale_age": 67,
 
-    "annual_isa_contribution": 40000
+    "annual_isa_contribution": 40000,
+
+    "state_pension_full": 12548,
+
+    "state_pension_growth": 0.035
 }
