@@ -13,23 +13,23 @@ def main():
     print()
 
     print(
-        f'{"Age":<6}'
-        f'{"Opening":>15}'
-        f'{"Growth":>15}'
-        f'{"Withdraw":>15}'
-        f'{"Closing":>15}'
+        f"{'Age':<5}"
+        f"{'Opening':>15}"
+        f"{'Growth':>15}"
+        f"{'Withdraw':>15}"
+        f"{'Closing':>15}"
     )
 
-    print("-" * 70)
+    print("-" * 65)
 
     for year in projection:
 
         print(
-            f'{year.age:<6}'
-            f'£{year.opening:>14,.0f}'
-            f'£{year.growth:>14,.0f}'
-            f'£{year.withdrawal:>14,.0f}'
-            f'£{year.closing:>14,.0f}'
+            f"{year.age:<5}"
+            f"{year.opening:>15,.0f}"
+            f"{year.growth:>15,.0f}"
+            f"{year.withdrawal:>15,.0f}"
+            f"{year.closing:>15,.0f}"
         )
 
 

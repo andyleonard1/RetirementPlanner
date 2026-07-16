@@ -2,9 +2,12 @@
     "current_age": 62,
     "retirement_age": 63,
     "projection_end_age": 85,
+    "spouse_current_age": 59,
 
     "starting_pension": 665000,
-
+    "expected_investment_return": 0.0475,
+    "platform_charge": 0.0025,
+    "fund_charge": 0.0025,
     "target_net_income": 35000,
 
     "inflation": 0.025,
@@ -22,6 +25,7 @@
     "annual_isa_contribution": 40000,
 
     "state_pension_full": 12548,
+    "current_calendar_year": 2026,
 
     "state_pension_growth": 0.035
 }
