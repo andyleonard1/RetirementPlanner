@@ -1,18 +1,17 @@
 # Retirement Planner V5
 
-A UK retirement planning tool written in Python.
+A retirement planning application written in Python.
 
-## Features
+## Current Features
 
-- State Pension projections
-- Pension modelling
-- Savings modelling
-- ISA modelling
-- UK income tax calculations
-- Excel workbook generation
+- Pension projection
+- State pension projection
+- Timeline engine
 
-## Current Version
+## Planned Features
 
-Sprint 1 completed.
-
-Next: Pension Engine.
+- Savings
+- ISA
+- Tax
+- Excel reporting
+- Monte Carlo analysis

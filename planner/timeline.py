@@ -1,3 +1,12 @@
+"""
+Timeline Engine
+
+Creates one RetirementYear object for every year in the retirement projection.
+
+This engine does not perform any financial calculations.
+Its sole responsibility is to build the timeline that all other
+engines will populate.
+"""
 from planner.models import RetirementYear
 
 

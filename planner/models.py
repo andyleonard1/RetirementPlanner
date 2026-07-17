@@ -1,4 +1,4 @@
-ffrom dataclasses import dataclass
+from dataclasses import dataclass
 
 
 @dataclass

@@ -1,21 +1,14 @@
-from dataclasses import dataclass
+"""
+Pension Engine
 
+Calculates pension growth and withdrawals for each retirement year.
 
-@dataclass
-class PensionYear:
-    age: int
-    opening: float
-    growth: float
-    withdrawal: float
-    closing: float
-    annual_change: float
-    growth_rate: float
+This engine does not create RetirementYear objects.
+Instead, it updates the timeline created by TimelineEngine.
+"""
 
 
 class PensionEngine:
-    """
-    Calculates the pension fund value for each year of retirement.
-    """
 
     def __init__(self, assumptions):
 
@@ -24,41 +17,25 @@ class PensionEngine:
         self.starting_pension = assumptions.get("starting_pension")
         self.growth_rate = assumptions.get("pension_growth")
 
-    def project(self):
-
-        projection = []
+    def apply(self, timeline):
 
         pension = self.starting_pension
 
-        for age in range(
-            self.assumptions.get("retirement_age"),
-            self.assumptions.get("projection_end_age") + 1,
-        ):
+        withdrawal = self.assumptions.get("target_net_income")
+
+        for year in timeline:
 
             opening = pension
 
             growth = opening * self.growth_rate
 
-            withdrawal = self.assumptions.get("target_net_income")
-
             closing = opening + growth - withdrawal
 
-            annual_change = closing - opening
-
-            growth_rate = self.growth_rate * 100
-
-            projection.append(
-                PensionYear(
-                    age,
-                    round(opening, 2),
-                    round(growth, 2),
-                    round(withdrawal, 2),
-                    round(closing, 2),
-                    round(annual_change, 2),
-                    round(growth_rate, 2),
-                )
-            )
+            year.opening_pension = round(opening, 2)
+            year.pension_growth = round(growth, 2)
+            year.pension_withdrawal = round(withdrawal, 2)
+            year.closing_pension = round(closing, 2)
 
             pension = closing
 
-        return projection
+        return timeline

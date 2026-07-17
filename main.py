@@ -1,35 +1,33 @@
 from planner.assumptions import Assumptions
-from planner.pension_engine import PensionEngine
-
+from planner.planner import RetirementPlanner
+from planner.report import ConsoleReport
 
 def main():
 
     assumptions = Assumptions()
 
-    engine = PensionEngine(assumptions)
+    planner = RetirementPlanner(assumptions)
 
-    projection = engine.project()
+    timeline = planner.run()
 
-    print()
+    def main():
 
-    print(
-        f"{'Age':<5}"
-        f"{'Opening':>15}"
-        f"{'Growth':>15}"
-        f"{'Withdraw':>15}"
-        f"{'Closing':>15}"
-    )
+        assumptions = Assumptions()
 
-    print("-" * 65)
+        planner = RetirementPlanner(assumptions)
 
-    for year in projection:
+        timeline = planner.run()
+
+        ConsoleReport().print(timeline)
+
+    for year in timeline:
 
         print(
             f"{year.age:<5}"
-            f"{year.opening:>15,.0f}"
-            f"{year.growth:>15,.0f}"
-            f"{year.withdrawal:>15,.0f}"
-            f"{year.closing:>15,.0f}"
+            f"{year.calendar_year:>8}"
+            f"{year.closing_pension:>15,.0f}"
+            f"{year.your_state_pension:>15,.0f}"
+            f"{year.spouse_state_pension:>15,.0f}"
         )
 
 
