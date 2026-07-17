@@ -15,11 +15,12 @@ class ConsoleReport:
             f"{'Age':<5}"
             f"{'Year':>8}"
             f"{'Pension':>15}"
+            f"{'Savings':>15}"
             f"{'Your SP':>15}"
             f"{'Spouse SP':>15}"
         )
 
-        print("-" * 70)
+        print("-" * 78)
 
         for year in timeline:
 
@@ -27,6 +28,7 @@ class ConsoleReport:
                 f"{year.age:<5}"
                 f"{year.calendar_year:>8}"
                 f"{year.closing_pension:>15,.0f}"
+                f"{year.savings_closing:>15,.0f}"
                 f"{year.your_state_pension:>15,.0f}"
                 f"{year.spouse_state_pension:>15,.0f}"
             )

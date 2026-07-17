@@ -25,6 +25,8 @@ class RetirementYear:
     # Savings
     savings_opening: float = 0.0
     savings_interest: float = 0.0
+    savings_money_in: float = 0.0
+    savings_money_out: float = 0.0
     savings_closing: float = 0.0
 
     # ISA
