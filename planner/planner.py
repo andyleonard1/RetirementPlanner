@@ -9,6 +9,7 @@ from planner.timeline import TimelineEngine
 from planner.pension_engine import PensionEngine
 from planner.state_pension import StatePensionEngine
 from planner.savings_engine import SavingsEngine
+from planner.isa_engine import ISAEngine
 
 class RetirementPlanner:
 
@@ -24,4 +25,5 @@ class RetirementPlanner:
         PensionEngine(self.assumptions).apply(timeline)
         StatePensionEngine(self.assumptions).apply(timeline)
         SavingsEngine(self.assumptions).apply(timeline)
+        ISAEngine(self.assumptions).apply(timeline)
         return timeline

@@ -9,7 +9,7 @@
     "platform_charge": 0.0025,
     "fund_charge": 0.0025,
     "target_net_income": 35000,
-    "starting_savings": 0,
+    "starting_savings": 11000,
     "savings_interest_rate": 0.03,
     "inflation": 0.025,
 
@@ -17,13 +17,13 @@
 
     "savings_interest": 0.035,
 
-    "isa_growth": 0.04,
+    "starting_isa": 50000,
+    "isa_growth_rate": 0.04,
+    "annual_isa_allowance": 40000,
 
     "property_sale": 350000,
 
     "property_sale_age": 67,
-
-    "annual_isa_contribution": 40000,
 
     "state_pension_full": 12548,
     "current_calendar_year": 2026,
