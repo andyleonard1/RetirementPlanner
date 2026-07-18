@@ -40,5 +40,11 @@ class ISAEngine:
             year.isa_closing = round(closing, 2)
 
             isa = closing
-
+        year.total_assets = round(
+    year.closing_pension
+    + year.savings_closing
+    + year.isa_closing,
+    2,
+)
         return timeline
+   

@@ -16,11 +16,12 @@ class SavingsEngine:
 
     def apply(self, timeline):
 
-        savings = self.starting_savings
+        for index, year in enumerate(timeline):
 
-        for year in timeline:
-
-            opening = savings
+            if index == 0:
+                opening = self.starting_savings
+            else:
+                opening = timeline[index - 1].savings_closing
 
             interest = opening * self.interest_rate
 
@@ -35,7 +36,5 @@ class SavingsEngine:
             year.savings_money_in = round(money_in, 2)
             year.savings_money_out = round(money_out, 2)
             year.savings_closing = round(closing, 2)
-
-            savings = closing
 
         return timeline
