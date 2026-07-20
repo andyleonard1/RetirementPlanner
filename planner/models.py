@@ -12,6 +12,15 @@ class RetirementYear:
     calendar_year: int
     spouse_age: int
 
+    # Strategy
+
+    interest_used: float = 0.0
+    cash_used: float = 0.0
+    isa_used: float = 0.0
+    pension_needed: float = 0.0
+
+    surplus_cash: float = 0.0
+
     # Pension
     opening_pension: float = 0.0
     pension_growth: float = 0.0
