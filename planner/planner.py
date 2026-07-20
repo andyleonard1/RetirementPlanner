@@ -10,6 +10,9 @@ from planner.pension_engine import PensionEngine
 from planner.state_pension import StatePensionEngine
 from planner.savings_engine import SavingsEngine
 from planner.isa_engine import ISAEngine
+from planner.cashflow_engine import CashFlowEngine
+from planner.withdrawal_engine import WithdrawalEngine
+from planner.tax_engine import TaxEngine
 
 class RetirementPlanner:
 
@@ -22,8 +25,11 @@ class RetirementPlanner:
         timeline = TimelineEngine(self.assumptions).build()
 
         # Populate financial data
-        PensionEngine(self.assumptions).apply(timeline)
         StatePensionEngine(self.assumptions).apply(timeline)
         SavingsEngine(self.assumptions).apply(timeline)
         ISAEngine(self.assumptions).apply(timeline)
+        CashFlowEngine(self.assumptions).apply(timeline)
+        WithdrawalEngine(self.assumptions).apply(timeline)
+        TaxEngine(self.assumptions).apply(timeline)
+        PensionEngine(self.assumptions).apply(timeline)
         return timeline

@@ -36,7 +36,7 @@ class ISAEngine:
 
             year.isa_opening = round(opening, 2)
             year.isa_growth = round(growth, 2)
-            year.isa_money_in = round(transfer, 2)
+            year.isa_contribution = round(transfer, 2)
             year.isa_closing = round(closing, 2)
 
             isa = closing

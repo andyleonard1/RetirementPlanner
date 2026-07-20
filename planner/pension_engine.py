@@ -21,14 +21,15 @@ class PensionEngine:
 
         pension = self.starting_pension
 
-        withdrawal = self.assumptions.get("target_net_income")
-
         for year in timeline:
 
             opening = pension
 
             growth = opening * self.growth_rate
 
+            # Withdrawal is now decided by WithdrawalEngine
+            withdrawal = year.pension_withdrawal
+            
             closing = opening + growth - withdrawal
 
             year.opening_pension = round(opening, 2)
