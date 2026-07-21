@@ -22,51 +22,46 @@ class StrategyEngine:
 
             need = year.target_spending
 
-            #
-            # 1. Interest
-            #
-            interest = min(need, year.cash_available)
+            for year in timeline:
 
-            need -= interest
+                need = year.target_spending
 
-            #
-            # 2. Savings
-            #
-            savings = min(need, year.savings_closing)
+                #
+                # Use available cash first
+                #
+                cash_used = min(need, year.cash_available)
 
-            need -= savings
+                remaining = need - cash_used
 
-            #
-            # 3. ISA
-            #
-            isa = min(need, year.isa_closing)
+                #
+                # Pension maximum
+                #
+                pension_limit = self.assumptions.get("max_pension_income")
 
-            need -= isa
+                pension = min(remaining, pension_limit)
 
-            #
-            # 4. Pension
-            #
-            pension = max(0, need)
+                remaining -= pension
 
-            #
-            # Store decisions
-            #
-            year.interest_used = round(interest, 2)
-            year.savings_used = round(savings, 2)
-            year.isa_used = round(isa, 2)
-            year.pension_needed = round(pension, 2)
+                #
+                # ISA funds whatever is left
+                #
+                isa = max(0, remaining)
 
-            #
-            # Remaining balances
-            #
-            year.savings_remaining = round(
-                year.savings_closing - savings,
-                2,
-            )
+                year.interest_used = cash_used
+                year.pension_needed = pension
+                year.isa_used = isa
+                year.pension_needed = round(pension, 2)
 
-            year.isa_remaining = round(
-                year.isa_closing - isa,
-                2,
-            )
+                        #
+                        # Remaining balances
+                        #
+                year.savings_remaining = round(
+                            year.savings_closing - savings,
+                            2,
+                        )
 
+                year.isa_remaining = round(
+                            year.isa_closing - isa,
+                            2,
+                        )
         return timeline

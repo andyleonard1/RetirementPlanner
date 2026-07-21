@@ -49,7 +49,14 @@ class RetirementYear:
     isa_growth: float = 0.0
     isa_contribution: float = 0.0
     isa_closing: float = 0.0
-    
+    # ISA withdrawals
+    isa_used: float = 0.0
+    isa_remaining: float = 0.0
+
+    # Strategy
+    interest_used: float = 0.0
+    pension_needed: float = 0.0
+    surplus_cash: float = 0.0
     # Tax
     taxable_income: float = 0.0
     
