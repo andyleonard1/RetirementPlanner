@@ -1,6 +1,7 @@
 from planner.assumptions import Assumptions
 from planner.planner import RetirementPlanner
 from planner.report import ConsoleReport
+from planner.reports.excel_report import ExcelReport
 
 
 def main():
@@ -12,9 +13,14 @@ def main():
 
     planner = RetirementPlanner(assumptions)
 
-    timeline = planner.run()
+    # Run the retirement model
+    timeline, summary = planner.run()
 
-    ConsoleReport().print(timeline)
+    # Console report
+    ConsoleReport().print(timeline, summary)
+
+    # Excel report
+    ExcelReport().generate(timeline, assumptions)
 
 
 if __name__ == "__main__":

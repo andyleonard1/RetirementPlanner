@@ -14,6 +14,7 @@ from planner.cashflow_engine import CashFlowEngine
 from planner.withdrawal_engine import WithdrawalEngine
 from planner.tax_engine import TaxEngine
 from planner.strategy_engine import StrategyEngine
+from planner.summary_engine import SummaryEngine
 
 class RetirementPlanner:
 
@@ -38,4 +39,7 @@ class RetirementPlanner:
         WithdrawalEngine(self.assumptions).apply(timeline)
         TaxEngine(self.assumptions).apply(timeline)
         PensionEngine(self.assumptions).apply(timeline)
-        return timeline
+
+        summary = SummaryEngine(self.assumptions).apply(timeline)
+
+        return timeline, summary

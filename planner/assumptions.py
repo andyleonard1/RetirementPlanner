@@ -14,5 +14,5 @@ class Assumptions:
         with open(file_path, "r") as file:
             return json.load(file)
 
-    def get(self, name):
-        return self.data[name]
+    def get(self, name, default=None):
+        return self.data.get(name, default)

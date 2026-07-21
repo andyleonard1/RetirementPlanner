@@ -7,7 +7,7 @@ Displays the retirement timeline in a simple table.
 
 class ConsoleReport:
 
-    def print(self, timeline):
+    def print(self, timeline, summary):
 
         print()
 
@@ -23,10 +23,9 @@ class ConsoleReport:
             f"{'Cash':>12}"
             f"{'Your SP':>12}"
             f"{'Spouse SP':>12}"
-            f"{'Need':>12}"
         )
 
-        print("-" * 148)
+        print("-" * 136)
 
         for year in timeline:
 
@@ -42,5 +41,21 @@ class ConsoleReport:
                 f"{year.cash_available:>12,.0f}"
                 f"{year.your_state_pension:>12,.0f}"
                 f"{year.spouse_state_pension:>12,.0f}"
-                f"{year.income_shortfall:>12,.0f}"
             )
+
+        print()
+        print("=" * 70)
+        print("RETIREMENT SUMMARY")
+        print("=" * 70)
+
+        print(f"Ending Pension      £{summary['ending_pension']:,.0f}")
+        print(f"Ending Savings      £{summary['ending_savings']:,.0f}")
+        print(f"Ending ISA          £{summary['ending_isa']:,.0f}")
+        print(f"Total Assets        £{summary['ending_assets']:,.0f}")
+
+        print()
+
+        print(f"Gross Pension Drawn £{summary['gross_pension']:,.0f}")
+        print(f"Net Pension Income  £{summary['net_pension']:,.0f}")
+        print(f"State Pension       £{summary['state_pension']:,.0f}")
+        print(f"Income Tax Paid     £{summary['total_tax']:,.0f}")

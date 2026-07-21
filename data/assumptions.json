@@ -4,7 +4,7 @@
     "projection_end_age": 90,
     "spouse_current_age": 59,
 
-    "starting_pension": 665000,
+    "starting_pension": 660000,
     "expected_investment_return": 0.0475,
     "platform_charge": 0.0025,
     "fund_charge": 0.0025,
@@ -38,5 +38,9 @@
     "spending_phase_3": 28000,
 
     "phase_1_end_age": 69,
-    "phase_2_end_age": 79
+    "phase_2_end_age": 79,
+    "inflation_rate": 0.025,
+    "inflation_link_spending": true,
+    "inflation_link_tax": true,
+    "inflation_link_isa": true
 }
