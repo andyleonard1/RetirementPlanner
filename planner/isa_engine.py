@@ -1,7 +1,7 @@
 """
 ISA Engine
 
-Projects ISA balances by transferring money from savings.
+Projects ISA value over retirement.
 """
 
 
@@ -13,7 +13,6 @@ class ISAEngine:
 
         self.starting_isa = assumptions.get("starting_isa")
         self.growth_rate = assumptions.get("isa_growth_rate")
-        self.allowance = assumptions.get("annual_isa_allowance")
 
     def apply(self, timeline):
 
@@ -25,26 +24,23 @@ class ISAEngine:
 
             growth = opening * self.growth_rate
 
-            available = year.savings_closing
+            contribution = year.isa_contribution
 
-            transfer = min(self.allowance, available)
+            withdrawal = year.isa_used
 
-            year.savings_money_out = transfer
-            year.savings_closing -= transfer
-
-            closing = opening + growth + transfer
+            closing = (
+                opening
+                + growth
+                + contribution
+                - year.isa_used
+            )
 
             year.isa_opening = round(opening, 2)
             year.isa_growth = round(growth, 2)
-            year.isa_contribution = round(transfer, 2)
+            year.isa_withdrawal = round(withdrawal, 2)
             year.isa_closing = round(closing, 2)
 
             isa = closing
-        year.total_assets = round(
-    year.closing_pension
-    + year.savings_closing
-    + year.isa_closing,
-    2,
-)
+
         return timeline
    

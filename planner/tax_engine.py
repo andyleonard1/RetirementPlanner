@@ -36,7 +36,7 @@ class TaxEngine:
             #
             # Net pension income required from WithdrawalEngine
             #
-            required_net = year.income_shortfall
+            required_net = year.pension_needed
 
             #
             # First estimate

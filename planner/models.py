@@ -52,7 +52,7 @@ class RetirementYear:
     # ISA withdrawals
     isa_used: float = 0.0
     isa_remaining: float = 0.0
-
+    isa_withdrawal: float = 0.0
     # Strategy
     interest_used: float = 0.0
     pension_needed: float = 0.0

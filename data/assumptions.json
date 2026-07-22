@@ -3,7 +3,7 @@
     "retirement_age": 63,
     "projection_end_age": 90,
     "spouse_current_age": 59,
-
+    "max_pension_income": 30000,
     "starting_pension": 660000,
     "expected_investment_return": 0.0475,
     "platform_charge": 0.0025,

@@ -30,10 +30,7 @@ class RetirementPlanner:
         StatePensionEngine(self.assumptions).apply(timeline)
         SavingsEngine(self.assumptions).apply(timeline)
         ISAEngine(self.assumptions).apply(timeline)
-        CashFlowEngine(self.assumptions).apply(timeline)
-        WithdrawalEngine(self.assumptions).apply(timeline)
-        TaxEngine(self.assumptions).apply(timeline)
-        PensionEngine(self.assumptions).apply(timeline)
+
         CashFlowEngine(self.assumptions).apply(timeline)
         StrategyEngine(self.assumptions).apply(timeline)
         WithdrawalEngine(self.assumptions).apply(timeline)
