@@ -3,11 +3,17 @@ Strategy Engine
 
 Determines where retirement income should come from.
 
-Priority
+Supported strategies
 
-1. Cash available (interest + state pension)
-2. Pension (up to a limit)
-3. ISA
+PENSION_FIRST
+    Cash
+    Pension
+    ISA
+
+ISA_FIRST
+    Cash
+    ISA
+    Pension
 """
 
 
@@ -18,44 +24,86 @@ class StrategyEngine:
 
     def apply(self, timeline):
 
-        pension_limit = self.assumptions.get("max_pension_income")
+        strategy = self.assumptions.get("withdrawal_strategy")
 
         for year in timeline:
 
+            #
+            # Maximum pension for this year
+            # (calculated by TaxOptimizerEngine)
+            #
+            pension_limit = year.maximum_tax_efficient_pension
+
+            #
+            # Spending required
+            #
             need = year.target_spending
 
             #
-            # Use cash first
+            # Cash available (interest + state pensions)
             #
             cash_used = min(need, year.cash_available)
 
             remaining = need - cash_used
 
             #
-            # Then pension
+            # Choose withdrawal strategy
             #
-            pension = min(remaining, pension_limit)
+            if strategy == "ISA_FIRST":
 
-            remaining -= pension
+                #
+                # Use ISA first
+                #
+                isa = min(
+                    remaining,
+                    year.isa_closing,
+                )
 
-            #
-            # Finally ISA
-            #
-            isa = max(0, remaining)
+                remaining -= isa
+
+                pension = min(
+                    remaining,
+                    pension_limit,
+                )
+
+            else:
+                #
+                # Default = Pension First
+                #
+                pension = min(
+                    remaining,
+                    pension_limit,
+                )
+
+                remaining -= pension
+
+                isa = max(
+                    0.0,
+                    remaining,
+                )
 
             #
             # Save decisions
             #
             year.interest_used = round(cash_used, 2)
+
             year.pension_needed = round(pension, 2)
+
             year.isa_used = round(isa, 2)
 
             #
             # Remaining balances
             #
-            year.savings_remaining = year.savings_closing
+            year.savings_remaining = round(
+                year.savings_closing,
+                2,
+            )
+
             year.isa_remaining = round(
-                year.isa_closing - isa,
+                max(
+                    0.0,
+                    year.isa_closing - isa,
+                ),
                 2,
             )
 

@@ -8,7 +8,9 @@ Displays the retirement timeline in a simple table.
 class ConsoleReport:
 
     def print(self, timeline, summary):
-
+        print()
+        print(f"Withdrawal Strategy : {summary['strategy']}")
+        print()
         print()
 
         print(

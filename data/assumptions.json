@@ -1,4 +1,5 @@
 {
+    "withdrawal_strategy": "PENSION_FIRST",
     "current_age": 62,
     "retirement_age": 63,
     "projection_end_age": 90,

@@ -36,6 +36,11 @@ class SummaryEngine:
             "total_tax": sum(
                 y.income_tax for y in timeline
             ),
+            
         }
-
+        summary["strategy"] = self.assumptions.get(
+                "withdrawal_strategy"
+            )
         return summary
+    
+        

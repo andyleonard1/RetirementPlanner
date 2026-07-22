@@ -65,6 +65,7 @@ class RetirementYear:
     taxable_pension_income: float = 0.0
     income_tax: float = 0.0
     net_pension_income: float = 0.0
+    maximum_tax_efficient_pension: float = 0.0
     
     # Income
     household_net_income: float = 0.0
