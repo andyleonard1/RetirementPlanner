@@ -3,7 +3,9 @@ Summary Engine
 
 Calculates summary statistics for the completed retirement plan.
 """
+import logging
 
+logger = logging.getLogger(__name__)
 
 class SummaryEngine:
 
@@ -11,7 +13,7 @@ class SummaryEngine:
         self.assumptions = assumptions
 
     def apply(self, timeline):
-
+        logger.info("Running Summary Engine")
         final = timeline[-1]
 
         summary = {

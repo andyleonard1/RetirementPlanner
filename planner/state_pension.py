@@ -4,7 +4,9 @@ State Pension Engine
 Calculates State Pension for both spouses and updates the
 RetirementYear objects created by the TimelineEngine.
 """
+import logging
 
+logger = logging.getLogger(__name__)
 
 class StatePensionEngine:
 
@@ -16,7 +18,7 @@ class StatePensionEngine:
         self.growth = assumptions.get("state_pension_growth")
 
     def apply(self, timeline):
-
+        logger.info("Running State Pension Engine")
         for year in timeline:
 
             age = year.age

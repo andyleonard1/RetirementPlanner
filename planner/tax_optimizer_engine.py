@@ -8,7 +8,9 @@ Version 1
 
 Uses the remaining Basic Rate tax band.
 """
+import logging
 
+logger = logging.getLogger(__name__)
 
 class TaxOptimizerEngine:
 
@@ -17,7 +19,7 @@ class TaxOptimizerEngine:
         self.assumptions = assumptions
 
     def apply(self, timeline):
-
+        logger.info("Running Tax Optimiser Engine")
         allowance = self.assumptions.get("personal_allowance")
         basic_limit = self.assumptions.get("basic_rate_limit")
 

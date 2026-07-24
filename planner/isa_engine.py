@@ -3,7 +3,9 @@ ISA Engine
 
 Projects ISA value over retirement.
 """
+import logging
 
+logger = logging.getLogger(__name__)
 
 class ISAEngine:
 
@@ -15,7 +17,7 @@ class ISAEngine:
         self.growth_rate = assumptions.get("isa_growth_rate")
 
     def apply(self, timeline):
-
+        logger.info("Running WithdrawalEngine")
         isa = self.starting_isa
 
         for year in timeline:

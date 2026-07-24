@@ -15,15 +15,17 @@ ISA_FIRST
     ISA
     Pension
 """
+import logging
 
-
+logger = logging.getLogger(__name__)
+logger.info("Running StrategyEngine")
 class StrategyEngine:
 
     def __init__(self, assumptions):
         self.assumptions = assumptions
 
     def apply(self, timeline):
-
+        logger.info("Running Strategy Engine")
         strategy = self.assumptions.get("withdrawal_strategy")
 
         for year in timeline:

@@ -6,7 +6,9 @@ Calculates pension growth and withdrawals for each retirement year.
 This engine does not create RetirementYear objects.
 Instead, it updates the timeline created by TimelineEngine.
 """
+import logging
 
+logger = logging.getLogger(__name__)
 
 class PensionEngine:
 
@@ -18,7 +20,7 @@ class PensionEngine:
         self.growth_rate = assumptions.get("pension_growth")
 
     def apply(self, timeline):
-
+        logger.info("Running PensionEngine")
         pension = self.starting_pension
 
         for year in timeline:

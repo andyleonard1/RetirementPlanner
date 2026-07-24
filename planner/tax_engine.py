@@ -17,14 +17,16 @@ For now it assumes:
     • Basic rate only (20%)
     • No tax-free cash (PCLS) yet
 """
+import logging
 
+logger = logging.getLogger(__name__)
 class TaxEngine:
 
     def __init__(self, assumptions):
         self.assumptions = assumptions
 
     def apply(self, timeline):
-
+        logger.info("Running Tax Engine")
         allowance = self.assumptions.get("personal_allowance")
         basic_limit = self.assumptions.get("basic_rate_limit")
         basic_rate = self.assumptions.get("basic_rate")

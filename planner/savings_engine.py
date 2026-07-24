@@ -3,7 +3,9 @@ Savings Engine
 
 Projects the user's cash savings over time.
 """
+import logging
 
+logger = logging.getLogger(__name__)
 
 class SavingsEngine:
 
@@ -15,7 +17,7 @@ class SavingsEngine:
         self.interest_rate = assumptions.get("savings_interest_rate")
 
     def apply(self, timeline):
-
+        logger.info("Running Savings Engine")
         for index, year in enumerate(timeline):
 
             if index == 0:

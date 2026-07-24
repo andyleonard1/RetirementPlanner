@@ -7,7 +7,6 @@ class RetirementYear:
     Represents one year of retirement.
     Every engine will add data to this object.
     """
-
     age: int
     calendar_year: int
     spouse_age: int

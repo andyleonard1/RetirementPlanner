@@ -1,0 +1,88 @@
+13:39:59 INFO     planner.pension_engine: Running PensionEngine
+13:40:24 INFO     planner.strategy_engine: Running StrategyEngine
+13:40:24 INFO     planner.pension_engine: Running PensionEngine
+13:41:07 INFO     planner.strategy_engine: Running StrategyEngine
+13:41:07 INFO     planner.withdrawal_engine: Running WithdrawalEngine
+13:41:07 INFO     planner.tax_engine: Running TaxEngine
+13:41:07 INFO     planner.pension_engine: Running PensionEngine
+13:42:36 INFO     planner.state_pension: Running WithdrawalEngine
+13:42:36 INFO     planner.savings_engine: Running WithdrawalEngine
+13:42:36 INFO     planner.isa_engine: Running WithdrawalEngine
+13:42:36 INFO     planner.cashflow_engine: Running WithdrawalEngine
+13:42:36 INFO     planner.tax_optimizer_engine: Running WithdrawalEngine
+13:42:36 INFO     planner.strategy_engine: Running StrategyEngine
+13:42:36 INFO     planner.withdrawal_engine: Running WithdrawalEngine
+13:42:36 INFO     planner.tax_engine: Running TaxEngine
+13:42:36 INFO     planner.pension_engine: Running PensionEngine
+13:44:02 INFO     planner.state_pension: Running State Pension Engine
+13:44:02 INFO     planner.savings_engine: Running Savings Engine
+13:44:02 INFO     planner.isa_engine: Running WithdrawalEngine
+13:44:02 INFO     planner.cashflow_engine: Running WithdrawalEngine
+13:44:02 INFO     planner.tax_optimizer_engine: Running Tax Optimiser Engine
+13:44:02 INFO     planner.strategy_engine: Running Strategy Engine
+13:44:02 INFO     planner.withdrawal_engine: Running Withdrawal Engine
+13:44:02 INFO     planner.tax_engine: Running Tax Engine
+13:44:02 INFO     planner.pension_engine: Running PensionEngine
+13:44:02 INFO     planner.summary_engine: Running Summary Engine
+13:45:11 INFO     planner.state_pension: Running State Pension Engine
+13:45:11 INFO     planner.savings_engine: Running Savings Engine
+13:45:11 INFO     planner.isa_engine: Running WithdrawalEngine
+13:45:11 INFO     planner.cashflow_engine: Running WithdrawalEngine
+13:45:11 INFO     planner.tax_optimizer_engine: Running Tax Optimiser Engine
+13:45:11 INFO     planner.strategy_engine: Running Strategy Engine
+13:45:11 INFO     planner.withdrawal_engine: Running Withdrawal Engine
+13:45:11 INFO     planner.tax_engine: Running Tax Engine
+13:45:11 INFO     planner.pension_engine: Running PensionEngine
+13:45:11 INFO     planner.summary_engine: Running Summary Engine
+10:17:44 INFO     planner.state_pension: Running State Pension Engine
+10:17:44 INFO     planner.savings_engine: Running Savings Engine
+10:17:44 INFO     planner.isa_engine: Running WithdrawalEngine
+10:17:44 INFO     planner.cashflow_engine: Running WithdrawalEngine
+10:17:44 INFO     planner.tax_optimizer_engine: Running Tax Optimiser Engine
+10:17:44 INFO     planner.strategy_engine: Running Strategy Engine
+10:17:44 INFO     planner.withdrawal_engine: Running Withdrawal Engine
+10:17:44 INFO     planner.tax_engine: Running Tax Engine
+10:17:44 INFO     planner.pension_engine: Running PensionEngine
+10:17:44 INFO     planner.summary_engine: Running Summary Engine
+10:19:12 INFO     planner.state_pension: Running State Pension Engine
+10:19:12 INFO     planner.savings_engine: Running Savings Engine
+10:19:12 INFO     planner.isa_engine: Running WithdrawalEngine
+10:19:12 INFO     planner.cashflow_engine: Running WithdrawalEngine
+10:19:12 INFO     planner.tax_optimizer_engine: Running Tax Optimiser Engine
+10:19:12 INFO     planner.strategy_engine: Running Strategy Engine
+10:19:12 INFO     planner.withdrawal_engine: Running Withdrawal Engine
+10:19:12 INFO     planner.tax_engine: Running Tax Engine
+10:19:12 INFO     planner.pension_engine: Running PensionEngine
+10:19:12 INFO     planner.summary_engine: Running Summary Engine
+10:32:01 INFO     planner.state_pension: Running State Pension Engine
+10:32:01 INFO     planner.savings_engine: Running Savings Engine
+10:32:01 INFO     planner.isa_engine: Running WithdrawalEngine
+10:32:01 INFO     planner.cashflow_engine: Running WithdrawalEngine
+10:32:01 INFO     planner.tax_optimizer_engine: Running Tax Optimiser Engine
+10:32:01 INFO     planner.strategy_engine: Running Strategy Engine
+10:32:01 INFO     planner.withdrawal_engine: Running Withdrawal Engine
+10:32:01 INFO     planner.tax_engine: Running Tax Engine
+10:32:01 INFO     planner.pension_engine: Running PensionEngine
+10:32:01 INFO     planner.summary_engine: Running Summary Engine
+15:55:51 INFO     planner.state_pension: Running State Pension Engine
+15:55:51 INFO     planner.savings_engine: Running Savings Engine
+15:55:51 INFO     planner.isa_engine: Running WithdrawalEngine
+15:55:51 INFO     planner.cashflow_engine: Running WithdrawalEngine
+15:55:51 INFO     planner.tax_optimizer_engine: Running Tax Optimiser Engine
+15:55:51 INFO     planner.strategy_engine: Running Strategy Engine
+15:55:51 INFO     planner.withdrawal_engine: Running Withdrawal Engine
+15:55:51 INFO     planner.tax_engine: Running Tax Engine
+15:55:51 INFO     planner.pension_engine: Running PensionEngine
+15:55:51 INFO     planner.summary_engine: Running Summary Engine
+08:11:39 INFO     planner.planner: Starting retirement plan calculation
+08:11:39 INFO     planner.state_pension: Running State Pension Engine
+08:11:39 INFO     planner.savings_engine: Running Savings Engine
+08:11:39 INFO     planner.isa_engine: Running WithdrawalEngine
+08:11:39 INFO     planner.cashflow_engine: Running WithdrawalEngine
+08:11:39 INFO     planner.optimisation_engine: Running OptimisationEngine
+08:11:39 INFO     planner.strategy_engine: Running Strategy Engine
+08:11:39 INFO     planner.withdrawal_engine: Running Withdrawal Engine
+08:11:39 INFO     planner.tax_engine: Running Tax Engine
+08:11:39 INFO     planner.pension_engine: Running PensionEngine
+08:11:39 INFO     planner.summary_engine: Running Summary Engine
+08:11:39 INFO     planner.planner: Retirement plan calculation complete
