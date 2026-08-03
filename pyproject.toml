@@ -1,0 +1,16 @@
+[project]
+name = "retirement-planner"
+version = "2.0.0-rc2"
+description = "Professional Retirement Planning Engine"
+requires-python = ">=3.13"
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = "py313"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]

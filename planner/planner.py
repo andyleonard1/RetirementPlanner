@@ -1,25 +1,25 @@
 """
 Retirement Planner
 
-Coordinates the retirement planning process by running
-each engine in the correct order.
+Coordinates the retirement planning process by running each
+planning engine in sequence and returning a PlannerResult.
 """
 
 import logging
+import time
 
+from planner.planner_result import PlannerResult
 from planner.timeline import TimelineEngine
 
 from planner.state_pension import StatePensionEngine
 from planner.savings_engine import SavingsEngine
 from planner.isa_engine import ISAEngine
-
 from planner.cashflow_engine import CashFlowEngine
 from planner.optimisation_engine import OptimisationEngine
 from planner.strategy_engine import StrategyEngine
 from planner.withdrawal_engine import WithdrawalEngine
 from planner.tax_engine import TaxEngine
 from planner.pension_engine import PensionEngine
-
 from planner.summary_engine import SummaryEngine
 
 logger = logging.getLogger(__name__)
@@ -31,57 +31,94 @@ class RetirementPlanner:
 
         self.assumptions = assumptions
 
+        #
+        # Order matters!
+        #
+        self.engines = [
+
+            StatePensionEngine,
+
+            SavingsEngine,
+
+            ISAEngine,
+
+            CashFlowEngine,
+
+            OptimisationEngine,
+
+            StrategyEngine,
+
+            WithdrawalEngine,
+
+            TaxEngine,
+
+            PensionEngine,
+
+        ]
+
+    # -----------------------------------------------------
+
+    def build_timeline(self):
+
+        logger.info("Building retirement timeline")
+
+        return TimelineEngine(
+            self.assumptions
+        ).build()
+
+    # -----------------------------------------------------
+
+    def run_engines(self, timeline):
+
+        for engine_class in self.engines:
+
+            logger.info(
+                "Running %s",
+                engine_class.__name__,
+            )
+
+            engine = engine_class(
+                self.assumptions
+            )
+
+            engine.apply(timeline)
+
+    # -----------------------------------------------------
+
+    def build_summary(self, timeline):
+
+        logger.info("Running SummaryEngine")
+
+        return SummaryEngine(
+            self.assumptions
+        ).apply(timeline)
+
+    # -----------------------------------------------------
+
     def run(self):
 
-        logger.info("Starting retirement plan calculation")
+        logger.info(
+            "Starting retirement calculation"
+        )
 
-        #
-        # Build retirement timeline
-        #
-        timeline = TimelineEngine(self.assumptions).build()
+        start = time.perf_counter()
 
-        #
-        # Populate income and balances
-        #
-        StatePensionEngine(self.assumptions).apply(timeline)
-        SavingsEngine(self.assumptions).apply(timeline)
-        ISAEngine(self.assumptions).apply(timeline)
+        timeline = self.build_timeline()
 
-        #
-        # Determine spending requirement
-        #
-        CashFlowEngine(self.assumptions).apply(timeline)
+        self.run_engines(timeline)
 
-        #
-        # Calculate tax-efficient pension limits
-        #
-        OptimisationEngine(self.assumptions).apply(timeline)
+        summary = self.build_summary(timeline)
 
-        #
-        # Decide where income comes from
-        #
-        StrategyEngine(self.assumptions).apply(timeline)
+        elapsed = (
+            time.perf_counter() - start
+        )
 
-        #
-        # Convert strategy into withdrawals
-        #
-        WithdrawalEngine(self.assumptions).apply(timeline)
+        logger.info(
+            "Calculation complete (%.3f sec)",
+            elapsed,
+        )
 
-        #
-        # Gross-up pension withdrawals for tax
-        #
-        TaxEngine(self.assumptions).apply(timeline)
-
-        #
-        # Apply pension growth and withdrawals
-        #
-        PensionEngine(self.assumptions).apply(timeline)
-
-        #
-        # Build summary
-        #
-        summary = SummaryEngine(self.assumptions).apply(timeline)
-
-        logger.info("Retirement plan calculation complete")
-
-        return timeline, summary
+        return PlannerResult(
+            timeline=timeline,
+            summary=summary,
+        )

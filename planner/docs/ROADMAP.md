@@ -1,16 +1,29 @@
-## Version 0.6
+# Roadmap
 
-- Inflation
-- Dynamic tax thresholds
-- Variable investment returns
+## RC2
 
-## Version 0.7
+Architecture stabilisation
 
-- Monte Carlo simulation
-- Historical market returns
+## RC3
 
-## Version 1.0
+Optimisation Suite
 
-- GUI
-- Optimisation engine
-- PDF reports
+## RC4
+
+Historical Replay
+
+## RC5
+
+Professional Reporting
+
+## RC6
+
+User Interface
+
+## Version 2.0
+
+Production Release
+
+## Version 3.0
+
+Advanced Financial Planning Platform

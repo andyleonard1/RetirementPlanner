@@ -19,7 +19,9 @@
     "higher_rate": 0.40,
     "additional_rate": 0.45,
     "pension_growth": 0.04,
-
+    "expected_return": 0.04,
+    "investment_volatility": 0.10,
+    "inflation_volatility": 0.01,
     "savings_interest": 0.035,
 
     "starting_isa": 50000,
@@ -43,5 +45,35 @@
     "inflation_rate": 0.025,
     "inflation_link_spending": true,
     "inflation_link_tax": true,
-    "inflation_link_isa": true
+    "inflation_link_isa": true,
+    "goals": [
+
+    {
+        "name": "Retire at planned age",
+        "type": "retirement_age"
+    },
+
+    {
+        "name": "Maintain target spending",
+        "type": "spending"
+    },
+
+    {
+        "name": "Leave £500k estate",
+        "type": "estate",
+        "target": 500000
+    },
+
+    {
+        "name": "Maintain 90% success",
+        "type": "monte_carlo",
+        "target": 90
+    },
+
+    {
+        "name": "Avoid pension depletion",
+        "type": "pension_positive"
+    }
+
+]
 }

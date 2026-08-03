@@ -21,7 +21,10 @@ class ScenarioEngine:
 
         planner = RetirementPlanner(assumptions)
 
-        timeline, summary = planner.run()
+        result = planner.run()
+
+        timeline = result.timeline
+        summary = result.summary
 
         return {
             "name": scenario_name,

@@ -17,3 +17,19 @@
 - Inflation modelling
 - Dynamic tax thresholds
 - Variable investment returns
+
+Version 1.0.0-beta1
+-------------------
+
+Added
+• Recommendation Engine
+• Risk Engine
+• Professional PDF report
+
+Improved
+• Strategy comparison
+• Reporting architecture
+
+Fixed
+• Strategy Engine withdrawal logic
+• Unit tests

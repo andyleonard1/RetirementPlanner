@@ -5,13 +5,11 @@ Application entry point.
 """
 
 import logging
+import time
 
-from planner.version import VERSION
 from planner.assumptions import Assumptions
 from planner.planner import RetirementPlanner
-from planner.report import ConsoleReport
-from planner.reports.excel_report import ExcelReport
-
+from planner.version import banner
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,23 +21,67 @@ logger = logging.getLogger(__name__)
 
 def main():
 
-    logger.info("")
-    logger.info("=" * 60)
-    logger.info(f"Retirement Planner  v{VERSION}")
-    logger.info("=" * 60)
+    print()
+    print(banner())
+    print()
 
-    assumptions = Assumptions()
+    start = time.perf_counter()
 
-    planner = RetirementPlanner(assumptions)
+    try:
 
-    timeline, summary = planner.run()
+        assumptions = Assumptions()
 
-    ConsoleReport().print(timeline, summary)
+        planner = RetirementPlanner(
+            assumptions
+        )
 
-    ExcelReport().generate(timeline, assumptions)
+        result = planner.run()
 
-    logger.info("")
-    logger.info("Run complete.")
+        elapsed = (
+            time.perf_counter() - start
+        )
+
+        print()
+
+        print("Retirement plan completed successfully")
+
+        print(f"Execution time : {elapsed:.2f} seconds")
+
+        print()
+
+        print("Projected position at age 90")
+
+        print("----------------------------")
+
+        print(
+            f"Pension : £{result.summary['ending_pension']:,.0f}"
+        )
+
+        print(
+            f"ISA      : £{result.summary['ending_isa']:,.0f}"
+        )
+
+        print(
+            f"Savings  : £{result.summary['ending_savings']:,.0f}"
+        )
+
+        print(
+            f"Assets   : £{result.summary['ending_assets']:,.0f}"
+        )
+
+        print()
+
+    except Exception as ex:
+
+        logger.exception(ex)
+
+        print()
+
+        print("Planner failed.")
+
+        print(ex)
+
+        raise
 
 
 if __name__ == "__main__":
