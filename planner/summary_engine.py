@@ -3,9 +3,11 @@ Summary Engine
 
 Calculates summary statistics for the completed retirement plan.
 """
+
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 class SummaryEngine:
 
@@ -13,7 +15,9 @@ class SummaryEngine:
         self.assumptions = assumptions
 
     def apply(self, timeline):
+
         logger.info("Running Summary Engine")
+
         final = timeline[-1]
 
         summary = {
@@ -25,24 +29,32 @@ class SummaryEngine:
                 + final.savings_closing
                 + final.isa_closing
             ),
+
             "gross_pension": sum(
-                y.gross_pension_income for y in timeline
-            ),
-            "net_pension": sum(
-                y.net_pension_income for y in timeline
-            ),
-            "state_pension": sum(
-                y.your_state_pension + y.spouse_state_pension
+                y.gross_pension_income
                 for y in timeline
             ),
-            "total_tax": sum(
-                y.income_tax for y in timeline
+
+            "net_pension": sum(
+                y.net_pension_income
+                for y in timeline
             ),
-            
-        }
-        summary["strategy"] = self.assumptions.get(
+
+            "state_pension": sum(
+                y.your_state_pension
+                + y.spouse_state_pension
+                for y in timeline
+            ),
+
+            "total_tax": sum(
+                y.income_tax
+                for y in timeline
+            ),
+
+            "strategy": self.assumptions.get(
                 "withdrawal_strategy"
-            )
+            ),
+        }
+
         return summary
-    
         

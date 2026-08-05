@@ -60,7 +60,9 @@ class RetirementYear:
     income_tax: float = 0.0
     net_pension_income: float = 0.0
     maximum_tax_efficient_pension: float = 0.0
-    
+    tax_free_cash_used: float = 0.0
+    taxable_pension_withdrawal: float = 0.0
+    remaining_tax_free_cash: float = 0.0
     # Income
     household_net_income: float = 0.0
     target_spending: float = 0.0
@@ -80,7 +82,13 @@ class RetirementYear:
     savings_remaining: float = 0.0
     # Summary
     total_assets: float = 0.0
-    
+    market_year: int = 0
+
+    portfolio_return: float = 0.0
+
+    pension_growth_rate: float = 0.0
+
+    isa_growth_rate: float = 0.0
     from dataclasses import dataclass
 
 """

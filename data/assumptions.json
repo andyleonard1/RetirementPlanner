@@ -23,7 +23,7 @@
     "investment_volatility": 0.10,
     "inflation_volatility": 0.01,
     "savings_interest": 0.035,
-
+    "tax_free_pension_percentage": 0.25,
     "starting_isa": 50000,
     "isa_growth_rate": 0.04,
     "annual_isa_allowance": 40000,
