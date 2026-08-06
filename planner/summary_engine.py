@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 class SummaryEngine:
 
     def __init__(self, assumptions):
+
         self.assumptions = assumptions
 
     def apply(self, timeline):
@@ -20,10 +21,42 @@ class SummaryEngine:
 
         final = timeline[-1]
 
+        #
+        # Determine whether the plan succeeded.
+        #
+        success = True
+        failure_reason = None
+        first_failure_age = None
+
+        for year in timeline:
+
+            if year.closing_pension < 0:
+
+                success = False
+                failure_reason = "Pension exhausted"
+                first_failure_age = year.age
+                break
+
+            #
+            # Only check this if the field exists.
+            #
+            if hasattr(year, "income_shortfall"):
+
+                if year.income_shortfall > 0:
+
+                    success = False
+                    failure_reason = "Income shortfall"
+                    first_failure_age = year.age
+                    break
+
         summary = {
+
             "ending_pension": final.closing_pension,
+
             "ending_savings": final.savings_closing,
+
             "ending_isa": final.isa_closing,
+
             "ending_assets": (
                 final.closing_pension
                 + final.savings_closing
@@ -54,7 +87,16 @@ class SummaryEngine:
             "strategy": self.assumptions.get(
                 "withdrawal_strategy"
             ),
+
+            #
+            # Success information.
+            #
+            "success": success,
+
+            "failure_reason": failure_reason,
+
+            "first_failure_age": first_failure_age,
+
         }
 
         return summary
-        

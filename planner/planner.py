@@ -121,4 +121,12 @@ class RetirementPlanner:
         return PlannerResult(
             timeline=timeline,
             summary=summary,
-        )
+
+    #
+    # Overall success of the plan.
+    #
+            success=summary.get(
+                "success",
+                False,
+            ),
+    )
