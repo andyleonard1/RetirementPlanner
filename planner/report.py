@@ -7,9 +7,18 @@ Displays the retirement timeline in a simple table.
 
 class ConsoleReport:
 
-    def print(self, timeline, summary):
+    def print(
+        self,
+        timeline,
+        summary,
+        decision=None,
+        age_comparison=None,
+    ):
         print()
-        print(f"Withdrawal Strategy : {summary['strategy']}")
+        print(
+            f"Withdrawal Strategy : "
+            f"{summary['strategy']}"
+        )
         print()
         print()
 
@@ -50,14 +59,149 @@ class ConsoleReport:
         print("RETIREMENT SUMMARY")
         print("=" * 70)
 
-        print(f"Ending Pension      £{summary['ending_pension']:,.0f}")
-        print(f"Ending Savings      £{summary['ending_savings']:,.0f}")
-        print(f"Ending ISA          £{summary['ending_isa']:,.0f}")
-        print(f"Total Assets        £{summary['ending_assets']:,.0f}")
+        print(
+            f"Ending Pension      "
+            f"£{summary['ending_pension']:,.0f}"
+        )
+
+        print(
+            f"Ending Savings      "
+            f"£{summary['ending_savings']:,.0f}"
+        )
+
+        print(
+            f"Ending ISA          "
+            f"£{summary['ending_isa']:,.0f}"
+        )
+
+        print(
+            f"Total Assets        "
+            f"£{summary['ending_assets']:,.0f}"
+        )
 
         print()
 
-        print(f"Gross Pension Drawn £{summary['gross_pension']:,.0f}")
-        print(f"Net Pension Income  £{summary['net_pension']:,.0f}")
-        print(f"State Pension       £{summary['state_pension']:,.0f}")
-        print(f"Income Tax Paid     £{summary['total_tax']:,.0f}")
+        print(
+            f"Gross Pension Drawn "
+            f"£{summary['gross_pension']:,.0f}"
+        )
+
+        print(
+            f"Net Pension Income  "
+            f"£{summary['net_pension']:,.0f}"
+        )
+
+        print(
+            f"State Pension       "
+            f"£{summary['state_pension']:,.0f}"
+        )
+
+        print(
+            f"Income Tax Paid     "
+            f"£{summary['total_tax']:,.0f}"
+        )
+
+        # -------------------------------------------------
+        # RETIREMENT AGE COMPARISON
+        # -------------------------------------------------
+
+        if age_comparison is not None:
+
+            print()
+            print("=" * 70)
+            print("RETIREMENT AGE COMPARISON")
+            print("=" * 70)
+
+            print(
+                f"{'Age':<8}"
+                f"{'Status':<14}"
+                f"{'Ending Assets':>18}"
+                f"{'Change':>18}"
+            )
+
+            print("-" * 58)
+
+            for comparison in age_comparison:
+
+                status = (
+                    "SUCCESS"
+                    if comparison.success
+                    else "NOT SUSTAINABLE"
+                )
+
+                change = comparison.change_from_previous_age
+
+                change_text = (
+                    "-"
+                    if change is None
+                    else f"£{change:,.0f}"
+                )
+
+                print(
+                    f"{comparison.retirement_age:<8}"
+                    f"{status:<14}"
+                    f"£{comparison.ending_assets:>17,.0f}"
+                    f"{change_text:>18}"
+                )
+
+        # -------------------------------------------------
+        # RETIREMENT DECISION
+        # -------------------------------------------------
+
+        if decision is not None:
+
+            print()
+            print("=" * 70)
+            print("RETIREMENT DECISION")
+            print("=" * 70)
+
+            print(
+                f"Recommended Age    "
+                f"{decision.recommended_age}"
+            )
+
+            print(
+                f"Ending Pension     "
+                f"£{decision.ending_pension:,.0f}"
+            )
+
+            print(
+                f"Ending Savings     "
+                f"£{decision.ending_savings:,.0f}"
+            )
+
+            print(
+                f"Ending ISA         "
+                f"£{decision.ending_isa:,.0f}"
+            )
+
+            print(
+                f"Ending Assets      "
+                f"£{decision.ending_assets:,.0f}"
+            )
+
+            if decision.later_age is not None:
+
+                print()
+                print(
+                    f"If retiring at "
+                    f"{decision.later_age}:"
+                )
+
+                if (
+                    decision.later_ending_assets
+                    is not None
+                ):
+                    print(
+                        f"Ending Assets      "
+                        f"£{decision.later_ending_assets:,.0f}"
+                    )
+
+                if (
+                    decision.additional_assets_from_waiting
+                    is not None
+                ):
+                    print(
+                        f"Additional Assets  "
+                        f"£{decision.additional_assets_from_waiting:,.0f}"
+                    )

@@ -10,7 +10,7 @@
     "platform_charge": 0.0025,
     "fund_charge": 0.0025,
     "target_net_income": 35000,
-    "starting_savings": 11000,
+    "starting_savings": 72500,
     "savings_interest_rate": 0.03,
     "inflation": 0.025,
     "personal_allowance": 12570,
@@ -24,7 +24,7 @@
     "inflation_volatility": 0.01,
     "savings_interest": 0.035,
     "tax_free_pension_percentage": 0.25,
-    "starting_isa": 50000,
+    "starting_isa": 126000,
     "isa_growth_rate": 0.04,
     "annual_isa_allowance": 40000,
 

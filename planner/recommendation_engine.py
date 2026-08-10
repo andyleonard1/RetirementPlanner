@@ -1,120 +1,123 @@
 """
 Recommendation Engine
 
-Produces a plain-English explanation of the
-recommended retirement strategy.
+Produces human-readable recommendations based on
+scenario comparison results.
 """
+
+from planner.recommendations.recommendation import Recommendation
 
 
 class RecommendationEngine:
 
-    def apply(self, decision):
-        risk = decision["risk"]
-        winner = decision["summary"]
-        strategy = decision["recommended"]
+    # -------------------------------------------------
 
-        runner = decision.get("runner_up")
+    def _earliest_successful_age(self, comparisons):
 
-        reasons = []
+        successful = [
+            comparison
+            for comparison in comparisons
+            if comparison.success
+        ]
 
-        confidence = "LOW"
+        if not successful:
+            return None
 
-        if runner:
+        return min(
+            comparison.retirement_age
+            for comparison in successful
+        )
 
-            loser = runner["summary"]
+    # -------------------------------------------------
 
-            asset_gain = (
-                winner["ending_assets"]
-                - loser["ending_assets"]
+    def generate(self, comparisons):
+        print("RECOMMENDATION ENGINE:", __file__)
+        print("COMPARISONS:", comparisons)
+        if not comparisons:
+            return []
+
+        recommendations = []
+
+        #
+        # -------------------------------------------------
+        # 1. EARLIEST SUCCESSFUL RETIREMENT AGE
+        # -------------------------------------------------
+        #
+
+        earliest_age = self._earliest_successful_age(
+            comparisons
+        )
+
+        if earliest_age is not None:
+
+            recommendations.append(
+                Recommendation(
+                    priority=1,
+                    title="Recommended Retirement Age",
+                    message=(
+                        f"Age {earliest_age} is the earliest "
+                        "tested retirement age that satisfies "
+                        "the current planning goals."
+                    ),
+                    impact=(
+                        f"Earliest successful retirement age: "
+                        f"{earliest_age}"
+                    ),
+                )
             )
 
-            tax_saved = (
-                loser["total_tax"]
-                - winner["total_tax"]
-            )
+        #
+        # -------------------------------------------------
+        # 2. INDIVIDUAL SCENARIO STATUS
+        # -------------------------------------------------
+        #
 
-            pension_gain = (
-                winner["ending_pension"]
-                - loser["ending_pension"]
-            )
+        for comparison in comparisons:
 
-            isa_gain = (
-                winner["ending_isa"]
-                - loser["ending_isa"]
-            )
+            if comparison.success:
 
-            savings_gain = (
-                winner["ending_savings"]
-                - loser["ending_savings"]
-            )
-
-            if asset_gain > 0:
-                reasons.append(
-                    f"Leaves £{asset_gain:,.0f} more total assets."
+                recommendations.append(
+                    Recommendation(
+                        priority=2,
+                        title="Plan Successful",
+                        message=(
+                            f"The retirement plan "
+                            f"'{comparison.name}' meets "
+                            "the current planning goals."
+                        ),
+                        impact=(
+                            f"Projected ending assets "
+                            f"£{comparison.ending_assets:,.0f}"
+                        ),
+                    )
                 )
-
-            if tax_saved > 0:
-                reasons.append(
-                    f"Saves £{tax_saved:,.0f} in lifetime tax."
-                )
-
-            if pension_gain > 0:
-                reasons.append(
-                    f"Retains £{pension_gain:,.0f} more pension wealth."
-                )
-
-            if isa_gain > 0:
-                reasons.append(
-                    f"Retains £{isa_gain:,.0f} more ISA wealth."
-                )
-
-            if savings_gain > 0:
-                reasons.append(
-                    f"Retains £{savings_gain:,.0f} more cash savings."
-                )
-
-            #
-            # Confidence
-            #
-            if asset_gain > 250000:
-                confidence = "VERY HIGH"
-
-            elif asset_gain > 100000:
-                confidence = "HIGH"
-
-            elif asset_gain > 25000:
-                confidence = "MEDIUM"
 
             else:
-                confidence = "LOW"
 
-        else:
+                recommendations.append(
+                    Recommendation(
+                        priority=2,
+                        title="Plan Not Sustainable",
+                        message=(
+                            f"The retirement plan "
+                            f"'{comparison.name}' does not meet "
+                            "the current planning goals."
+                        ),
+                        impact=(
+                            "Consider retiring later or "
+                            "reducing spending."
+                        ),
+                    )
+                )
 
-            reasons.append(
-                "Only one strategy was available for comparison."
-            )
+        #
+        # -------------------------------------------------
+        # 3. ENSURE PRIORITY ORDER
+        # -------------------------------------------------
+        #
 
-        return {
+        recommendations.sort(
+            key=lambda recommendation: recommendation.priority
+        )
 
-            "strategy": strategy,
-
-            "ending_assets": winner["ending_assets"],
-
-            "ending_pension": winner["ending_pension"],
-
-            "ending_isa": winner["ending_isa"],
-
-            "ending_savings": winner["ending_savings"],
-
-            "total_tax": winner["total_tax"],
-
-            "confidence": confidence,
-
-            "reasons": reasons,
-            
-            "risk_rating": risk["rating"],
-
-            "risk_score": risk["score"],
-
-            "risk_messages": risk["risks"],
-        }
+        return recommendations
