@@ -26,3 +26,11 @@ class DecisionSummary:
     later_ending_assets: float | None = None
 
     additional_assets_from_waiting: float | None = None
+
+    earliest_age_score: float | None = None
+
+    ending_assets_score: float | None = None
+
+    waiting_efficiency_score: float | None = None
+
+    total_score: float | None = None

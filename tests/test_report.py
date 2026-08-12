@@ -160,6 +160,40 @@ class TestConsoleReport(unittest.TestCase):
             text,
         )
 
+    # -------------------------------------------------
+
+    def test_report_includes_recommendation_score(self):
+
+        decision = DecisionSummary(
+            recommended_age=56,
+            ending_pension=500000,
+            ending_isa=100000,
+            ending_savings=50000,
+            ending_assets=650000,
+            earliest_age_score=95.0,
+            ending_assets_score=80.0,
+            waiting_efficiency_score=70.0,
+            total_score=84.0,
+        )
+
+        output = StringIO()
+
+        with redirect_stdout(output):
+            self.report.print(
+                self.timeline,
+                self.summary,
+                decision,
+            )
+
+        text = output.getvalue()
+
+        self.assertIn("Recommendation Score", text)
+        self.assertIn("95.0/100", text)
+        self.assertIn("80.0/100", text)
+        self.assertIn("70.0/100", text)
+        self.assertIn("84.0/100", text)
+
+
 
 if __name__ == "__main__":
     unittest.main()

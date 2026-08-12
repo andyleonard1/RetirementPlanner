@@ -437,6 +437,52 @@ class TestScenarioManager(unittest.TestCase):
         )
 
 
+    def test_decision_summary_uses_retirement_age_score(self):
+
+        manager = ScenarioManager()
+
+        manager.compare = lambda: [
+            ScenarioComparison(
+                name="Age 60",
+                success=True,
+                ending_assets=900000,
+                ending_pension=500000,
+                ending_isa=250000,
+                ending_savings=150000,
+                total_tax=100000,
+                retirement_age=60,
+            ),
+            ScenarioComparison(
+                name="Age 62",
+                success=True,
+                ending_assets=1200000,
+                ending_pension=650000,
+                ending_isa=350000,
+                ending_savings=200000,
+                total_tax=110000,
+                retirement_age=62,
+            ),
+            ScenarioComparison(
+                name="Age 64",
+                success=True,
+                ending_assets=1100000,
+                ending_pension=600000,
+                ending_isa=320000,
+                ending_savings=180000,
+                total_tax=115000,
+                retirement_age=64,
+            ),
+        ]
+
+        summary = manager.decision_summary()
+
+        self.assertEqual(
+            summary.recommended_age,
+            62,
+        )
+
+    # -------------------------------------------------
+
 if __name__ == "__main__":
     unittest.main()
 # -------------------------------------------------
@@ -581,3 +627,84 @@ class TestRetirementAgeScoring(unittest.TestCase):
 
         self.assertFalse(scores[1].success)
         self.assertEqual(scores[1].total_score, 0.0)
+
+# -------------------------------------------------
+
+class TestRetirementAgeScoringValidation(unittest.TestCase):
+
+    def _comparison(self, age, success=True, assets=0):
+        return ScenarioComparison(
+            name=f"Age {age}",
+            success=success,
+            ending_assets=assets,
+            ending_pension=500000,
+            ending_isa=250000,
+            ending_savings=150000,
+            total_tax=100000,
+            retirement_age=age,
+        )
+
+    def test_waiting_efficiency_favours_higher_assets_per_year_waited(self):
+
+        manager = ScenarioManager()
+
+        manager.compare = lambda: [
+            self._comparison(60, assets=900000),
+            self._comparison(62, assets=1000000),
+            self._comparison(64, assets=1060000),
+        ]
+
+        scores = manager.retirement_age_scores()
+
+        self.assertEqual(
+            scores[1].waiting_efficiency_score,
+            100.0,
+        )
+
+        self.assertEqual(
+            scores[2].waiting_efficiency_score,
+            0.0,
+        )
+
+    def test_total_score_uses_the_declared_weights(self):
+
+        manager = ScenarioManager()
+
+        manager.compare = lambda: [
+            self._comparison(60, assets=900000),
+            self._comparison(62, assets=1000000),
+        ]
+
+        scores = manager.retirement_age_scores()
+
+        self.assertAlmostEqual(
+            scores[0].total_score,
+            40.0,
+        )
+
+        self.assertAlmostEqual(
+            scores[1].total_score,
+            60.0,
+        )
+
+    def test_all_successful_scores_remain_between_zero_and_one_hundred(self):
+
+        manager = ScenarioManager()
+
+        manager.compare = lambda: [
+            self._comparison(60, assets=900000),
+            self._comparison(62, assets=1000000),
+            self._comparison(64, assets=950000),
+        ]
+
+        scores = manager.retirement_age_scores()
+
+        for score in scores:
+            self.assertGreaterEqual(score.earliest_age_score, 0.0)
+            self.assertLessEqual(score.earliest_age_score, 100.0)
+            self.assertGreaterEqual(score.ending_assets_score, 0.0)
+            self.assertLessEqual(score.ending_assets_score, 100.0)
+            self.assertGreaterEqual(score.waiting_efficiency_score, 0.0)
+            self.assertLessEqual(score.waiting_efficiency_score, 100.0)
+            self.assertGreaterEqual(score.total_score, 0.0)
+            self.assertLessEqual(score.total_score, 100.0)

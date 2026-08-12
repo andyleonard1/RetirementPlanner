@@ -7,6 +7,10 @@ scenario comparison results.
 
 from planner.recommendations.recommendation import Recommendation
 
+from planner.scenarios.retirement_age_scoring_engine import (
+    RetirementAgeScoringEngine,
+)
+
 
 class RecommendationEngine:
 
@@ -92,6 +96,33 @@ class RecommendationEngine:
         )
 
     # -------------------------------------------------
+    # Find the highest scoring successful retirement age
+    # -------------------------------------------------
+
+    def _best_scored_successful_age(self, comparisons):
+
+        scores = RetirementAgeScoringEngine().score(
+            comparisons
+        )
+
+        successful_scores = [
+            score
+            for score in scores
+            if score.success
+        ]
+
+        if not successful_scores:
+            return None
+
+        return max(
+            successful_scores,
+            key=lambda score: (
+                score.total_score,
+                -score.retirement_age,
+            ),
+        )
+
+    # -------------------------------------------------
     # Generate recommendations
     # -------------------------------------------------
 
@@ -112,20 +143,42 @@ class RecommendationEngine:
             comparisons
         )
 
-        if earliest_age is not None:
+        best_score = self._best_scored_successful_age(
+            comparisons
+        )
+
+        if earliest_age is not None and best_score is not None:
+
+            if best_score.retirement_age == earliest_age:
+                message = (
+                    f"Age {earliest_age} is the earliest tested "
+                    "retirement age that satisfies the current "
+                    "planning goals and has the strongest overall "
+                    "retirement-age score."
+                )
+            else:
+                message = (
+                    f"Age {best_score.retirement_age} has the strongest "
+                    "overall retirement-age score among the sustainable "
+                    "ages tested, balancing earlier retirement, ending "
+                    "assets and the benefit of waiting."
+                )
 
             recommendations.append(
                 Recommendation(
                     priority=1,
                     title="Recommended Retirement Age",
-                    message=(
-                        f"Age {earliest_age} is the earliest "
-                        "tested retirement age that satisfies "
-                        "the current planning goals."
-                    ),
+                    message=message,
                     impact=(
-                        f"Earliest successful retirement age: "
-                        f"{earliest_age}"
+                        f"Selected age: {best_score.retirement_age}; "
+                        f"overall score: {best_score.total_score:.1f}/100; "
+                        f"earliest sustainable age: {earliest_age}; "
+                        f"score components — earliest age "
+                        f"{best_score.earliest_age_score:.1f}, "
+                        f"ending assets "
+                        f"{best_score.ending_assets_score:.1f}, "
+                        f"waiting efficiency "
+                        f"{best_score.waiting_efficiency_score:.1f}"
                     ),
                 )
             )

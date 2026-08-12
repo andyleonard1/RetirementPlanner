@@ -114,6 +114,9 @@ def main():
         decision = manager.decision_summary()
         age_comparison = manager.retirement_age_comparison()
 
+        if decision is not None:
+            recommended_age = decision.recommended_age
+
         # -------------------------------------------------
         # Run the planner at the recommended age.
         # -------------------------------------------------

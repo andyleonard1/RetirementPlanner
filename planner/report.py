@@ -180,6 +180,27 @@ class ConsoleReport:
                 f"£{decision.ending_assets:,.0f}"
             )
 
+            if decision.total_score is not None:
+
+                print()
+                print("Recommendation Score")
+                print(
+                    f"Earliest-age score      "
+                    f"{decision.earliest_age_score:.1f}/100"
+                )
+                print(
+                    f"Ending-assets score     "
+                    f"{decision.ending_assets_score:.1f}/100"
+                )
+                print(
+                    f"Waiting-efficiency score "
+                    f"{decision.waiting_efficiency_score:.1f}/100"
+                )
+                print(
+                    f"Overall score           "
+                    f"{decision.total_score:.1f}/100"
+                )
+
             if decision.later_age is not None:
 
                 print()

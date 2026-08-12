@@ -282,22 +282,39 @@ class ScenarioManager:
 
         comparisons = self.compare()
 
-        successful = [
-            comparison
-            for comparison in comparisons
-            if comparison.success
-        ]
-
-        if not successful:
-            return None
-
-        earliest = min(
-            successful,
-            key=lambda comparison:
-            comparison.retirement_age
+        scores = RetirementAgeScoringEngine().score(
+            comparisons
         )
 
-        later_age = earliest.retirement_age + 1
+        successful_scores = [
+            score
+            for score in scores
+            if score.success
+        ]
+
+        if not successful_scores:
+            return None
+
+        recommended_score = max(
+            successful_scores,
+            key=lambda score: (
+                score.total_score,
+                -score.retirement_age,
+            ),
+        )
+
+        recommended_age = (
+            recommended_score.retirement_age
+        )
+
+        recommended = next(
+            comparison
+            for comparison in comparisons
+            if comparison.retirement_age
+            == recommended_age
+        )
+
+        later_age = recommended_age + 1
 
         later = next(
             (
@@ -313,7 +330,7 @@ class ScenarioManager:
 
             additional_assets = (
                 later.ending_assets
-                - earliest.ending_assets
+                - recommended.ending_assets
             )
 
             later_ending_assets = (
@@ -328,23 +345,23 @@ class ScenarioManager:
         return DecisionSummary(
 
             recommended_age=(
-                earliest.retirement_age
+                recommended_age
             ),
 
             ending_pension=(
-                earliest.ending_pension
+                recommended.ending_pension
             ),
 
             ending_isa=(
-                earliest.ending_isa
+                recommended.ending_isa
             ),
 
             ending_savings=(
-                earliest.ending_savings
+                recommended.ending_savings
             ),
 
             ending_assets=(
-                earliest.ending_assets
+                recommended.ending_assets
             ),
 
             later_age=(
@@ -359,5 +376,21 @@ class ScenarioManager:
 
             additional_assets_from_waiting=(
                 additional_assets
+            ),
+
+            earliest_age_score=(
+                recommended_score.earliest_age_score
+            ),
+
+            ending_assets_score=(
+                recommended_score.ending_assets_score
+            ),
+
+            waiting_efficiency_score=(
+                recommended_score.waiting_efficiency_score
+            ),
+
+            total_score=(
+                recommended_score.total_score
             ),
         )

@@ -1,0 +1,22 @@
+RETIREMENT RECOMMENDATION SENSITIVITY
+====================================
+
+Cases: 27
+Baseline recommendation: age 56
+Recommended-age range: 56 to 67
+Most common recommendation: age 56 (18 of 27 cases)
+Confidence classification: Low (range exceeds 2 years)
+
+Distribution:
+- Age 56: 18 cases
+- Age 58: 3 cases
+- Age 67: 6 cases
+
+Interpretation:
+The baseline recommendation of age 56 is the modal result, but it is not
+robust across the full tested assumption grid. Lower pension growth combined
+with lower ISA growth pushes the recommendation to age 67 in several cases.
+A 4% pension-growth assumption with 3% ISA growth produces age 58.
+
+The sensitivity analysis is informational only and does not alter the live
+recommendation.
