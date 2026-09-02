@@ -1,15 +1,11 @@
 """
 Optimisation Engine
 
-Calculates tax-efficient pension withdrawal limits.
+Shared optimisation framework for retirement-income calculations.
 
-Version 1
-
-For each year, calculate how much pension can be
-withdrawn while staying within the Personal Allowance.
-
-This engine does NOT decide where money comes from.
-It simply provides guidance for StrategyEngine.
+The live planner uses the Personal Allowance policy implemented by this
+engine. Alternative tax-limit policies can reuse the same framework without
+duplicating the timeline traversal and result storage.
 """
 
 import logging
@@ -19,46 +15,45 @@ logger = logging.getLogger(__name__)
 
 class OptimisationEngine:
 
-    def __init__(self, assumptions):
-
+    def __init__(self, assumptions, policy="personal_allowance"):
         self.assumptions = assumptions
+        self.policy = policy
 
-    def apply(self, timeline):
+    def _calculate_limit(self, year):
+        """Return the maximum pension income for the selected policy."""
 
-        logger.info("Running OptimisationEngine")
+        state_pension = (
+            year.your_state_pension
+            + year.spouse_state_pension
+        )
+
+        if self.policy == "basic_rate_band":
+            basic_limit = self.assumptions.get("basic_rate_limit")
+            return max(0.0, basic_limit - state_pension)
 
         allowance = self.assumptions.get("personal_allowance")
+        return max(0.0, allowance - state_pension)
+
+    def apply(self, timeline):
+        """Calculate and store the tax-efficient pension limit for each year."""
+
+        logger.info(
+            "Running OptimisationEngine (policy=%s)",
+            self.policy,
+        )
 
         for year in timeline:
+            remaining_allowance = self._calculate_limit(year)
 
-            #
-            # Taxable income already received
-            #
-            taxable_income = (
-                year.your_state_pension
-                + year.spouse_state_pension
-            )
-
-            #
-            # Remaining Personal Allowance
-            #
-            remaining_allowance = max(
-                0.0,
-                allowance - taxable_income,
-            )
-
-            #
-            # Store result for StrategyEngine
-            #
             year.maximum_tax_efficient_pension = round(
                 remaining_allowance,
                 2,
             )
 
             logger.debug(
-                f"Age {year.age}: "
-                f"Taxable income={taxable_income}, "
-                f"Remaining allowance={remaining_allowance}"
+                "Age %s: tax-efficient pension=%s",
+                year.age,
+                remaining_allowance,
             )
 
         return timeline

@@ -7,19 +7,22 @@ This engine does not perform any financial calculations.
 Its sole responsibility is to build the timeline that all other
 engines will populate.
 """
+from planner.contracts import AssumptionsProvider, TimelineBuilderProtocol, Timeline
 from planner.models import RetirementYear
 
 
 class TimelineEngine:
+    """Build the initial retirement timeline."""
+
     """
     Creates one RetirementYear object for each year in the projection.
     """
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
 
         self.assumptions = assumptions
 
-    def build(self):
+    def build(self) -> Timeline:
 
         timeline = []
 

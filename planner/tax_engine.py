@@ -9,16 +9,18 @@ Supports tax-free pension cash (PCLS).
 
 import logging
 
+from planner.contracts import AssumptionsProvider, Timeline
+
 logger = logging.getLogger(__name__)
 
 
 class TaxEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
 
         self.assumptions = assumptions
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> Timeline:
 
         logger.info("Running Tax Engine")
 

@@ -30,7 +30,8 @@ class RetirementSolver:
         )
 
         planner = RetirementPlanner(
-            assumptions
+            assumptions,
+            audit_context="recommendation",
         )
 
         return planner.run()

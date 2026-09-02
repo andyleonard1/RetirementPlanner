@@ -9,12 +9,14 @@ Instead, it updates the timeline created by TimelineEngine.
 
 import logging
 
+from planner.contracts import AssumptionsProvider, Timeline
+
 logger = logging.getLogger(__name__)
 
 
 class PensionEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
 
         self.assumptions = assumptions
 
@@ -35,7 +37,7 @@ class PensionEngine:
             )
         )
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> Timeline:
 
         logger.info("Running PensionEngine")
 

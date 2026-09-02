@@ -5,18 +5,16 @@ Analyses a completed retirement projection and
 identifies potential risks.
 """
 
+from planner.results import RiskResult
+
 
 class RiskEngine:
 
     def analyse(self, timeline):
 
         risks = []
-
         score = 10
 
-        #
-        # Pension exhausted?
-        #
         pension_empty = any(
             year.closing_pension <= 0
             for year in timeline
@@ -28,9 +26,6 @@ class RiskEngine:
         else:
             risks.append("Pension never exhausted.")
 
-        #
-        # ISA exhausted?
-        #
         isa_empty = any(
             year.isa_remaining <= 0
             for year in timeline
@@ -42,9 +37,6 @@ class RiskEngine:
         else:
             risks.append("ISA remains positive.")
 
-        #
-        # Savings exhausted?
-        #
         savings_empty = any(
             year.savings_remaining <= 0
             for year in timeline
@@ -56,9 +48,6 @@ class RiskEngine:
         else:
             risks.append("Savings remain positive.")
 
-        #
-        # Spending shortfall?
-        #
         shortfall = any(
             year.income_shortfall > 0
             for year in timeline
@@ -74,19 +63,13 @@ class RiskEngine:
 
         if score >= 9:
             rating = "LOW"
-
         elif score >= 7:
             rating = "MEDIUM"
-
         else:
             rating = "HIGH"
 
-        return {
-
-            "score": score,
-
-            "rating": rating,
-
-            "risks": risks,
-
-        }
+        return RiskResult(
+            score=score,
+            rating=rating,
+            risks=risks,
+        )

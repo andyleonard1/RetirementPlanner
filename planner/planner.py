@@ -27,9 +27,10 @@ logger = logging.getLogger(__name__)
 
 class RetirementPlanner:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions, audit_context="user"):
 
         self.assumptions = assumptions
+        self.audit_context = audit_context
 
         #
         # Order matters!
@@ -118,6 +119,12 @@ class RetirementPlanner:
             elapsed,
         )
 
+        assumption_changes = (
+            self.assumptions.changes()
+            if hasattr(self.assumptions, "changes")
+            else ()
+        )
+
         return PlannerResult(
             timeline=timeline,
             summary=summary,
@@ -129,4 +136,6 @@ class RetirementPlanner:
                 "success",
                 False,
             ),
+            assumption_changes=assumption_changes,
+            audit_context=self.audit_context,
     )

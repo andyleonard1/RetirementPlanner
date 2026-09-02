@@ -6,18 +6,20 @@ RetirementYear objects created by the TimelineEngine.
 """
 import logging
 
+from planner.contracts import AssumptionsProvider, Timeline
+
 logger = logging.getLogger(__name__)
 
 class StatePensionEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
 
         self.assumptions = assumptions
 
         self.full_pension = assumptions.get("state_pension_full")
         self.growth = assumptions.get("state_pension_growth")
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> Timeline:
         logger.info("Running State Pension Engine")
         for year in timeline:
 

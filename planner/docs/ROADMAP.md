@@ -1,29 +1,53 @@
 # Roadmap
 
-## RC2
+## RC2 — Architecture Stabilisation
 
-Architecture stabilisation
+Current release track.
 
-## RC3
+Completed areas include:
 
-Optimisation Suite
+- engine-driven planner architecture
+- scenario comparison
+- standard result objects
+- optimisation framework consolidation
+- logging consistency
+- typed engine contracts
+- reporting migration
 
-## RC4
+Remaining RC2 focus:
 
-Historical Replay
+- documentation consolidation
+- integration coverage
+- removal of obsolete compatibility paths where safe
 
-## RC5
+## RC3 — Optimisation Suite
 
-Professional Reporting
+- expand optimisation beyond the current prototype
+- compare optimisation strategies
+- improve explanation of optimisation outcomes
 
-## RC6
+## RC4 — Historical Replay
 
-User Interface
+- historical market scenarios
+- deterministic replay of market sequences
+- comparison of historical outcomes
 
-## Version 2.0
+## RC5 — Professional Reporting
 
-Production Release
+- richer adviser reporting
+- clearer assumptions and methodology sections
+- expanded scenario and sensitivity presentation
 
-## Version 3.0
+## RC6 — User Interface
 
-Advanced Financial Planning Platform
+- interactive planning workflow
+- scenario controls
+- visual comparison of outcomes
+
+## Version 2.0 — Production Release
+
+Production hardening, documentation, integration coverage and release validation.
+
+## Version 3.0 — Advanced Financial Planning Platform
+
+Longer-term expansion into a broader financial-planning platform.

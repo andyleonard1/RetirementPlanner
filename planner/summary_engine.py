@@ -6,16 +6,18 @@ Calculates summary statistics for the completed retirement plan.
 
 import logging
 
+from planner.contracts import AssumptionsProvider, SummaryEngineProtocol, Timeline
+
 logger = logging.getLogger(__name__)
 
 
 class SummaryEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
 
         self.assumptions = assumptions
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> dict:
 
         logger.info("Running Summary Engine")
 

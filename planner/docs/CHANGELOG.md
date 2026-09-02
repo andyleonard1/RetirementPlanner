@@ -33,3 +33,16 @@ Improved
 Fixed
 • Strategy Engine withdrawal logic
 • Unit tests
+## 2.0 RC2 architecture work
+
+### Added
+- Structural engine contracts using Python `Protocol`.
+- Typed result-object boundaries.
+- Architecture and engine documentation.
+- Consolidated release and coding standards documentation.
+
+### Improved
+- Recommendation/report migration.
+- Optimisation framework reuse.
+- Logging consistency.
+- Documentation now reflects the current engine-driven architecture.

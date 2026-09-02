@@ -6,13 +6,15 @@ the inflation-adjusted spending target.
 """
 import logging
 
+from planner.contracts import AssumptionsProvider, Timeline
+
 logger = logging.getLogger(__name__)
 class CashFlowEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
         self.assumptions = assumptions
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> Timeline:
         logger.info("Running WithdrawalEngine")
         phase1_end = self.assumptions.get("phase_1_end_age")
         phase2_end = self.assumptions.get("phase_2_end_age")

@@ -6,17 +6,21 @@ calculations are performed.
 """
 
 import logging
+import math
+from numbers import Real
+
+from planner.contracts import AssumptionsProvider
 
 logger = logging.getLogger(__name__)
 
 
 class ValidationEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
 
         self.assumptions = assumptions
 
-    def validate(self):
+    def validate(self) -> None:
 
         logger.info("Validating assumptions")
 
@@ -34,9 +38,9 @@ class ValidationEngine:
 
     def _check_ages(self):
 
-        current = self.assumptions.get("current_age")
-        retirement = self.assumptions.get("retirement_age")
-        end = self.assumptions.get("projection_end_age")
+        current = self._number("current_age")
+        retirement = self._number("retirement_age")
+        end = self._number("projection_end_age")
 
         if current < 18:
             raise ValueError(
@@ -77,26 +81,16 @@ class ValidationEngine:
 
     def _check_tax(self):
 
-        allowance = self.assumptions.get(
-            "personal_allowance"
-        )
+        allowance = self._number("personal_allowance")
 
         if allowance < 0:
             raise ValueError(
                 "Personal allowance cannot be negative."
             )
 
-        basic = self.assumptions.get(
-            "basic_rate"
-        )
-
-        higher = self.assumptions.get(
-            "higher_rate"
-        )
-
-        additional = self.assumptions.get(
-            "additional_rate"
-        )
+        basic = self._number("basic_rate")
+        higher = self._number("higher_rate")
+        additional = self._number("additional_rate")
 
         for rate, name in [
 
@@ -120,13 +114,8 @@ class ValidationEngine:
 
     def _check_investments(self):
 
-        expected = self.assumptions.get(
-            "expected_investment_return"
-        )
-
-        volatility = self.assumptions.get(
-            "investment_volatility"
-        )
+        expected = self._number("expected_investment_return")
+        volatility = self._number("investment_volatility")
 
         if expected < -0.20 or expected > 0.25:
 
@@ -146,17 +135,9 @@ class ValidationEngine:
 
     def _check_spending(self):
 
-        phase1 = self.assumptions.get(
-            "spending_phase_1"
-        )
-
-        phase2 = self.assumptions.get(
-            "spending_phase_2"
-        )
-
-        phase3 = self.assumptions.get(
-            "spending_phase_3"
-        )
+        phase1 = self._number("spending_phase_1")
+        phase2 = self._number("spending_phase_2")
+        phase3 = self._number("spending_phase_3")
 
         for value, name in [
 
@@ -180,10 +161,29 @@ class ValidationEngine:
 
     def _positive(self, key):
 
-        value = self.assumptions.get(key)
+        value = self._number(key)
 
         if value < 0:
 
             raise ValueError(
                 f"{key} cannot be negative."
             )
+    # -----------------------------------------------------
+    # Required numeric assumption helper
+    # -----------------------------------------------------
+
+    def _number(self, key):
+
+        value = self.assumptions.get(key)
+
+        if isinstance(value, bool) or not isinstance(value, Real):
+            raise ValueError(
+                f"{key} must be a finite number."
+            )
+
+        if not math.isfinite(value):
+            raise ValueError(
+                f"{key} must be a finite number."
+            )
+
+        return value

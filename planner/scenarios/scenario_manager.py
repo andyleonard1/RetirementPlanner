@@ -58,7 +58,8 @@ class ScenarioManager:
         for scenario in self._scenarios:
 
             planner = RetirementPlanner(
-                scenario.assumptions
+                scenario.assumptions,
+                audit_context="scenario",
             )
 
             results.append(
@@ -76,7 +77,8 @@ class ScenarioManager:
         for scenario in self._scenarios:
 
             planner = RetirementPlanner(
-                scenario.assumptions
+                scenario.assumptions,
+                audit_context="scenario",
             )
 
             result = planner.run()

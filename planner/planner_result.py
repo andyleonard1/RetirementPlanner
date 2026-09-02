@@ -36,3 +36,8 @@ class PlannerResult:
     recommendation: dict | None = None
 
     risk: dict | None = None
+
+    # Configuration changes present when this projection was run.
+    assumption_changes: tuple = field(default_factory=tuple)
+    # Why this projection differs from the saved/base configuration.
+    audit_context: str = "user"

@@ -51,7 +51,8 @@ class MonteCarloEngine:
             ] = growth
 
             planner = RetirementPlanner(
-                assumptions
+                assumptions,
+                audit_context="analysis",
             )
 
             result = planner.run()

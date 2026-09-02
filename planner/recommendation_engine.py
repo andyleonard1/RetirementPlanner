@@ -5,7 +5,12 @@ Produces human-readable recommendations based on
 scenario comparison results.
 """
 
+import logging
+
 from planner.recommendations.recommendation import Recommendation
+
+
+logger = logging.getLogger(__name__)
 
 
 class RecommendationEngine:
@@ -31,8 +36,7 @@ class RecommendationEngine:
     # -------------------------------------------------
 
     def generate(self, comparisons):
-        print("RECOMMENDATION ENGINE:", __file__)
-        print("COMPARISONS:", comparisons)
+        logger.debug("Generating recommendations for %d scenario comparisons", len(comparisons))
         if not comparisons:
             return []
 

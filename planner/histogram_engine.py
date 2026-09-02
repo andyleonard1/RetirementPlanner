@@ -7,6 +7,8 @@ ready for charting.
 
 import logging
 
+from planner.results import HistogramResult
+
 logger = logging.getLogger(__name__)
 
 
@@ -22,59 +24,27 @@ class HistogramEngine:
         minimum = min(values)
         maximum = max(values)
 
-        #
-        # Prevent divide-by-zero
-        #
         if minimum == maximum:
+            return HistogramResult(
+                labels=[f"£{minimum:,.0f}"],
+                counts=[len(values)],
+            )
 
-            return {
-
-                "labels": [f"£{minimum:,.0f}"],
-
-                "counts": [len(values)],
-
-            }
-
-        bucket_size = (
-            maximum - minimum
-        ) / buckets
-
+        bucket_size = (maximum - minimum) / buckets
         counts = [0] * buckets
 
-        #
-        # Count values
-        #
         for value in values:
-
-            index = int(
-                (value - minimum)
-                / bucket_size
-            )
-
+            index = int((value - minimum) / bucket_size)
             if index >= buckets:
                 index = buckets - 1
-
             counts[index] += 1
 
-        #
-        # Labels
-        #
         labels = []
-
         for i in range(buckets):
+            lower = minimum + (i * bucket_size)
+            labels.append(f"£{lower/1000000:.1f}M")
 
-            lower = minimum + (
-                i * bucket_size
-            )
-
-            labels.append(
-                f"£{lower/1000000:.1f}M"
-            )
-
-        return {
-
-            "labels": labels,
-
-            "counts": counts,
-
-        }
+        return HistogramResult(
+            labels=labels,
+            counts=counts,
+        )

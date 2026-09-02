@@ -5,18 +5,20 @@ Projects the user's cash savings over time.
 """
 import logging
 
+from planner.contracts import AssumptionsProvider, Timeline
+
 logger = logging.getLogger(__name__)
 
 class SavingsEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
 
         self.assumptions = assumptions
 
         self.starting_savings = assumptions.get("starting_savings")
         self.interest_rate = assumptions.get("savings_interest_rate")
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> Timeline:
         logger.info("Running Savings Engine")
         for index, year in enumerate(timeline):
 

@@ -5,18 +5,20 @@ Projects ISA value over retirement.
 """
 import logging
 
+from planner.contracts import AssumptionsProvider, Timeline
+
 logger = logging.getLogger(__name__)
 
 class ISAEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
 
         self.assumptions = assumptions
 
         self.starting_isa = assumptions.get("starting_isa")
         self.growth_rate = assumptions.get("isa_growth_rate")
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> Timeline:
         logger.info("Running WithdrawalEngine")
         isa = self.starting_isa
 
