@@ -12,6 +12,7 @@ from planner.planner import RetirementPlanner
 from planner.recommendations.report_adapter import (
     RecommendationReportAdapter,
 )
+from planner.recommendations.recommendation_quality import RecommendationQualityEngine
 from planner.risk_engine import RiskEngine
 from planner.scenarios.scenario import Scenario
 from planner.scenarios.scenario_manager import ScenarioManager
@@ -58,6 +59,14 @@ def main():
     result = RetirementPlanner(
         recommended_assumptions
     ).run()
+
+    recommendations.insert(
+        0,
+        RecommendationQualityEngine().build(
+            decision,
+            result.optimisation_decision,
+        ),
+    )
 
     risk = RiskEngine().analyse(result.timeline)
 

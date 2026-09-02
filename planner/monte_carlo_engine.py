@@ -20,7 +20,12 @@ class MonteCarloEngine:
 
         self.assumptions = assumptions
 
-    def run(self, iterations=5000):
+    def run(self, iterations=5000, seed=None):
+
+        if iterations <= 0:
+            raise ValueError("iterations must be greater than zero")
+
+        rng = random.Random(seed)
 
         logger.info(
             f"Running Monte Carlo ({iterations:,} iterations)"
@@ -36,7 +41,7 @@ class MonteCarloEngine:
                 self.assumptions
             )
 
-            growth = random.gauss(
+            growth = rng.gauss(
 
                 assumptions.get("expected_return"),
 

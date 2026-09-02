@@ -23,8 +23,9 @@ Remaining RC2 focus:
 ## RC3 — Optimisation Suite
 
 - expand optimisation beyond the current prototype
-- compare optimisation strategies
+- **compare optimisation strategies — Sprint 51 complete**
 - improve explanation of optimisation outcomes
+- **integrate optimisation decision support into recommendation/report pipeline — Sprint 54 complete**
 
 ## RC4 — Historical Replay
 
@@ -51,3 +52,15 @@ Production hardening, documentation, integration coverage and release validation
 ## Version 3.0 — Advanced Financial Planning Platform
 
 Longer-term expansion into a broader financial-planning platform.
+
+## RC3 — Sprint 53
+
+- Added read-only optimisation decision support.
+- Decision support interprets policy capacity differences and materiality without changing financial calculations.
+
+## RC4 — Sprint 62
+
+- Added isolated sequence-of-returns risk analysis.
+- Compare identical annual return sets in different orders while modelling withdrawals.
+- Keep deterministic retirement engines unchanged.
+- Protected Sprint 61 baseline: 241 tests passing.

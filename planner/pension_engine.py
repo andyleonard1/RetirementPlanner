@@ -10,15 +10,21 @@ Instead, it updates the timeline created by TimelineEngine.
 import logging
 
 from planner.contracts import AssumptionsProvider, Timeline
+from planner.funds.projection_engine_integration import ProjectionReturnDecision
 
 logger = logging.getLogger(__name__)
 
 
 class PensionEngine:
 
-    def __init__(self, assumptions: AssumptionsProvider):
+    def __init__(
+        self,
+        assumptions: AssumptionsProvider,
+        projection_return_decision: ProjectionReturnDecision | None = None,
+    ):
 
         self.assumptions = assumptions
+        self.projection_return_decision = projection_return_decision
 
         self.starting_pension = assumptions.get("starting_pension")
 
@@ -51,14 +57,20 @@ class PensionEngine:
             # Use Market History / Monte Carlo return if present,
             # otherwise fall back to configured growth.
             #
-            growth_rate = getattr(
-                year,
-                "pension_growth_rate",
-                0.0,
-            )
+            if (
+                self.projection_return_decision is not None
+                and self.projection_return_decision.fund_informed
+            ):
+                growth_rate = self.projection_return_decision.expected_return
+            else:
+                growth_rate = getattr(
+                    year,
+                    "pension_growth_rate",
+                    0.0,
+                )
 
-            if growth_rate == 0:
-                growth_rate = self.growth_rate
+                if growth_rate == 0:
+                    growth_rate = self.growth_rate
 
             growth = opening * growth_rate
 

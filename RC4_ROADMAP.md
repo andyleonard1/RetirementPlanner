@@ -346,3 +346,15 @@
 - Reuse the existing portfolio statistics calculator and scenario comparison runner as calculation boundaries.
 - Preserve the `ScenarioProjectionViewModel` as the presentation contract.
 - Keep all retirement, tax, State Pension, ISA, savings and withdrawal calculations unchanged.
+
+## Sprint 104 — Interactive GUI Editing & Re-run
+
+- Wire the existing `ScenarioProjectionApplication` into the desktop scenario GUI.
+- Add editable starting pension, retirement age and projection end age controls.
+- Add conservative, central and optimistic scenario selection controls.
+- Validate GUI input before applying it to the in-memory assumptions model.
+- Rebuild the selected scenario view model through the existing application/calculation boundaries.
+- Refresh scenario cards and year-level results without moving financial calculations into the GUI.
+- Keep persistence explicit through a separate Save assumptions action.
+- Preserve the existing deterministic Aviva/Sky demo data until fund-return import wiring is separately planned.
+- Keep retirement, tax, State Pension, ISA, savings and withdrawal calculations unchanged.

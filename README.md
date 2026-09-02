@@ -21,6 +21,7 @@ A UK retirement-planning application written in Python. The system projects reti
 - PDF, Excel and console reporting
 - Golden-scenario regression coverage
 - Typed engine contracts using Python `Protocol`
+- Optimisation policy comparison (Personal Allowance vs Basic-rate band)
 
 ## Architecture
 
@@ -86,7 +87,7 @@ python health_check.py
 python -m pytest -q
 ```
 
-Current checkpoint: **131 tests passing**.
+Current checkpoint: **198 tests passing**.
 
 ## Development approach
 

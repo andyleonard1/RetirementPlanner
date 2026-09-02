@@ -41,3 +41,6 @@ class PlannerResult:
     assumption_changes: tuple = field(default_factory=tuple)
     # Why this projection differs from the saved/base configuration.
     audit_context: str = "user"
+
+    # Read-only optimisation decision support for reporting and recommendations.
+    optimisation_decision: object | None = None

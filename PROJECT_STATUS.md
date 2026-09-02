@@ -248,3 +248,13 @@ Optimisation decision support added; 205 tests passing.
 - GUI edits are applied to assumptions in memory and validated; persistence remains explicit via `Assumptions.save()`.
 - Added selected-scenario support without changing the underlying financial engines.
 - Added seven regression tests covering input validation, binding, scenario selection and calculation-boundary behaviour.
+
+## Sprint 104 — Interactive GUI Editing & Re-run
+
+- Wired the desktop GUI to `ScenarioProjectionApplication` rather than hard-coded projection orchestration.
+- Added editable starting pension, retirement age and projection end age fields.
+- Added conservative, central and optimistic scenario checkboxes.
+- Added GUI-side parsing/validation and a Run projection action that applies inputs in memory and rebuilds the view model through existing calculation boundaries.
+- Added a separate Save assumptions action so editing does not silently persist configuration.
+- Preserved the deterministic 75% Aviva / 25% Sky demo return data for the desktop entry point.
+- Kept financial engine and retirement/tax/State Pension/ISA/savings/withdrawal calculations unchanged.

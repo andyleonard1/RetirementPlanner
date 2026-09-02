@@ -6,6 +6,8 @@ legacy dictionary-based reporting interfaces used by the console health
 and recommendation reports.
 """
 
+from planner.audit_catalog import description
+
 
 class RecommendationReportAdapter:
 
@@ -59,6 +61,8 @@ class RecommendationReportAdapter:
                 else assumptions.get("retirement_age")
             ),
             "recommendation_score": total_score,
+            "optimisation_decision": self._optimisation_decision(result),
+            "overall_recommendation": self._overall_recommendation(recommendations),
             "assumption_changes": [
                 {
                     "path": change.path,
@@ -67,11 +71,45 @@ class RecommendationReportAdapter:
                     "category": self._change_category(
                         getattr(result, "audit_context", "user")
                     ),
+                    "description": self._change_description(
+                        change.path,
+                        getattr(result, "audit_context", "user"),
+                    ),
+                    "before_display": self._format_change_value(change.before),
+                    "after_display": self._format_change_value(change.after),
                 }
                 for change in getattr(result, "assumption_changes", ())
             ],
         }
 
+
+    @staticmethod
+    def _overall_recommendation(recommendations):
+        for recommendation in recommendations:
+            if recommendation.title == "Overall Retirement Strategy":
+                return {
+                    "title": recommendation.title,
+                    "message": recommendation.message,
+                    "impact": recommendation.impact,
+                }
+        return None
+
+    @staticmethod
+    def _optimisation_decision(result):
+        decision = getattr(result, "optimisation_decision", None)
+        if decision is None:
+            return None
+
+        return {
+            "higher_policy": decision.higher_policy,
+            "lower_policy": decision.lower_policy,
+            "average_difference": decision.average_difference,
+            "maximum_difference": decision.maximum_difference,
+            "maximum_difference_age": decision.maximum_difference_age,
+            "material": decision.material,
+            "recommendation": decision.recommendation,
+            "explanation": decision.explanation,
+        }
 
     @staticmethod
     def _change_category(context):
@@ -82,6 +120,20 @@ class RecommendationReportAdapter:
             "analysis": "ANALYSIS",
         }
         return labels.get(context, "USER ASSUMPTION")
+
+    @staticmethod
+    def _change_description(path, context):
+        return description(path, context)
+
+    @staticmethod
+    def _format_change_value(value):
+        if value is None:
+            return "not set"
+        if isinstance(value, float):
+            if value != value:
+                return "NaN"
+            return f"{value:g}"
+        return str(value)
 
     @staticmethod
     def _confidence(score):

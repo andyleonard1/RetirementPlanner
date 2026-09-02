@@ -88,3 +88,14 @@ Projection results also carry an `audit_context` describing why a projection was
 - `analysis` — analytical projections such as sensitivity or Monte Carlo work.
 
 The context does not alter calculations. It only helps reporting distinguish intentional scenario/analysis changes from actual user assumption changes.
+
+## Audit description coverage
+
+Audit descriptions are maintained centrally in `planner/audit_catalog.py`.
+The catalogue is tested against every schema-defined top-level assumption key,
+so a new required schema field cannot silently appear in reports without an
+explicit human-readable description.
+
+Nested retirement-goal paths use shared goal-specific descriptions, while
+unknown paths retain a deterministic fallback description for forward
+compatibility.

@@ -46,3 +46,13 @@ Fixed
 - Optimisation framework reuse.
 - Logging consistency.
 - Documentation now reflects the current engine-driven architecture.
+
+## RC4 Sprint 62 — Sequence-of-Returns Risk
+
+### Added
+- `planner/simulation/sequence_risk.py` for isolated sequence-of-returns comparisons.
+- Regression coverage for return-order effects, withdrawals, validation and depletion.
+
+### Design
+- The deterministic retirement model remains the reference calculation.
+- Sequence-risk analysis is an independent RC4 layer and does not alter live retirement recommendations.
