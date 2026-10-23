@@ -6,37 +6,142 @@ Calculates pension growth and withdrawals for each retirement year.
 This engine does not create RetirementYear objects.
 Instead, it updates the timeline created by TimelineEngine.
 """
+
 import logging
+
+from planner.contracts import AssumptionsProvider, Timeline
+from planner.funds.projection_engine_integration import ProjectionReturnDecision
+from planner.investment_return import InvestmentReturnResolver
 
 logger = logging.getLogger(__name__)
 
+
 class PensionEngine:
 
-    def __init__(self, assumptions):
+    def __init__(
+        self,
+        assumptions: AssumptionsProvider,
+        projection_return_decision: ProjectionReturnDecision | None = None,
+    ):
 
         self.assumptions = assumptions
+        self.projection_return_decision = projection_return_decision
 
         self.starting_pension = assumptions.get("starting_pension")
-        self.growth_rate = assumptions.get("pension_growth")
 
-    def apply(self, timeline):
+        self.investment_return_config = InvestmentReturnResolver.resolve(
+            assumptions
+        )
+        self.growth_rate = self.investment_return_config.net_projection_return
+
+        #
+        # Total tax-free cash available at retirement.
+        #
+        tax_free_percentage = float(
+            self.assumptions.get(
+                "tax_free_pension_percentage",
+                self.assumptions.get("tax_free_cash_percentage", 0.25),
+            )
+        )
+
+        self.remaining_tax_free_cash = (
+            self.starting_pension
+            * tax_free_percentage
+        )
+
+    def apply(self, timeline: Timeline) -> Timeline:
+
         logger.info("Running PensionEngine")
+
         pension = self.starting_pension
 
         for year in timeline:
 
             opening = pension
 
-            growth = opening * self.growth_rate
+            #
+            # Use Market History / Monte Carlo return if present,
+            # otherwise fall back to configured growth.
+            #
+            if (
+                self.projection_return_decision is not None
+                and self.projection_return_decision.fund_informed
+            ):
+                growth_rate = self.projection_return_decision.expected_return
+            else:
+                growth_rate = getattr(year, "pension_growth_rate", 0.0)
+                if growth_rate == 0:
+                    gross = InvestmentReturnResolver.scheduled_gross_projection_return(
+                        self.assumptions, year.calendar_year
+                    )
+                    growth_rate = gross - self.investment_return_config.total_charge
 
-            # Withdrawal is now decided by WithdrawalEngine
+            growth = opening * growth_rate
+
+            #
+            # Withdrawal calculated by WithdrawalEngine
+            #
             withdrawal = year.pension_withdrawal
-            
-            closing = opening + growth - withdrawal
 
+            #
+            # Split withdrawal into tax-free
+            # and taxable portions.
+            #
+            if self.assumptions.get(
+                "use_tax_free_cash",
+                True,
+            ):
+
+                tax_free = min(
+                    withdrawal * float(
+                        self.assumptions.get(
+                            "tax_free_pension_percentage",
+                            self.assumptions.get("tax_free_cash_percentage", 0.25),
+                        )
+                    ),
+                    self.remaining_tax_free_cash,
+                )
+
+                taxable = withdrawal - tax_free
+
+                self.remaining_tax_free_cash -= tax_free
+
+            else:
+
+                tax_free = 0.0
+                taxable = withdrawal
+
+            #
+            # Closing pension
+            #
+            closing = (
+                opening
+                + growth
+                - withdrawal
+            )
+
+            #
+            # Store results
+            #
             year.opening_pension = round(opening, 2)
             year.pension_growth = round(growth, 2)
             year.pension_withdrawal = round(withdrawal, 2)
+
+            year.tax_free_cash_used = round(
+                tax_free,
+                2,
+            )
+
+            year.taxable_pension_withdrawal = round(
+                taxable,
+                2,
+            )
+
+            year.remaining_tax_free_cash = round(
+                self.remaining_tax_free_cash,
+                2,
+            )
+
             year.closing_pension = round(closing, 2)
 
             pension = closing

@@ -1,0 +1,81 @@
+name: RetirementPlanner Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify tests and release inputs
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+      - name: Install test and application dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest pypdf
+          python -m pip install -r planner/requirements.txt
+      - name: Run full pytest suite
+        run: python -m pytest -ra
+      - name: Compile Python sources
+        run: python -m compileall -q .
+      - name: Validate assumptions JSON
+        run: python -c "import json; json.load(open('data/assumptions.json', encoding='utf-8'))"
+
+  package:
+    name: Build and audit release evidence
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install packaging dependencies
+        run: python -m pip install pytest
+      - name: Capture test collection evidence
+        run: python scripts/test_collection_report.py --output reports/sprint276_collection_report.json
+      - name: Build release manifest
+        run: python scripts/build_release_manifest.py . --sprint 276
+      - name: Build checkpoint ZIP
+        run: python scripts/build_release_archive.py . dist/RetirementPlanner_RC4_Sprint276.zip
+      - name: Audit checkpoint ZIP
+        run: python scripts/package_audit.py dist/RetirementPlanner_RC4_Sprint276.zip
+      - name: Reconcile release evidence
+        run: python scripts/release_evidence.py --collection reports/sprint276_collection_report.json --archive dist/RetirementPlanner_RC4_Sprint276.zip --output dist/sprint276_release_evidence.json
+      - name: Upload release checkpoint and evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: RetirementPlanner-Sprint276-${{ github.sha }}
+          path: |
+            dist/RetirementPlanner_RC4_Sprint276.zip
+            dist/sprint276_release_evidence.json
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish GitHub Release for version tags
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/RetirementPlanner_RC4_Sprint276.zip
+            dist/sprint276_release_evidence.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

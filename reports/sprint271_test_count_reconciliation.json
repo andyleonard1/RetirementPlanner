@@ -1,0 +1,76 @@
+{
+  "assumptions_sha256": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+  "config_hashes_differ": false,
+  "financial_calculation_source_changed": false,
+  "focused_regression_group_passed": 63,
+  "golden_baseline_sha256": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550",
+  "interpretation": "Sprint 271 adds eight ZIP filename collision and traceability tests, with zero removed node IDs. The full suite passed across all 16 deterministic partitions, with 20 subtests passed. One existing test file hash changed only to advance the manifest builder default-sprint expectation from 270 to 271. No production financial calculation source, assumptions defaults, or golden baseline changed.",
+  "node_id_diff": {
+    "added": [
+      "tests/test_sprint271_zip_filename_collisions.py::test_accepts_explicit_directory_with_children",
+      "tests/test_sprint271_zip_filename_collisions.py::test_accepts_non_conflicting_case_distinct_paths_in_separate_directories",
+      "tests/test_sprint271_zip_filename_collisions.py::test_rejects_case_collision_in_nested_paths",
+      "tests/test_sprint271_zip_filename_collisions.py::test_rejects_case_insensitive_path_aliases",
+      "tests/test_sprint271_zip_filename_collisions.py::test_rejects_directory_and_file_alias",
+      "tests/test_sprint271_zip_filename_collisions.py::test_rejects_file_that_is_parent_of_another_entry",
+      "tests/test_sprint271_zip_filename_collisions.py::test_rejects_unicode_canonical_equivalence",
+      "tests/test_sprint271_zip_filename_collisions.py::test_sprint271_docs_status_and_roadmap_are_traceable"
+    ],
+    "added_count": 8,
+    "removed": [],
+    "removed_count": 0
+  },
+  "package_audit_passed": true,
+  "release_manifest_file_count": 411,
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "sprint270": {
+    "collected": 1455,
+    "errors": 0,
+    "execution": "32 deterministic partitions",
+    "failed": 0,
+    "full_suite_passed": 1455,
+    "partition_count": 32,
+    "skipped": 0,
+    "subtests_passed": 20,
+    "test_file_count": 164
+  },
+  "sprint271": {
+    "collected": 1463,
+    "errors": 0,
+    "execution": "8 deterministic round-robin partitions",
+    "failed": 0,
+    "full_suite_passed": 1463,
+    "partition_count": 8,
+    "partition_sizes": [
+      183,
+      183,
+      183,
+      183,
+      183,
+      183,
+      183,
+      182
+    ],
+    "partition_warnings": 0,
+    "skipped": 0,
+    "subtests_passed": 20,
+    "summed_partition_pytest_seconds": 68.95,
+    "test_file_count": 165
+  },
+  "test_file_hash_differences": [
+    "tests/test_sprint267_manifest_schema_hardening.py"
+  ],
+  "test_files_added": [
+    "tests/test_sprint271_zip_filename_collisions.py"
+  ],
+  "test_files_removed": [],
+  "user_windows_sprint270_result": {
+    "collected": 1455,
+    "passed": 1453,
+    "skip_reason": "filesystem symlink creation unavailable on that platform",
+    "skipped": 2
+  },
+  "zip_crc_passed": true,
+  "zip_entry_count": 412
+}

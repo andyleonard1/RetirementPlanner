@@ -1,0 +1,47 @@
+{
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "sprint264": {
+    "collected": 1398
+  },
+  "sprint265": {
+    "collected": 1408,
+    "full_suite_passed": 1408,
+    "full_suite_execution": "single-process pytest",
+    "full_suite_elapsed_seconds": 162.61,
+    "partition_count": 1,
+    "partition_sizes": [
+      1408
+    ],
+    "subtests_passed": null
+  },
+  "node_id_diff": {
+    "added_count": 10,
+    "removed_count": 0,
+    "added": [
+      "tests/test_sprint255_package_audit.py::test_manifest_hash_mismatch_is_reported",
+      "tests/test_sprint255_package_audit.py::test_sprint265_manifest_traceability_exists",
+      "tests/test_sprint265_release_manifest.py::test_manifest_excludes_itself_and_transient_artifacts",
+      "tests/test_sprint265_release_manifest.py::test_manifest_generation_is_deterministic",
+      "tests/test_sprint265_release_manifest.py::test_manifest_records_sha256_and_size_for_each_file",
+      "tests/test_sprint265_release_manifest.py::test_package_audit_accepts_valid_manifest",
+      "tests/test_sprint265_release_manifest.py::test_package_audit_rejects_invalid_manifest_digest",
+      "tests/test_sprint265_release_manifest.py::test_package_audit_rejects_manifest_path_set_mismatch",
+      "tests/test_sprint265_release_manifest.py::test_package_audit_rejects_manifest_size_mismatch",
+      "tests/test_sprint265_release_manifest.py::test_write_manifest_serializes_current_manifest"
+    ],
+    "removed": []
+  },
+  "test_file_hash_differences": [
+    "tests/test_sprint255_package_audit.py"
+  ],
+  "test_files_added": [
+    "tests/test_sprint265_release_manifest.py"
+  ],
+  "test_files_removed": [],
+  "config_hashes_differ": false,
+  "assumptions_sha256": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+  "golden_baseline_sha256": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550",
+  "financial_calculation_source_changed": false,
+  "interpretation": "Sprint 265 collected 1,408 test items and the complete single-process pytest run passed all 1,408 in 162.61 seconds. The 10 new test items are Sprint 265 manifest and package-audit regression coverage. Financial calculation source, assumptions and golden baseline are unchanged."
+}

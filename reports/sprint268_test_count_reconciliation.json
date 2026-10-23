@@ -1,0 +1,88 @@
+{
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "sprint267": {
+    "collected": 1432,
+    "full_suite_passed": 1432,
+    "execution_note": "prior checkpoint acceptance used 32 deterministic partitions"
+  },
+  "sprint268": {
+    "collected": 1436,
+    "full_suite_passed": 1436,
+    "skipped": 0,
+    "failed": 0,
+    "errors": 0,
+    "full_suite_execution": "32 deterministic round-robin partitions from the Sprint 268 collection report",
+    "partition_count": 32,
+    "partition_sizes": [
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      44,
+      44,
+      44,
+      44
+    ],
+    "subtests_passed": 20,
+    "partition_warnings": 0,
+    "elapsed_seconds": 153.9
+  },
+  "user_windows_sprint267_result": {
+    "passed": 1430,
+    "skipped": 2,
+    "collected": 1432,
+    "skip_reason": "filesystem symlink creation unavailable on that platform"
+  },
+  "node_id_diff": {
+    "added_count": 4,
+    "removed_count": 0,
+    "added": [
+      "tests/test_sprint268_zip_symlink_rejection.py::test_audit_rejects_symlink_entry_not_listed_in_manifest",
+      "tests/test_sprint268_zip_symlink_rejection.py::test_audit_rejects_unix_symlink_even_when_named_as_required_file",
+      "tests/test_sprint268_zip_symlink_rejection.py::test_audit_still_accepts_regular_required_files",
+      "tests/test_sprint268_zip_symlink_rejection.py::test_directory_entries_are_checked_for_unsafe_paths"
+    ],
+    "removed": []
+  },
+  "test_file_hash_differences": [
+    "tests/test_sprint267_manifest_schema_hardening.py"
+  ],
+  "test_files_added": [
+    "tests/test_sprint268_zip_symlink_rejection.py"
+  ],
+  "test_files_removed": [],
+  "config_hashes_differ": false,
+  "assumptions_sha256": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+  "golden_baseline_sha256": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550",
+  "financial_calculation_source_changed": false,
+  "interpretation": "Sprint 268 adds portable ZIP symlink-entry and directory-path safety coverage. The full 1,436-item suite passed across 32 deterministic partitions (28 \u00d7 45 and 4 \u00d7 44), with 20 subtests passed. User-provided Windows Sprint 267 evidence remains distinct: 1,430 passed and two filesystem-symlink tests skipped because symlink creation was unavailable. No production financial calculation source, assumptions, or golden baseline changed. Final ZIP contains 400 entries including the manifest; the manifest covers 399 payload files, and the independent package audit and ZIP CRC check passed.",
+  "package_audit_passed": true,
+  "zip_crc_passed": true,
+  "release_manifest_file_count": 399,
+  "zip_entry_count": 400
+}

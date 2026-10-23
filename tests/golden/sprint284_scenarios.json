@@ -1,0 +1,388 @@
+{
+  "format": "retirement-planner-golden-scenarios",
+  "version": 1,
+  "description": "Reviewed deterministic scenario outputs for Sprint 284 regression checks. Values rounded to two decimal places.",
+  "scenarios": {
+    "balanced_pension_first": {
+      "fields": [
+        "calendar_year",
+        "age",
+        "target_spending",
+        "gross_pension_income",
+        "income_tax",
+        "your_state_pension",
+        "closing_pension",
+        "isa_closing",
+        "savings_closing",
+        "income_shortfall",
+        "total_assets"
+      ],
+      "timeline": [
+        {
+          "calendar_year": 2026,
+          "age": 65,
+          "target_spending": 38000.0,
+          "gross_pension_income": 32336.47,
+          "income_tax": 2336.47,
+          "your_state_pension": 0.0,
+          "closing_pension": 214863.53,
+          "isa_closing": 61800.0,
+          "savings_closing": 30600.0,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2027,
+          "age": 66,
+          "target_spending": 38950.0,
+          "gross_pension_income": 32262.53,
+          "income_tax": 2262.53,
+          "your_state_pension": 0.0,
+          "closing_pension": 189046.91,
+          "isa_closing": 63654.0,
+          "savings_closing": 31212.0,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2028,
+          "age": 67,
+          "target_spending": 39923.75,
+          "gross_pension_income": 31317.46,
+          "income_tax": 4565.95,
+          "your_state_pension": 12548.0,
+          "closing_pension": 163400.85,
+          "isa_closing": 65563.62,
+          "savings_closing": 31836.24,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2029,
+          "age": 68,
+          "target_spending": 36614.29,
+          "gross_pension_income": 26977.31,
+          "income_tax": 3924.18,
+          "your_state_pension": 12924.44,
+          "closing_pension": 141325.57,
+          "isa_closing": 67530.53,
+          "savings_closing": 32472.96,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2030,
+          "age": 69,
+          "target_spending": 37529.64,
+          "gross_pension_income": 11933.28,
+          "income_tax": 1677.44,
+          "your_state_pension": 13312.17,
+          "closing_pension": 133632.06,
+          "isa_closing": 69556.44,
+          "savings_closing": 33122.42,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2031,
+          "age": 70,
+          "target_spending": 33942.24,
+          "gross_pension_income": 6770.18,
+          "income_tax": 913.47,
+          "your_state_pension": 13711.54,
+          "closing_pension": 130870.84,
+          "isa_closing": 71643.14,
+          "savings_closing": 33784.87,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2032,
+          "age": 71,
+          "target_spending": 34790.79,
+          "gross_pension_income": 6798.16,
+          "income_tax": 928.83,
+          "your_state_pension": 14122.88,
+          "closing_pension": 127998.8,
+          "isa_closing": 73792.43,
+          "savings_closing": 34460.57,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2033,
+          "age": 72,
+          "target_spending": 35660.58,
+          "gross_pension_income": 6822.57,
+          "income_tax": 944.34,
+          "your_state_pension": 14546.57,
+          "closing_pension": 125016.2,
+          "isa_closing": 76006.2,
+          "savings_closing": 35149.78,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        }
+      ],
+      "summary": {
+        "ending_pension": 125016.2,
+        "ending_assets": 236172.18,
+        "total_tax": 17553.21,
+        "gross_pension": 155217.96
+      }
+    },
+    "isa_first": {
+      "fields": [
+        "calendar_year",
+        "age",
+        "target_spending",
+        "gross_pension_income",
+        "income_tax",
+        "your_state_pension",
+        "closing_pension",
+        "isa_closing",
+        "savings_closing",
+        "income_shortfall",
+        "total_assets"
+      ],
+      "timeline": [
+        {
+          "calendar_year": 2026,
+          "age": 65,
+          "target_spending": 38000.0,
+          "gross_pension_income": 12570.0,
+          "income_tax": 0.0,
+          "your_state_pension": 0.0,
+          "closing_pension": 234630.0,
+          "isa_closing": 61800.0,
+          "savings_closing": 30600.0,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2027,
+          "age": 66,
+          "target_spending": 38950.0,
+          "gross_pension_income": 12570.0,
+          "income_tax": 0.0,
+          "your_state_pension": 0.0,
+          "closing_pension": 229098.9,
+          "isa_closing": 63654.0,
+          "savings_closing": 31212.0,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2028,
+          "age": 67,
+          "target_spending": 39923.75,
+          "gross_pension_income": 22.0,
+          "income_tax": 0.0,
+          "your_state_pension": 12548.0,
+          "closing_pension": 235949.87,
+          "isa_closing": 65563.62,
+          "savings_closing": 31836.24,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2029,
+          "age": 68,
+          "target_spending": 36614.29,
+          "gross_pension_income": 0.0,
+          "income_tax": 0.0,
+          "your_state_pension": 12924.44,
+          "closing_pension": 243028.36,
+          "isa_closing": 67530.53,
+          "savings_closing": 32472.96,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2030,
+          "age": 69,
+          "target_spending": 37529.64,
+          "gross_pension_income": 0.0,
+          "income_tax": 0.0,
+          "your_state_pension": 13312.17,
+          "closing_pension": 250319.21,
+          "isa_closing": 69556.44,
+          "savings_closing": 33122.42,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2031,
+          "age": 70,
+          "target_spending": 33942.24,
+          "gross_pension_income": 0.0,
+          "income_tax": 0.0,
+          "your_state_pension": 13711.54,
+          "closing_pension": 257828.79,
+          "isa_closing": 71643.14,
+          "savings_closing": 33784.87,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2032,
+          "age": 71,
+          "target_spending": 34790.79,
+          "gross_pension_income": 0.0,
+          "income_tax": 0.0,
+          "your_state_pension": 14122.88,
+          "closing_pension": 265563.65,
+          "isa_closing": 73792.43,
+          "savings_closing": 34460.57,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2033,
+          "age": 72,
+          "target_spending": 35660.58,
+          "gross_pension_income": 0.0,
+          "income_tax": 0.0,
+          "your_state_pension": 14546.57,
+          "closing_pension": 273530.56,
+          "isa_closing": 76006.2,
+          "savings_closing": 35149.78,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        }
+      ],
+      "summary": {
+        "ending_pension": 273530.56,
+        "ending_assets": 384686.54,
+        "total_tax": 0.0,
+        "gross_pension": 25162.0
+      }
+    },
+    "higher_inflation_triple_lock_off": {
+      "fields": [
+        "calendar_year",
+        "age",
+        "target_spending",
+        "gross_pension_income",
+        "income_tax",
+        "your_state_pension",
+        "closing_pension",
+        "isa_closing",
+        "savings_closing",
+        "income_shortfall",
+        "total_assets"
+      ],
+      "timeline": [
+        {
+          "calendar_year": 2026,
+          "age": 65,
+          "target_spending": 38000.0,
+          "gross_pension_income": 32336.47,
+          "income_tax": 2336.47,
+          "your_state_pension": 0.0,
+          "closing_pension": 214863.53,
+          "isa_closing": 61800.0,
+          "savings_closing": 30600.0,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2027,
+          "age": 66,
+          "target_spending": 38950.0,
+          "gross_pension_income": 32262.53,
+          "income_tax": 2262.53,
+          "your_state_pension": 0.0,
+          "closing_pension": 189046.91,
+          "isa_closing": 63654.0,
+          "savings_closing": 31212.0,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2028,
+          "age": 67,
+          "target_spending": 39923.75,
+          "gross_pension_income": 31317.46,
+          "income_tax": 4565.95,
+          "your_state_pension": 12548.0,
+          "closing_pension": 163400.85,
+          "isa_closing": 65563.62,
+          "savings_closing": 31836.24,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2029,
+          "age": 68,
+          "target_spending": 36614.29,
+          "gross_pension_income": 27036.36,
+          "income_tax": 3920.49,
+          "your_state_pension": 12861.7,
+          "closing_pension": 141266.52,
+          "isa_closing": 67530.53,
+          "savings_closing": 32472.96,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2030,
+          "age": 69,
+          "target_spending": 37529.64,
+          "gross_pension_income": 12206.31,
+          "income_tax": 1692.61,
+          "your_state_pension": 13183.24,
+          "closing_pension": 133298.2,
+          "isa_closing": 69556.44,
+          "savings_closing": 33122.42,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2031,
+          "age": 70,
+          "target_spending": 33942.24,
+          "gross_pension_income": 7191.0,
+          "income_tax": 936.85,
+          "your_state_pension": 13512.82,
+          "closing_pension": 130106.15,
+          "isa_closing": 71643.14,
+          "savings_closing": 33784.87,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2032,
+          "age": 71,
+          "target_spending": 34790.79,
+          "gross_pension_income": 7374.67,
+          "income_tax": 960.86,
+          "your_state_pension": 13850.64,
+          "closing_pension": 126634.66,
+          "isa_closing": 73792.43,
+          "savings_closing": 34460.57,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        },
+        {
+          "calendar_year": 2033,
+          "age": 72,
+          "target_spending": 35660.58,
+          "gross_pension_income": 7563.03,
+          "income_tax": 985.48,
+          "your_state_pension": 14196.91,
+          "closing_pension": 122870.67,
+          "isa_closing": 76006.2,
+          "savings_closing": 35149.78,
+          "income_shortfall": 0.0,
+          "total_assets": 0.0
+        }
+      ],
+      "summary": {
+        "ending_pension": 122870.67,
+        "ending_assets": 234026.65,
+        "total_tax": 17661.24,
+        "gross_pension": 157287.83
+      }
+    }
+  }
+}

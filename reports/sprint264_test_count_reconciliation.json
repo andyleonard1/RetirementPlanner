@@ -1,0 +1,76 @@
+{
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "sprint263": {
+    "collected": 1388,
+    "full_suite_passed_across_16_partitions": 1388,
+    "subtests_passed": 20
+  },
+  "sprint264": {
+    "collected": 1398,
+    "full_suite_passed_across_16_partitions": 1398,
+    "partition_count": 16,
+    "partition_sizes": [
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87
+    ],
+    "subtests_passed": 20
+  },
+  "node_id_diff": {
+    "added_count": 10,
+    "removed_count": 0,
+    "added": [
+      "tests/test_sprint255_package_audit.py::test_sprint264_audit_rejects_stale_local_collection_artifact",
+      "tests/test_sprint255_package_audit.py::test_sprint264_collection_evidence_traceability_exists",
+      "tests/test_sprint258_collection_diagnostics.py::test_comparison_is_clean_requires_node_ids_files_and_hashes_to_match",
+      "tests/test_sprint264_collection_evidence_freshness.py::test_changed_pytest_configuration_makes_evidence_stale",
+      "tests/test_sprint264_collection_evidence_freshness.py::test_changed_test_source_hash_makes_evidence_stale",
+      "tests/test_sprint264_collection_evidence_freshness.py::test_identical_collection_evidence_is_clean",
+      "tests/test_sprint264_collection_evidence_freshness.py::test_missing_test_file_makes_evidence_stale",
+      "tests/test_sprint264_collection_evidence_freshness.py::test_node_id_difference_makes_evidence_stale",
+      "tests/test_sprint264_collection_evidence_freshness.py::test_removed_test_file_makes_evidence_stale",
+      "tests/test_sprint264_collection_evidence_freshness.py::test_sprint264_is_opted_into_release_package_audit"
+    ],
+    "removed": []
+  },
+  "test_file_hash_differences": [
+    "tests/test_sprint255_package_audit.py",
+    "tests/test_sprint258_collection_diagnostics.py"
+  ],
+  "test_files_added": [
+    "tests/test_sprint264_collection_evidence_freshness.py"
+  ],
+  "test_files_removed": [],
+  "config_hashes_differ": false,
+  "user_windows_sprint262_report": {
+    "collected": 1377,
+    "python_version": "3.14.6",
+    "pytest_version": "9.1.1",
+    "matches_sprint262_node_ids_and_hashes": true,
+    "node_id_added": 0,
+    "node_id_removed": 0,
+    "changed_test_hashes": [],
+    "config_hashes_differ": false,
+    "full_suite_log": "1,377 passed in 274.41s"
+  },
+  "historical_user_reported_count": 1308,
+  "interpretation": "The supplied Windows report/log is a Sprint 262 snapshot at 1,377. It matches the Sprint 262 node IDs and hashes exactly. Sprint 263 added 11 tests; Sprint 264 added 10 regression tests. The 1,308 figure is an older reported result and is not the count in the supplied 1,377-pass log.",
+  "assumptions_sha256": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+  "golden_baseline_sha256": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550",
+  "financial_calculation_source_changed": false,
+  "single_process_full_suite": "not used for acceptance; all 16 deterministic partitions passed"
+}

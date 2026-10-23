@@ -1,0 +1,97 @@
+{
+  "assumptions_sha256": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+  "config_hashes_differ": false,
+  "financial_calculation_source_changed": false,
+  "golden_baseline_sha256": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550",
+  "interpretation": "Sprint 270 adds nine ZIP special-file metadata regressions and updates the Sprint 267 manifest-builder default-sprint expectation. The 1,455-item suite passed across all 32 deterministic partitions, with 20 subtests passed. No production financial calculation source, assumptions defaults, or golden baseline changed.",
+  "node_id_diff": {
+    "added": [
+      "tests/test_sprint270_zip_special_file_metadata.py::test_audit_accepts_regular_release_files_and_directory_metadata",
+      "tests/test_sprint270_zip_special_file_metadata.py::test_audit_rejects_special_file_before_crc_or_payload_reads",
+      "tests/test_sprint270_zip_special_file_metadata.py::test_metadata_rejects_directory_type_without_directory_suffix",
+      "tests/test_sprint270_zip_special_file_metadata.py::test_metadata_rejects_regular_file_type_with_directory_suffix",
+      "tests/test_sprint270_zip_special_file_metadata.py::test_metadata_rejects_unneeded_unix_special_file_types[24576]",
+      "tests/test_sprint270_zip_special_file_metadata.py::test_metadata_rejects_unneeded_unix_special_file_types[4096]",
+      "tests/test_sprint270_zip_special_file_metadata.py::test_metadata_rejects_unneeded_unix_special_file_types[49152]",
+      "tests/test_sprint270_zip_special_file_metadata.py::test_metadata_rejects_unneeded_unix_special_file_types[8192]",
+      "tests/test_sprint270_zip_special_file_metadata.py::test_sprint270_docs_status_and_roadmap_are_traceable"
+    ],
+    "added_count": 9,
+    "removed": [],
+    "removed_count": 0
+  },
+  "package_audit_passed": true,
+  "release_manifest_file_count": 407,
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "sprint269": {
+    "collected": 1446,
+    "errors": 0,
+    "execution_note": "32 deterministic partitions; 20 subtests passed",
+    "failed": 0,
+    "full_suite_passed": 1446,
+    "skipped": 0
+  },
+  "sprint270": {
+    "collected": 1455,
+    "errors": 0,
+    "execution": "32 deterministic partitions (15 x 46 and 17 x 45)",
+    "failed": 0,
+    "full_suite_passed": 1455,
+    "partition_count": 32,
+    "partition_sizes": [
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45
+    ],
+    "partition_warnings": 0,
+    "skipped": 0,
+    "subtests_passed": 20,
+    "summed_partition_pytest_seconds": 84.72,
+    "test_file_count": 164
+  },
+  "test_file_hash_differences": [
+    "tests/test_sprint267_manifest_schema_hardening.py"
+  ],
+  "test_files_added": [
+    "tests/test_sprint270_zip_special_file_metadata.py"
+  ],
+  "test_files_removed": [],
+  "user_windows_sprint269_result": {
+    "collected": 1446,
+    "passed": 1444,
+    "skip_reason": "filesystem symlink creation unavailable on that platform",
+    "skipped": 2
+  },
+  "zip_crc_passed": true,
+  "zip_entry_count": 408
+}

@@ -2,59 +2,36 @@
 Compare retirement strategies.
 """
 
+import argparse
+
+from planner.assumptions import Assumptions
 from planner.scenario_engine import ScenarioEngine
+from planner.cli import add_assumptions_argument
+
+from reports.comparison_report import ComparisonReport
+from reports.strategy_comparison_pdf_report import StrategyComparisonPDFReport
 
 
 def main():
 
-    engine = ScenarioEngine()
+    parser = argparse.ArgumentParser(description="Compare retirement strategies")
+    add_assumptions_argument(parser)
+    parser.add_argument(
+        "--pdf",
+        metavar="PATH",
+        help="write a professional PDF comparison report from the computed results",
+    )
+    args = parser.parse_args()
+    engine = ScenarioEngine(assumptions=Assumptions(filename=args.assumptions))
 
     results = engine.compare_strategies()
 
-    print()
-    print("=" * 80)
-    print("RETIREMENT STRATEGY COMPARISON")
-    print("=" * 80)
+    ComparisonReport().print(results)
 
-    print(
-        f"{'Strategy':<18}"
-        f"{'Assets':>15}"
-        f"{'Pension':>15}"
-        f"{'ISA':>15}"
-        f"{'Tax':>15}"
-    )
-
-    print("-" * 80)
-
-    for result in results:
-
-        summary = result["summary"]
-
-        print(
-            f"{result['name']:<18}"
-            f"£{summary['ending_assets']:>14,.0f}"
-            f"£{summary['ending_pension']:>14,.0f}"
-            f"£{summary['ending_isa']:>14,.0f}"
-            f"£{summary['total_tax']:>14,.0f}"
-        )
-
-    print("-" * 80)
-
-    winner = max(
-        results,
-        key=lambda r: r["summary"]["ending_assets"]
-    )
-
-    lowest_tax = min(
-        results,
-        key=lambda r: r["summary"]["total_tax"]
-    )
-
-    print()
-    print(f"Best Estate : {winner['name']}")
-    print(f"Lowest Tax  : {lowest_tax['name']}")
-
-    print("=" * 80)
+    if args.pdf:
+        pdf_path = StrategyComparisonPDFReport().create(results, args.pdf)
+        print()
+        print(f"PDF comparison report exported: {pdf_path}")
 
 
 if __name__ == "__main__":

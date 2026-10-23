@@ -1,0 +1,97 @@
+{
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "sprint268": {
+    "collected": 1436,
+    "full_suite_passed": 1436,
+    "skipped": 0,
+    "failed": 0,
+    "errors": 0,
+    "execution_note": "32 deterministic partitions; 20 subtests passed"
+  },
+  "sprint269": {
+    "collected": 1446,
+    "full_suite_passed": 1446,
+    "skipped": 0,
+    "failed": 0,
+    "errors": 0,
+    "full_suite_execution": "32 deterministic round-robin partitions (6 \u00d7 46 and 26 \u00d7 45)",
+    "partition_count": 32,
+    "partition_sizes": [
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45,
+      45
+    ],
+    "subtests_passed": 20,
+    "partition_warnings": 0,
+    "elapsed_seconds": 162.2
+  },
+  "user_windows_sprint268_result": {
+    "passed": 1434,
+    "skipped": 2,
+    "collected": 1436,
+    "skip_reason": "filesystem symlink creation unavailable on that platform"
+  },
+  "node_id_diff": {
+    "added_count": 10,
+    "removed_count": 0,
+    "added": [
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_audit_preflights_encrypted_archive_before_decompression",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_metadata_accepts_supported_compression_methods",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_metadata_rejects_encrypted_entries",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_metadata_rejects_excessive_compression_ratio",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_metadata_rejects_excessive_entry_count",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_metadata_rejects_single_entry_over_size_limit",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_metadata_rejects_total_uncompressed_size_over_limit",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_metadata_rejects_unsupported_compression_method",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_metadata_rejects_zero_compressed_size_with_content",
+      "tests/test_sprint269_zip_metadata_resource_limits.py::test_sprint269_docs_status_and_roadmap_are_traceable"
+    ],
+    "removed": []
+  },
+  "test_file_hash_differences": [
+    "tests/test_sprint267_manifest_schema_hardening.py"
+  ],
+  "test_files_added": [
+    "tests/test_sprint269_zip_metadata_resource_limits.py"
+  ],
+  "test_files_removed": [],
+  "config_hashes_differ": false,
+  "assumptions_sha256": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+  "golden_baseline_sha256": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550",
+  "financial_calculation_source_changed": false,
+  "interpretation": "Sprint 269 adds ten ZIP metadata/resource-limit regressions and changes the Sprint 267 manifest-builder default-sprint assertion. The 1,446-item suite passed across 32 deterministic partitions (6 \u00d7 46 and 26 \u00d7 45), with 20 subtests passed. The Windows result supplied for Sprint 268 remains separately recorded as 1,434 passed and two filesystem-symlink tests skipped. No production financial calculation source, assumptions defaults, or golden baseline changed.",
+  "package_audit_passed": true,
+  "zip_crc_passed": true,
+  "release_manifest_file_count": 403,
+  "zip_entry_count": 404
+}
