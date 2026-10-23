@@ -1,0 +1,47 @@
+{
+  "format": "retirement-planner-historical-series",
+  "format_version": 1,
+  "contract": {
+    "series_id": "sample-gbp-annual-returns",
+    "description": "Synthetic fixture for adapter contract tests; not investment data",
+    "currency": "GBP",
+    "return_basis": "nominal",
+    "missing_year_policy": "reject"
+  },
+  "observations": [
+    {
+      "year": 2020,
+      "equity_return": 0.04,
+      "bond_return": 0.02,
+      "inflation_rate": 0.01,
+      "source_id": "test-fixture-v1",
+      "source_name": "Synthetic test fixture",
+      "status": "actual",
+      "currency": "GBP",
+      "return_basis": "nominal"
+    },
+    {
+      "year": 2021,
+      "equity_return": -0.03,
+      "bond_return": 0.015,
+      "inflation_rate": 0.025,
+      "source_id": "test-fixture-v1",
+      "source_name": "Synthetic test fixture",
+      "status": "estimated",
+      "currency": "GBP",
+      "return_basis": "nominal",
+      "source_url": "https://example.invalid/synthetic-fixture"
+    },
+    {
+      "year": 2022,
+      "equity_return": 0.06,
+      "bond_return": -0.01,
+      "inflation_rate": 0.04,
+      "source_id": "test-fixture-v1",
+      "source_name": "Synthetic test fixture",
+      "status": "actual",
+      "currency": "GBP",
+      "return_basis": "nominal"
+    }
+  ]
+}

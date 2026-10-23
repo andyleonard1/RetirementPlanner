@@ -4,31 +4,38 @@ Scenario Engine
 Runs one or more retirement scenarios.
 """
 
-from copy import deepcopy
+import copy
 
 from planner.assumptions import Assumptions
 from planner.planner import RetirementPlanner
+from planner.results import ScenarioResult
 
 
 class ScenarioEngine:
 
+    def __init__(self, assumptions=None):
+        self.assumptions = assumptions
+
     def run(self, scenario_name, changes=None):
 
-        assumptions = Assumptions()
+        assumptions = (
+            copy.deepcopy(self.assumptions)
+            if self.assumptions is not None
+            else Assumptions()
+        )
 
         if changes:
             assumptions.data.update(changes)
 
-        planner = RetirementPlanner(assumptions)
+        planner = RetirementPlanner(assumptions, audit_context="analysis")
+        result = planner.run()
 
-        timeline, summary = planner.run()
-
-        return {
-            "name": scenario_name,
-            "timeline": timeline,
-            "summary": summary,
-            "final_year": timeline[-1],
-        }
+        return ScenarioResult(
+            name=scenario_name,
+            timeline=result.timeline,
+            summary=result.summary,
+            final_year=result.timeline[-1],
+        )
 
     def compare_strategies(self):
 

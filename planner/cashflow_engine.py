@@ -6,13 +6,15 @@ the inflation-adjusted spending target.
 """
 import logging
 
+from planner.contracts import AssumptionsProvider, Timeline
+
 logger = logging.getLogger(__name__)
 class CashFlowEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
         self.assumptions = assumptions
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> Timeline:
         logger.info("Running WithdrawalEngine")
         phase1_end = self.assumptions.get("phase_1_end_age")
         phase2_end = self.assumptions.get("phase_2_end_age")
@@ -20,6 +22,8 @@ class CashFlowEngine:
         spending1 = self.assumptions.get("spending_phase_1")
         spending2 = self.assumptions.get("spending_phase_2")
         spending3 = self.assumptions.get("spending_phase_3")
+        schedule_enabled = self.assumptions.get("annual_spending_schedule_enabled", False)
+        spending_schedule = self.assumptions.get("annual_spending_schedule", {})
 
         inflate = self.assumptions.get("inflation_link_spending")
 
@@ -36,6 +40,14 @@ class CashFlowEngine:
 
             else:
                 spending = spending3
+
+            # An explicit annual schedule overrides the phase amount for
+            # matching calendar years. Missing years fall back to the
+            # existing age-based spending phases.
+            if schedule_enabled:
+                scheduled_spending = spending_schedule.get(str(year.calendar_year))
+                if scheduled_spending is not None:
+                    spending = scheduled_spending
 
             #
             # Inflate spending if enabled

@@ -1,0 +1,55 @@
+{
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "environment": {
+    "python": "3.13.5",
+    "pytest": "9.0.2"
+  },
+  "sprint260": {
+    "collected": 1369,
+    "sha256_assumptions": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+    "sha256_golden": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550"
+  },
+  "sprint261": {
+    "collected": 1377,
+    "passed_across_16_partitions": 1377,
+    "subtests_passed": 20,
+    "partition_sizes": [
+      87,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86,
+      86
+    ],
+    "sha256_assumptions": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+    "sha256_golden": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550"
+  },
+  "node_id_diff": {
+    "added_count": 8,
+    "removed_count": 0,
+    "added": [
+      "tests/test_sprint255_package_audit.py::test_sprint261_historical_replay_isolation_traceability_exists",
+      "tests/test_sprint261_historical_replay_isolation.py::test_production_source_does_not_import_historical_replay",
+      "tests/test_sprint261_historical_replay_isolation.py::test_replay_failure_does_not_mutate_dataset_or_protected_files",
+      "tests/test_sprint261_historical_replay_isolation.py::test_replay_is_repeatable_and_has_no_cross_call_state",
+      "tests/test_sprint261_historical_replay_isolation.py::test_replay_module_has_no_projection_monte_carlo_or_gui_imports",
+      "tests/test_sprint261_historical_replay_isolation.py::test_replay_rejects_bad_window_without_partial_result",
+      "tests/test_sprint261_historical_replay_isolation.py::test_replay_success_does_not_mutate_assumptions_or_golden_baseline",
+      "tests/test_sprint261_historical_replay_isolation.py::test_replay_uses_only_supplied_dataset_and_parameters"
+    ]
+  },
+  "user_reported_local_pass_count": 1308,
+  "difference_from_sprint261": 69,
+  "note": "User-local collection report is required to identify exact local node-ID/hash differences."
+}

@@ -1,0 +1,57 @@
+{
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "sprint262": {
+    "collected": 1377,
+    "full_suite_passed": 1377
+  },
+  "sprint263": {
+    "collected": 1388,
+    "full_suite_passed_across_16_partitions": 1388,
+    "partition_sizes": [
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      87,
+      86,
+      86,
+      86,
+      86
+    ],
+    "subtests_passed": 20
+  },
+  "node_id_diff": {
+    "added_count": 11,
+    "removed_count": 0,
+    "added": [
+      "tests/test_sprint255_package_audit.py::test_sprint263_collection_validation_traceability_exists",
+      "tests/test_sprint263_collection_report_validation.py::test_counts_by_file_must_match_node_ids",
+      "tests/test_sprint263_collection_report_validation.py::test_duplicate_node_ids_are_rejected",
+      "tests/test_sprint263_collection_report_validation.py::test_invalid_sha256_digest_is_rejected",
+      "tests/test_sprint263_collection_report_validation.py::test_malformed_node_id_is_rejected",
+      "tests/test_sprint263_collection_report_validation.py::test_missing_hash_map_is_rejected",
+      "tests/test_sprint263_collection_report_validation.py::test_test_file_count_must_match_node_ids",
+      "tests/test_sprint263_collection_report_validation.py::test_total_must_match_node_ids",
+      "tests/test_sprint263_collection_report_validation.py::test_valid_collection_report_passes_validation",
+      "tests/test_sprint263_collection_report_validation.py::test_wrong_report_format_is_rejected",
+      "tests/test_sprint263_collection_report_validation.py::test_wrong_report_version_is_rejected"
+    ],
+    "removed": []
+  },
+  "test_file_hash_differences": [
+    "tests/test_sprint255_package_audit.py"
+  ],
+  "config_hashes_differ": false,
+  "assumptions_sha256": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+  "golden_baseline_sha256": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550",
+  "financial_calculation_source_changed": false,
+  "single_process_full_suite": "timed out in execution environment; all tests then passed in 16 deterministic partitions"
+}

@@ -5,43 +5,86 @@
     "projection_end_age": 90,
     "spouse_current_age": 59,
     "max_pension_income": 30000,
-    "starting_pension": 660000,
+    "starting_pension": 660000.0,
     "expected_investment_return": 0.0475,
     "platform_charge": 0.0025,
     "fund_charge": 0.0025,
     "target_net_income": 35000,
-    "starting_savings": 11000,
+    "starting_savings": 72500,
     "savings_interest_rate": 0.03,
     "inflation": 0.025,
     "personal_allowance": 12570,
     "basic_rate_limit": 50270,
-    "basic_rate": 0.20,
-    "higher_rate": 0.40,
+    "basic_rate": 0.2,
+    "higher_rate": 0.4,
     "additional_rate": 0.45,
     "pension_growth": 0.04,
-
+    "expected_return": 0.04,
+    "investment_volatility": 0.1,
+    "inflation_volatility": 0.01,
     "savings_interest": 0.035,
-
-    "starting_isa": 50000,
+    "tax_free_pension_percentage": 0.25,
+    "starting_isa": 126000,
     "isa_growth_rate": 0.04,
     "annual_isa_allowance": 40000,
-
     "property_sale": 350000,
-
     "property_sale_age": 67,
-
     "state_pension_full": 12548,
     "current_calendar_year": 2026,
-
     "state_pension_growth": 0.035,
+    "state_pension_earnings_growth": 0.03,
+    "state_pension_triple_lock_enabled": true,
+    "state_pension_earnings_growth_schedule_enabled": false,
+    "state_pension_earnings_growth_schedule": {},
+    "annual_spending_schedule_enabled": false,
+    "annual_spending_schedule": {},
+    "investment_return_schedule_enabled": false,
+    "investment_return_schedule": {},
+    "isa_return_schedule_enabled": false,
+    "isa_return_schedule": {},
     "spending_phase_1": 35000,
     "spending_phase_2": 32000,
     "spending_phase_3": 28000,
-
     "phase_1_end_age": 69,
     "phase_2_end_age": 79,
     "inflation_rate": 0.025,
     "inflation_link_spending": true,
     "inflation_link_tax": true,
-    "inflation_link_isa": true
+    "inflation_link_isa": false,
+    "goals": [
+        {
+            "name": "Retire at planned age",
+            "type": "retirement_age",
+            "enabled": true,
+            "operator": "=="
+        },
+        {
+            "name": "Maintain target spending",
+            "type": "spending",
+            "enabled": true,
+            "operator": ">="
+        },
+        {
+            "name": "Leave £500k estate",
+            "type": "estate",
+            "target": 500000,
+            "enabled": true,
+            "operator": ">="
+        },
+        {
+            "name": "Maintain 90% success",
+            "type": "monte_carlo",
+            "target": 90,
+            "enabled": true,
+            "operator": ">="
+        },
+        {
+            "name": "Avoid pension depletion",
+            "type": "pension_positive",
+            "enabled": true,
+            "operator": ">"
+        }
+    ],
+    "isa_allowance_schedule_enabled": false,
+    "isa_allowance_schedule": {}
 }

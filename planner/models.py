@@ -1,3 +1,4 @@
+
 from dataclasses import dataclass
 
 
@@ -20,10 +21,8 @@ class RetirementYear:
     unmet_spending: float = 0.0
     interest_used: float = 0.0
     cash_used: float = 0.0
-    isa_used: float = 0.0
     pension_needed: float = 0.0
 
-    surplus_cash: float = 0.0
 
     # Pension
     opening_pension: float = 0.0
@@ -47,15 +46,14 @@ class RetirementYear:
     isa_opening: float = 0.0
     isa_growth: float = 0.0
     isa_contribution: float = 0.0
+    property_sale_proceeds: float = 0.0
+    property_sale_to_isa: float = 0.0
+    property_sale_to_savings: float = 0.0
     isa_closing: float = 0.0
     # ISA withdrawals
-    isa_used: float = 0.0
     isa_remaining: float = 0.0
     isa_withdrawal: float = 0.0
     # Strategy
-    interest_used: float = 0.0
-    pension_needed: float = 0.0
-    surplus_cash: float = 0.0
     # Tax
     taxable_income: float = 0.0
     
@@ -65,13 +63,16 @@ class RetirementYear:
     income_tax: float = 0.0
     net_pension_income: float = 0.0
     maximum_tax_efficient_pension: float = 0.0
-    
+    tax_free_cash_used: float = 0.0
+    taxable_pension_withdrawal: float = 0.0
+    remaining_tax_free_cash: float = 0.0
     # Income
     household_net_income: float = 0.0
     target_spending: float = 0.0
     income_shortfall: float = 0.0
     # Inflation
     inflation_factor: float = 1.0
+    inflation_rate: float | None = None
     
     # Cash Flow
     cash_available: float = 0.0
@@ -79,13 +80,46 @@ class RetirementYear:
     cash_spent: float = 0.0
     cash_remaining: float = 0.0
     # Income Sources
-    interest_used: float = 0.0
     savings_used: float = 0.0
-    isa_used: float = 0.0
-    pension_needed: float = 0.0
 
     # Remaining balances after withdrawals
     savings_remaining: float = 0.0
-    isa_remaining: float = 0.0
     # Summary
     total_assets: float = 0.0
+    market_year: int = 0
+
+    portfolio_return: float = 0.0
+
+    pension_growth_rate: float = 0.0
+
+    isa_growth_rate: float = 0.0
+    from dataclasses import dataclass
+
+"""
+Monte Carlo Result
+"""
+
+from dataclasses import dataclass
+
+
+@dataclass(slots=True)
+class MonteCarloResult:
+    """
+    Result returned from Monte Carlo analysis.
+    """
+
+    iterations: int
+
+    minimum: float
+
+    percentile_5: float
+
+    median: float
+
+    percentile_95: float
+
+    maximum: float
+
+    success_rate: float
+
+    results: list[float]

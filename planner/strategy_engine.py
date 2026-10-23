@@ -26,15 +26,17 @@ OPTIMISED
 
 import logging
 
+from planner.contracts import AssumptionsProvider, Timeline
+
 logger = logging.getLogger(__name__)
 
 
 class StrategyEngine:
 
-    def __init__(self, assumptions):
+    def __init__(self, assumptions: AssumptionsProvider):
         self.assumptions = assumptions
 
-    def apply(self, timeline):
+    def apply(self, timeline: Timeline) -> Timeline:
 
         strategy = self.assumptions.get("withdrawal_strategy")
 
@@ -60,6 +62,8 @@ class StrategyEngine:
 
     def _pension_first(self, timeline):
 
+        max_pension_income = self._max_pension_income()
+
         for year in timeline:
 
             need = year.target_spending
@@ -72,31 +76,45 @@ class StrategyEngine:
             remaining = need - cash_used
 
             #
-            # Always use tax-efficient pension first
+            # Always use tax-efficient pension first, but never exceed
+            # the configured maximum annual pension income.
             #
             pension = min(
                 remaining,
                 year.maximum_tax_efficient_pension,
+                max_pension_income,
             )
 
             remaining -= pension
 
             #
-            # Additional pension before ISA
+            # Additional pension before ISA, subject to the same
+            # annual pension-income ceiling.
             #
-            if remaining > 0:
+            additional_pension = min(
+                remaining,
+                max(0.0, max_pension_income - pension),
+            )
+            pension += additional_pension
+            remaining -= additional_pension
 
-                pension += remaining
-
-                remaining = 0
-
-            isa = 0.0
+            #
+            # Any amount above the pension ceiling is funded from ISA.
+            # This makes max_pension_income an actual planning constraint
+            # rather than a display-only assumption.
+            #
+            isa = min(
+                remaining,
+                year.isa_closing,
+            )
+            remaining -= isa
 
             self._store_results(
                 year,
                 cash_used,
                 pension,
                 isa,
+                income_shortfall=remaining,
             )
 
         return timeline
@@ -107,6 +125,8 @@ class StrategyEngine:
 
     def _isa_first(self, timeline):
 
+        max_pension_income = self._max_pension_income()
+
         for year in timeline:
 
             need = year.target_spending
@@ -119,17 +139,19 @@ class StrategyEngine:
             remaining = need - cash_used
 
             #
-            # Always use tax-efficient pension
+            # Use tax-efficient pension first, bounded by the configured
+            # maximum annual pension income.
             #
             pension = min(
                 remaining,
                 year.maximum_tax_efficient_pension,
+                max_pension_income,
             )
 
             remaining -= pension
 
             #
-            # Then ISA
+            # Then ISA.
             #
             isa = min(
                 remaining,
@@ -139,20 +161,22 @@ class StrategyEngine:
             remaining -= isa
 
             #
-            # ISA exhausted?
-            # Use additional pension.
+            # ISA exhausted? Use additional pension only up to the
+            # configured annual pension-income ceiling.
             #
-            if remaining > 0:
-
-                pension += remaining
-
-                remaining = 0
+            additional_pension = min(
+                remaining,
+                max(0.0, max_pension_income - pension),
+            )
+            pension += additional_pension
+            remaining -= additional_pension
 
             self._store_results(
                 year,
                 cash_used,
                 pension,
                 isa,
+                income_shortfall=remaining,
             )
 
         return timeline
@@ -187,6 +211,7 @@ class StrategyEngine:
         cash_used,
         pension,
         isa,
+        income_shortfall=0.0,
     ):
 
         year.interest_used = round(cash_used, 2)
@@ -207,3 +232,14 @@ class StrategyEngine:
             ),
             2,
         )
+
+        year.income_shortfall = round(
+            max(0.0, income_shortfall),
+            2,
+        )
+
+    def _max_pension_income(self):
+        value = float(self.assumptions.get("max_pension_income"))
+        if value < 0:
+            raise ValueError("max_pension_income cannot be negative.")
+        return value

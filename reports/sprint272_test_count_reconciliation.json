@@ -1,0 +1,95 @@
+{
+  "assumptions_sha256": "33736d31d6a8d14b73b5ec83c9a9befcbb736713979a7eaaa95b2c35d22b3801",
+  "config_hashes_differ": false,
+  "financial_calculation_source_changed": false,
+  "focused_regression_group_passed": 74,
+  "golden_baseline_sha256": "d0d45d5c3e2846a79711a4e23f3920a04a81bef6025917a2aa9a00d82733c550",
+  "interpretation": "Sprint 272 adds 11 test node IDs and removes 0 versus Sprint 271. The manifest-builder default-sprint expectation changes in ['tests/test_sprint267_manifest_schema_hardening.py']; no financial calculation source, assumptions defaults, or golden baseline changed. Final package audit passed; ZIP CRC passed; release manifest covers 415 payload files in a 416-entry archive.",
+  "node_id_diff": {
+    "added": [
+      "tests/test_sprint272_windows_filename_safety.py::test_accepts_portable_regular_names_and_directories",
+      "tests/test_sprint272_windows_filename_safety.py::test_checks_directory_components_and_nested_paths",
+      "tests/test_sprint272_windows_filename_safety.py::test_rejects_alternate_data_stream_colon",
+      "tests/test_sprint272_windows_filename_safety.py::test_rejects_control_characters",
+      "tests/test_sprint272_windows_filename_safety.py::test_rejects_reserved_device_names",
+      "tests/test_sprint272_windows_filename_safety.py::test_rejects_reserved_device_names_case_insensitively",
+      "tests/test_sprint272_windows_filename_safety.py::test_rejects_superscript_reserved_device_names",
+      "tests/test_sprint272_windows_filename_safety.py::test_rejects_trailing_dot",
+      "tests/test_sprint272_windows_filename_safety.py::test_rejects_trailing_space",
+      "tests/test_sprint272_windows_filename_safety.py::test_rejects_windows_invalid_punctuation",
+      "tests/test_sprint272_windows_filename_safety.py::test_sprint272_docs_status_and_roadmap_are_traceable"
+    ],
+    "added_count": 11,
+    "removed": [],
+    "removed_count": 0
+  },
+  "package_audit_passed": true,
+  "release_manifest_file_count": 415,
+  "report_format": "retirement-planner-test-count-reconciliation",
+  "report_version": 1,
+  "single_process_full_suite": "timed out in this execution environment; partitioned acceptance completed successfully",
+  "sprint271": {
+    "collected": 1463,
+    "errors": 0,
+    "failed": 0,
+    "full_suite_passed": 1463,
+    "skipped": 0,
+    "test_file_count": 165
+  },
+  "sprint272": {
+    "collected": 1474,
+    "errors": 0,
+    "execution": "32 deterministic round-robin partitions",
+    "failed": 0,
+    "full_suite_passed": 1474,
+    "partition_count": 32,
+    "partition_pass_counts": [
+      47,
+      47,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46,
+      46
+    ],
+    "skipped": 0,
+    "subtests_passed": 20,
+    "test_file_count": 166
+  },
+  "test_file_hashes": {
+    "changed_common_files": [
+      "tests/test_sprint267_manifest_schema_hardening.py"
+    ],
+    "files_added": [
+      "tests/test_sprint272_windows_filename_safety.py"
+    ],
+    "files_removed": []
+  },
+  "zip_crc_passed": true,
+  "zip_entry_count": 416
+}
