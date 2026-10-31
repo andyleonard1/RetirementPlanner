@@ -15,7 +15,7 @@ MANIFEST_NAME = "release_manifest.json"
 MANIFEST_FORMAT = "retirement-planner-release-manifest"
 MANIFEST_VERSION = 1
 EXCLUDED_PARTS = {".git", ".pytest_cache", "__pycache__", ".venv", "venv", "dist"}
-EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
+EXCLUDED_SUFFIXES = {".pyc", ".pyo", ".tmp"}
 EXCLUDED_NAMES = {MANIFEST_NAME, "local-collection.json", "collection-local.json", "full_test.txt", "sprint275_release_evidence.json", "sprint277_release_evidence.json", "sprint278_release_evidence.json", "sprint279_release_evidence.json", "sprint280_release_evidence.json", "sprint281_release_evidence.json", "sprint282_release_evidence.json", "sprint283_release_evidence.json", "sprint284_release_evidence.json", "sprint285_release_evidence.json"}
 
 

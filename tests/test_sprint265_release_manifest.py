@@ -35,6 +35,7 @@ def test_manifest_excludes_itself_and_transient_artifacts(tmp_path: Path) -> Non
     (tmp_path / "README.md").write_text("ok", encoding="utf-8")
     (tmp_path / "release_manifest.json").write_text("old", encoding="utf-8")
     (tmp_path / "local-collection.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "scratch.tmp").write_text("temporary", encoding="utf-8")
     cache = tmp_path / "__pycache__"
     cache.mkdir()
     (cache / "junk.pyc").write_bytes(b"cache")
