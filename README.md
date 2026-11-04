@@ -463,3 +463,7 @@ Sprint 280: [Pension funding and State Pension forecast integration](planner/doc
 ### Current checkpoint: Sprint 285
 
 Sprint 285 consolidates release-readiness traceability and adds checks for the required release gates, current manifest inventory, and unchanged shipped assumptions and reviewed golden baseline. It does not change production financial calculations or default assumptions. Full-suite acceptance is pending the target-environment `python -m pytest -ra` run. See `planner/docs/SPRINT285_RELEASE_READINESS.md`.
+
+## Sprint 286 - RC4 Release Candidate Verification
+
+Sprint 286 verifies the RC4 release candidate with 1,560 tests passing and two known Windows symlink-permission skips. Compilation and assumptions/baseline JSON checks passed. The 476-file release manifest, package audit, release evidence reconciliation, and repeat-build SHA-256 comparison all passed. The candidate ZIP is reproducible. GitHub publication has not been performed. See `planner/docs/SPRINT285_RELEASE_READINESS.md` for the preceding release-readiness process.
