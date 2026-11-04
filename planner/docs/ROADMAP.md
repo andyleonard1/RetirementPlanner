@@ -64,3 +64,12 @@ Longer-term expansion into a broader financial-planning platform.
 - Compare identical annual return sets in different orders while modelling withdrawals.
 - Keep deterministic retirement engines unchanged.
 - Protected Sprint 61 baseline: 241 tests passing.
+
+## Sprint 286 - RC4 Release Candidate Verification
+
+- Completed full-suite validation: 1,560 passed, 2 skipped.
+- Verified compilation and protected assumptions/golden-baseline JSON digests.
+- Generated and reconciled a 476-file Sprint 286 release manifest.
+- Passed package audit and release evidence reconciliation.
+- Confirmed deterministic ZIP output using matching SHA-256 hashes.
+- GitHub publication remains a separate, explicitly authorised step.

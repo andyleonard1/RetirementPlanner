@@ -1,3 +1,13 @@
+# Current Checkpoint - Sprint 286 RC4 Release Candidate Verification
+
+- Full suite: **1,560 passed, 2 skipped, 0 failed** (`python -m pytest -ra`). The two skips are the existing Windows symlink-permission limitations.
+- `python -m compileall -q .` passed. `data/assumptions.json` and `tests/golden/baseline.json` parsed successfully and retained their expected SHA-256 digests: `425ca566acdfa55c34b565c70f26c0ba2c670129b959a9188705cb4348e46692` and `a9c51cb9161e0874b42f5a4b62c92c8edc845aa83d8eb49b977bcb18475f6eb6`.
+- Sprint 286 release manifest: **476 files**. Collection report: **1,562 test items across 180 test files**.
+- RC4 ZIP passed package audit and release evidence reconciliation with zero errors.
+- Deterministic packaging confirmed by two independently generated ZIPs with identical SHA-256: `d6d26ab2371ad45c85160c329d836323d0266ea257750e5a87a8e68f1e1535c6`.
+- No production financial calculation logic, shipped assumptions, or golden baseline values were changed.
+- Candidate artifacts and reconciliation report were generated locally in the Windows Temp directory. GitHub publication is **not confirmed**; no commit, push, tag, or release has been made.
+- The release evidence report validates consistency but does not itself prove test execution; the pytest result above is recorded separately.
 # Current Checkpoint — Sprint 280 Pension Funding and State Pension Forecasts
 
 - Sprint 279 user-confirmed full suite: **1,524 passed, 2 skipped, 0 failed** in 188.50 seconds. The two skips are the existing Windows symlink-permission tests.
