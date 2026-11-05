@@ -73,3 +73,14 @@ Longer-term expansion into a broader financial-planning platform.
 - Passed package audit and release evidence reconciliation.
 - Confirmed deterministic ZIP output using matching SHA-256 hashes.
 - GitHub publication remains a separate, explicitly authorised step.
+
+## Sprint 287 - RC4 Release Evidence Reconciliation and Publication Readiness
+
+- Reconcile the Sprint 286 release verification record with the merged GitHub history.
+- Update the README and project status to identify Sprint 287 as the current checkpoint.
+- Confirm the availability and integrity of the locally generated RC4 candidate artefacts.
+- Review outstanding formal publication requirements.
+- Produce a clear release-readiness recommendation.
+- Keep GitHub Release publication and release tagging subject to separate explicit approval.
+- No production financial calculation, assumptions or golden-baseline changes are in scope.
+- Starting test baseline: 1,560 passed, 2 skipped.

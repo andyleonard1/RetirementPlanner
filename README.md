@@ -3,7 +3,7 @@
 **Version:** 2.0 RC2
 **Architecture branch:** `rc2-architecture`
 
-**Current RC4 development checkpoint:** Sprint 275 — Reproducible Release Evidence. The release evidence reconciler cross-checks pytest collection, source hashes, manifest and ZIP inventory while explicitly distinguishing collection from test execution. See `PROJECT_STATUS.md` for validation evidence.
+**Current RC4 development checkpoint:** Sprint 287 — Release Evidence Reconciliation and Publication Readiness. Sprint 286's RC4 candidate passed local verification; its documentation was merged through GitHub PR #5. Formal GitHub Release publication remains outstanding. See `PROJECT_STATUS.md` for validation evidence.
 
 A UK retirement-planning application written in Python. The system projects retirement finances year-by-year, evaluates retirement-age scenarios, produces recommendations, runs sensitivity analysis, and generates professional reports.
 
@@ -466,4 +466,8 @@ Sprint 285 consolidates release-readiness traceability and adds checks for the r
 
 ## Sprint 286 - RC4 Release Candidate Verification
 
-Sprint 286 verifies the RC4 release candidate with 1,560 tests passing and two known Windows symlink-permission skips. Compilation and assumptions/baseline JSON checks passed. The 476-file release manifest, package audit, release evidence reconciliation, and repeat-build SHA-256 comparison all passed. The candidate ZIP is reproducible. GitHub publication has not been performed. See `planner/docs/SPRINT285_RELEASE_READINESS.md` for the preceding release-readiness process.
+Sprint 286 verified the RC4 release candidate with 1,560 tests passing and two known Windows symlink-permission skips. Compilation and assumptions/baseline JSON checks passed. The 476-file release manifest, package audit, release evidence reconciliation, and repeat-build SHA-256 comparison all passed.
+
+The Sprint 286 verification documentation was committed, pushed and merged into the integration branch through GitHub PR #5 (merge commit `daaade80`). This did not publish a formal GitHub Release or create a release tag. The candidate ZIP and supporting evidence were generated locally.
+
+See `planner/docs/SPRINT285_RELEASE_READINESS.md` for the preceding release-readiness process.
