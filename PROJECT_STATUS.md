@@ -8,7 +8,7 @@
 - Sprint 287 scope: reconcile release documentation and evidence, confirm candidate artefact availability, and produce a release-readiness recommendation.
 - No formal release tag or GitHub Release is authorised or created by this checkpoint.
 - No production financial calculation logic, shipped assumptions or golden baseline changes are included in this documentation-focused work.
-- Documentation corrections are complete; focused release-readiness tests: 27 passed. Artefact hashes and manifest have been reconciled. Full-suite rerun after documentation changes remains outstanding.
+- Documentation corrections are complete; focused release-readiness tests: 27 passed. Artefact hashes and manifest have been reconciled. Full-suite rerun after documentation changes: **1,560 passed, 2 skipped** in 101.26 seconds.
 
 # Current Checkpoint - Sprint 286 RC4 Release Candidate Verification
 
