@@ -1,10 +1,22 @@
+# Current Checkpoint - Sprint 287 Release Evidence Reconciliation and Publication Readiness
+
+- Starting baseline: **1,560 passed, 2 skipped, 0 failed** (`python -m pytest -ra`) in 110.88 seconds.
+- Both skips are the existing Windows symlink-permission limitations in Sprint 267 tests.
+- Sprint 287 starts from integration merge commit `daaade80`, which includes Sprint 286 through GitHub PR #5.
+- Sprint 286's local RC4 verification remains valid: 476-file manifest, successful package audit, zero release-evidence reconciliation errors and reproducible ZIP.
+- Sprint 286 documentation was committed, pushed and merged. This is distinct from formal GitHub Release publication.
+- Sprint 287 scope: reconcile release documentation and evidence, confirm candidate artefact availability, and produce a release-readiness recommendation.
+- No formal release tag or GitHub Release is authorised or created by this checkpoint.
+- No production financial calculation logic, shipped assumptions or golden baseline changes are included in this documentation-focused work.
+- Documentation corrections are complete; focused release-readiness tests: 27 passed. Artefact hashes and manifest have been reconciled. Full-suite rerun after documentation changes: **1,560 passed, 2 skipped** in 101.26 seconds.
+
 # Current Checkpoint - Sprint 286 RC4 Release Candidate Verification
 
 - Full suite: **1,560 passed, 2 skipped, 0 failed** (`python -m pytest -ra`). The two skips are the existing Windows symlink-permission limitations.
 - `python -m compileall -q .` passed. `data/assumptions.json` and `tests/golden/baseline.json` parsed successfully and retained their expected SHA-256 digests: `425ca566acdfa55c34b565c70f26c0ba2c670129b959a9188705cb4348e46692` and `a9c51cb9161e0874b42f5a4b62c92c8edc845aa83d8eb49b977bcb18475f6eb6`.
 - Sprint 286 release manifest: **476 files**. Collection report: **1,562 test items across 180 test files**.
 - RC4 ZIP passed package audit and release evidence reconciliation with zero errors.
-- Deterministic packaging confirmed by two independently generated ZIPs with identical SHA-256: `d6d26ab2371ad45c85160c329d836323d0266ea257750e5a87a8e68f1e1535c6`.
+- Deterministic packaging confirmed by two independently generated ZIPs with identical SHA-256: `76bb85261d279e4ee14e532d2de1c68589ea8e0cb4fc7af244632c67765d365f`.
 - No production financial calculation logic, shipped assumptions, or golden baseline values were changed.
 - Candidate artifacts and reconciliation report were generated locally in the Windows Temp directory. GitHub publication is **not confirmed**; no commit, push, tag, or release has been made.
 - The release evidence report validates consistency but does not itself prove test execution; the pytest result above is recorded separately.
