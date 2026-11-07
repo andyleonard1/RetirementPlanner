@@ -3,7 +3,14 @@
 - Starting baseline: **1,560 passed, 2 skipped, 0 failed** (`python -m pytest -ra`) in 110.88 seconds.
 - Both skips are the existing Windows symlink-permission limitations in Sprint 267 tests.
 - Sprint 287 starts from integration merge commit `daaade80`, which includes Sprint 286 through GitHub PR #5.
-- Sprint 286's local RC4 verification remains valid: 476-file manifest, successful package audit, zero release-evidence reconciliation errors and reproducible ZIP.
+- Sprint 286's original RC4 verification was recorded with a 476-file manifest, successful package audit, zero reconciliation errors and a reproducibility claim.
+- **Recovery update (6 November 2026):** the Sprint 286 RC4 ZIP was reconstructed from source commit `6257a13c3bb7f321743b596b4870793f6c3b01d9`.
+- Recovered archive: `RetirementPlanner_RC4_Sprint286_6257a13.zip`. Its SHA-256 is `d6d26ab2371ad45c85160c329d836323d0266ea257750e5a87a8e68f1e1535c6`, matching the original hash recorded in the Sprint 286 verification commit.
+- The recovered ZIP passed `scripts/package_audit.py`, including package structure, required files, assumptions JSON and ZIP integrity checks.
+- A fresh collection report recorded **1,562 tests across 180 test files**. Reconciliation against the Sprint 286 source tree and recovered ZIP returned **PASS**, with zero errors and 476 manifest entries.
+- The regenerated recovery evidence is stored locally in `C:\Temp`: `sprint286_collection_report_recovered.json` and `sprint286_release_evidence_recovered.json`.
+- The reconciliation report explicitly records `test_execution_status: NOT_VERIFIED_BY_THIS_REPORT`. The historical pytest result of **1,560 passed, 2 skipped** remains a separate verification record.
+- **Hash discrepancy:** Sprint 287 documentation previously recorded `76bb85261d279e4ee14e532d2de1c68589ea8e0cb4fc7af244632c67765d365f`. That hash has not been reproduced. The recovered archive matches the earlier `d6d26...` hash; equivalence to the later candidate has not been established.
 - Sprint 286 documentation was committed, pushed and merged. This is distinct from formal GitHub Release publication.
 - Sprint 287 scope: reconcile release documentation and evidence, confirm candidate artefact availability, and produce a release-readiness recommendation.
 - No formal release tag or GitHub Release is authorised or created by this checkpoint.
@@ -16,7 +23,7 @@
 - `python -m compileall -q .` passed. `data/assumptions.json` and `tests/golden/baseline.json` parsed successfully and retained their expected SHA-256 digests: `425ca566acdfa55c34b565c70f26c0ba2c670129b959a9188705cb4348e46692` and `a9c51cb9161e0874b42f5a4b62c92c8edc845aa83d8eb49b977bcb18475f6eb6`.
 - Sprint 286 release manifest: **476 files**. Collection report: **1,562 test items across 180 test files**.
 - RC4 ZIP passed package audit and release evidence reconciliation with zero errors.
-- Deterministic packaging confirmed by two independently generated ZIPs with identical SHA-256: `76bb85261d279e4ee14e532d2de1c68589ea8e0cb4fc7af244632c67765d365f`.
+- The original Sprint 286 verification recorded deterministic packaging with SHA-256 `76bb85261d279e4ee14e532d2de1c68589ea8e0cb4fc7af244632c67765d365f`. The subsequently recovered archive matches the earlier recorded hash `d6d26ab2371ad45c85160c329d836323d0266ea257750e5a87a8e68f1e1535c6`; the later hash has not been independently reproduced.
 - No production financial calculation logic, shipped assumptions, or golden baseline values were changed.
 - Candidate artifacts and reconciliation report were generated locally in the Windows Temp directory. GitHub publication is **not confirmed**; no commit, push, tag, or release has been made.
 - The release evidence report validates consistency but does not itself prove test execution; the pytest result above is recorded separately.
