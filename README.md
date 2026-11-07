@@ -3,7 +3,7 @@
 **Version:** 2.0 RC2
 **Architecture branch:** `rc2-architecture`
 
-**Current RC4 development checkpoint:** Sprint 287 — Release Evidence Reconciliation and Publication Readiness. Sprint 286's RC4 candidate passed local verification; its documentation was merged through GitHub PR #5. Formal GitHub Release publication remains outstanding. See `PROJECT_STATUS.md` for validation evidence.
+**Current RC4 development checkpoint:** Sprint 287 - Release Evidence Reconciliation and Publication Readiness. The recovered Sprint 286 RC4 candidate passes package audit and release-evidence reconciliation. Its recovered SHA-256 matches the earlier verification record; a later recorded hash remains unreproduced. Formal GitHub Release publication remains outstanding. See `PROJECT_STATUS.md` for the evidence and limitations.
 
 A UK retirement-planning application written in Python. The system projects retirement finances year-by-year, evaluates retirement-age scenarios, produces recommendations, runs sensitivity analysis, and generates professional reports.
 
@@ -466,7 +466,7 @@ Sprint 285 consolidates release-readiness traceability and adds checks for the r
 
 ## Sprint 286 - RC4 Release Candidate Verification
 
-Sprint 286 verified the RC4 release candidate with 1,560 tests passing and two known Windows symlink-permission skips. Compilation and assumptions/baseline JSON checks passed. The 476-file release manifest, package audit, release evidence reconciliation, and repeat-build SHA-256 comparison all passed.
+Sprint 286 recorded 1,560 tests passing and two known Windows symlink-permission skips. Compilation and assumptions/baseline JSON checks passed. The 476-file release manifest, package audit and release-evidence reconciliation passed. The original verification record reported repeat-build SHA-256 `76bb85261d279e4ee14e532d2de1c68589ea8e0cb4fc7af244632c67765d365f`; however, this later hash has not been independently reproduced. The subsequently recovered archive passed package audit and reconciliation and matches the earlier recorded SHA-256 `d6d26ab2371ad45c85160c329d836323d0266ea257750e5a87a8e68f1e1535c6`. Equivalence between the two archive hashes has not been established.
 
 The Sprint 286 verification documentation was committed, pushed and merged into the integration branch through GitHub PR #5 (merge commit `daaade80`). This did not publish a formal GitHub Release or create a release tag. The candidate ZIP and supporting evidence were generated locally.
 

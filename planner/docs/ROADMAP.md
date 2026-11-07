@@ -71,7 +71,7 @@ Longer-term expansion into a broader financial-planning platform.
 - Verified compilation and protected assumptions/golden-baseline JSON digests.
 - Generated and reconciled a 476-file Sprint 286 release manifest.
 - Passed package audit and release evidence reconciliation.
-- Confirmed deterministic ZIP output using matching SHA-256 hashes.
+- The original verification record reported matching ZIP hashes (`76bb...`); subsequent recovery reproduced the earlier recorded hash (`d6d26...`), but not the later hash. Deterministic equivalence remains unconfirmed.
 - GitHub publication remains a separate, explicitly authorised step.
 
 ## Sprint 287 - RC4 Release Evidence Reconciliation and Publication Readiness
