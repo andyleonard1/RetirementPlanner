@@ -471,3 +471,6 @@ Sprint 286 recorded 1,560 tests passing and two known Windows symlink-permission
 The Sprint 286 verification documentation was committed, pushed and merged into the integration branch through GitHub PR #5 (merge commit `daaade80`). This did not publish a formal GitHub Release or create a release tag. The candidate ZIP and supporting evidence were generated locally.
 
 See `planner/docs/SPRINT285_RELEASE_READINESS.md` for the preceding release-readiness process.
+
+## Sprint 288
+**Current RC4 development checkpoint:** Sprint 288 - RC4 Hash Investigation Closure. The recovered Sprint 286 candidate has passed package audit and release-evidence reconciliation, and a second build invocation from the reconstructed source produced the same SHA-256 hash. The later historical hash remains unexplained, so equivalence to the original candidate is unconfirmed. Formal GitHub Release publication remains outstanding. See `PROJECT_STATUS.md` for the evidence and limitations.

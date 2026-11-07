@@ -1,3 +1,14 @@
+# Current Checkpoint - Sprint 288 RC4 Hash Investigation Closure
+
+- Sprint 288 investigated the discrepancy between the two SHA-256 values recorded for the Sprint 286 RC4 candidate.
+- Git history confirms that the later hash `76bb85261d279e4ee14e532d2de1c68589ea8e0cb4fc7af244632c67765d365f` first appeared in the Sprint 287 documentation commit. That commit changed documentation only; no archive-builder or release-tool changes accompanied it.
+- The archive builder and related release tools are unchanged between source commit `6257a13` and verification commit `10351cab`. The 466-entry release manifest is also unchanged.
+- The recovered archive was rebuilt in a separate build invocation from the reconstructed Sprint 286 worktree. Both ZIPs produced SHA-256 `d6d26ab2371ad45c85160c329d836323d0266ea257750e5a87a8e68f1e1535c6`.
+- The recovered archive passed package audit and release-evidence reconciliation. The repeat build confirms reproducibility for the recovered source and current build environment.
+- The later `76bb...` hash remains unreproduced. Its origin and equivalence to the recovered archive cannot be established from the available historical evidence.
+- **Investigation outcome:** close as an unresolved historical hash discrepancy. Retain the recovered archive and supporting evidence; do not claim that the original candidate has been exactly recovered.
+- Formal publication remains on hold pending a deliberately rebuilt and verified release candidate and separate explicit authorisation. No release tag or GitHub Release has been created.
+- No production financial calculations, assumptions defaults or golden baseline values were changed.
 # Current Checkpoint - Sprint 287 Release Evidence Reconciliation and Publication Readiness
 
 - Starting baseline: **1,560 passed, 2 skipped, 0 failed** (`python -m pytest -ra`) in 110.88 seconds.

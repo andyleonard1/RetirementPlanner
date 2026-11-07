@@ -70,9 +70,10 @@ Longer-term expansion into a broader financial-planning platform.
 - Completed full-suite validation: 1,560 passed, 2 skipped.
 - Verified compilation and protected assumptions/golden-baseline JSON digests.
 - Generated and reconciled a 476-file Sprint 286 release manifest.
-- Passed package audit and release evidence reconciliation.
-- The original verification record reported matching ZIP hashes (`76bb...`); subsequent recovery reproduced the earlier recorded hash (`d6d26...`), but not the later hash. Deterministic equivalence remains unconfirmed.
-- GitHub publication remains a separate, explicitly authorised step.
+- Passed package audit and release-evidence reconciliation.
+- Recovery investigation reproduced the earlier recorded ZIP hash (`d6d26...`) in two separate build invocations from the reconstructed source, confirming repeatability in the current build environment.
+- The later recorded hash (`76bb...`) remains unreproduced. Its origin and equivalence to the recovered archive are unconfirmed.
+- The investigation is closed as an unresolved historical evidence discrepancy. Formal GitHub Release publication remains a separately authorised step.
 
 ## Sprint 287 - RC4 Release Evidence Reconciliation and Publication Readiness
 
@@ -84,3 +85,12 @@ Longer-term expansion into a broader financial-planning platform.
 - Keep GitHub Release publication and release tagging subject to separate explicit approval.
 - No production financial calculation, assumptions or golden-baseline changes are in scope.
 - Starting test baseline: 1,560 passed, 2 skipped.
+
+## Sprint 288 - RC4 Hash Investigation Closure
+
+- Trace the historical Sprint 286 archive hash discrepancy through Git history.
+- Compare source and verification revisions, manifest contents and archive-building tools.
+- Reconstruct the candidate archive and perform a second build invocation.
+- Confirm repeatability of the recovered archive in the current build environment.
+- Record the unresolved historical hash discrepancy and retain the recovered evidence.
+- Keep formal release publication on hold pending a fresh, explicitly authorised release candidate.
