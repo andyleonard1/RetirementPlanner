@@ -157,4 +157,4 @@ def test_sprint267_docs_and_status_are_traceable() -> None:
 
 
 def test_manifest_builder_default_sprint_is_current() -> None:
-    assert manifest_builder.build_manifest(Path(__file__).resolve().parents[1])["sprint"] == 285
+    assert manifest_builder.build_manifest(Path(__file__).resolve().parents[1])["sprint"] == 291
