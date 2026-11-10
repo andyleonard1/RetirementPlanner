@@ -9,11 +9,16 @@ from __future__ import annotations
 import json
 import shutil
 import tempfile
-import tkinter as tk
 import unittest
 from copy import deepcopy
 from pathlib import Path
-from tkinter import ttk
+
+try:
+    import tkinter as tk
+    from tkinter import ttk
+except ImportError:  # Some headless Python distributions omit the optional Tk package.
+    tk = None
+    ttk = None
 
 from planner.assumptions import Assumptions
 from planner.gui.scenario_projection_application import ScenarioProjectionApplication
@@ -47,6 +52,9 @@ class Sprint291TkAssumptionsEditorTests(unittest.TestCase):
         shutil.copy2(ROOT / "data" / "assumptions.json", self.path)
         self.disk_baseline = self.path.read_bytes()
 
+        if tk is None or ttk is None:
+            self.tempdir.cleanup()
+            self.skipTest("Tkinter is not installed in this Python environment")
         try:
             self.root = tk.Tk()
         except (tk.TclError, RuntimeError) as exc:
@@ -74,7 +82,7 @@ class Sprint291TkAssumptionsEditorTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         try:
-            if getattr(self, "root", None) is not None:
+            if tk is not None and getattr(self, "root", None) is not None:
                 self.root.destroy()
         except tk.TclError:
             pass
