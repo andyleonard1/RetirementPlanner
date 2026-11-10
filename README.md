@@ -3,7 +3,7 @@
 **Version:** 2.0 RC2
 **Architecture branch:** `rc2-architecture`
 
-**Current RC4 development checkpoint:** Sprint 289 - Release Candidate Readiness Review. The Sprint 289 candidate passed the Windows test run (1,560 passed, 2 skipped), package audit and release-evidence reconciliation. Its independently checked SHA-256 is recorded with the supporting evidence in `planner/docs/SPRINT289_RELEASE_READINESS.md`. The candidate remains unpublished; formal release approval is separate.
+**Current RC4 development checkpoint:** Sprint 290 - Release Candidate Readiness. The candidate passed the Windows test run (1,560 passed, 2 skipped), package audit and release-evidence reconciliation. Its 477-file manifest and independently checked SHA-256 are recorded in [the Sprint 290 readiness evidence](planner/docs/SPRINT290_RELEASE_READINESS.md). The candidate remains unpublished; formal release approval is separate.
 
 A UK retirement-planning application written in Python. The system projects retirement finances year-by-year, evaluates retirement-age scenarios, produces recommendations, runs sensitivity analysis, and generates professional reports.
 
