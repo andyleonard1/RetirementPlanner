@@ -1,3 +1,13 @@
+# Current Checkpoint - Sprint 291 GUI Assumptions Editor Interaction & Usability
+
+- Sprint 291 is in progress on branch `feature/sprint-291-gui-assumptions-interaction`, based on Sprint 290 checkpoint `e70efbbdd4c65a27faf54d1699ea115f4e6b3fb1`.
+- Added native Tkinter interaction tests for the advanced assumptions editor, covering real widgets and button actions for Validate, Format, Apply, Apply & Save, Reload document, Discard changes and close confirmation.
+- Made the editor's text widget and action buttons explicitly keyboard-focusable.
+- Native GUI tests skip when Tkinter or a display server is unavailable. The Windows desktop run is the primary acceptance gate; full local validation is pending.
+- Advanced the release-manifest builder default sprint and its regression expectation to 291.
+- No production financial calculation logic, shipped assumptions defaults or golden baseline values have been changed.
+- Sprint 291 acceptance is pending focused Windows GUI tests, existing GUI regressions and the full pytest suite.
+
 # Current Checkpoint - Sprint 290 RC4 Release Candidate Readiness
 
 - Sprint 290 verified committed source revision `e79bf1cbc251bd6df9f4c1b1dce31bfa2506ee70` on branch `integration/sprint-285-source-import`.
