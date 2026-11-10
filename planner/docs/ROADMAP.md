@@ -105,3 +105,13 @@ Longer-term expansion into a broader financial-planning platform.
 - Build the deterministic ZIP, pass the package audit and reconcile the archive against the staged source and collection report with zero errors.
 - Independently verify the archive SHA-256: `a1f87eec108fc48e899bc07bddaa72d40ee0b941b7b4d4a88574c33c82f3cce0`.
 - Record the candidate as technically ready but unpublished. Formal release approval, tagging and GitHub Release publication remain separate authorised actions.
+
+## Sprint 290 - RC4 Release Candidate Readiness
+
+- Run the full Windows test suite: 1,560 passed, 2 known symlink-creation skips.
+- Verify Python compilation, assumptions JSON and unchanged protected golden-baseline checksums.
+- Export committed source revision `e79bf1cbc251bd6df9f4c1b1dce31bfa2506ee70`, build the 477-file Sprint 290 manifest and deterministic ZIP.
+- Pass package audit and release-evidence reconciliation with zero errors.
+- Independently verify candidate archive SHA-256: `8664d190167a6c245574db5a433cc8456a08149e30eb77725553ad414859aea8`.
+- Record technical readiness separately from formal release approval; keep tagging and GitHub Release publication subject to separate explicit authorisation.
+
