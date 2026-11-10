@@ -824,7 +824,7 @@ class ScenarioProjectionWindow:
             wraplength=760,
         ).pack(fill="x", pady=(0, 8))
 
-        text = tk.Text(frame, wrap="none", undo=True)
+        text = tk.Text(frame, wrap="none", undo=True, takefocus=True)
         text.pack(fill="both", expand=True)
         text.insert("1.0", self.controller.assumptions_json())
         text.edit_modified(False)
@@ -898,10 +898,10 @@ class ScenarioProjectionWindow:
                 except (ValueError, OSError, TypeError) as exc:
                     status.set(f"Applied in memory, but not saved: {exc}")
 
-        ttk.Button(buttons, text="Validate", command=validate_document).pack(side="left", padx=(0, 6))
-        ttk.Button(buttons, text="Format", command=format_document).pack(side="left", padx=(0, 6))
-        ttk.Button(buttons, text="Apply", command=apply_only).pack(side="left", padx=(0, 6))
-        ttk.Button(buttons, text="Apply & Save", command=apply_and_save).pack(side="left", padx=(0, 6))
+        ttk.Button(buttons, text="Validate", takefocus=True, command=validate_document).pack(side="left", padx=(0, 6))
+        ttk.Button(buttons, text="Format", takefocus=True, command=format_document).pack(side="left", padx=(0, 6))
+        ttk.Button(buttons, text="Apply", takefocus=True, command=apply_only).pack(side="left", padx=(0, 6))
+        ttk.Button(buttons, text="Apply & Save", takefocus=True, command=apply_and_save).pack(side="left", padx=(0, 6))
         def reload_document() -> None:
             text.delete("1.0", "end")
             text.insert("1.0", self.controller.assumptions_json())
@@ -922,9 +922,9 @@ class ScenarioProjectionWindow:
             except (ValueError, TypeError) as exc:
                 status.set(f"Could not discard changes: {exc}")
 
-        ttk.Button(buttons, text="Reload document", command=reload_document).pack(side="left")
-        ttk.Button(buttons, text="Discard changes", command=discard_changes).pack(side="left", padx=(6, 0))
-        ttk.Button(buttons, text="Close", command=close_editor).pack(side="right")
+        ttk.Button(buttons, text="Reload document", takefocus=True, command=reload_document).pack(side="left")
+        ttk.Button(buttons, text="Discard changes", takefocus=True, command=discard_changes).pack(side="left", padx=(6, 0))
+        ttk.Button(buttons, text="Close", takefocus=True, command=close_editor).pack(side="right")
 
         self._assumptions_editor = editor
         self._assumptions_text = text
