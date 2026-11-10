@@ -115,3 +115,12 @@ Longer-term expansion into a broader financial-planning platform.
 - Independently verify candidate archive SHA-256: `8664d190167a6c245574db5a433cc8456a08149e30eb77725553ad414859aea8`.
 - Record technical readiness separately from formal release approval; keep tagging and GitHub Release publication subject to separate explicit authorisation.
 
+## Sprint 291 — GUI Assumptions Editor Interaction & Usability
+
+- Exercise the advanced assumptions editor through real Tkinter widgets and visible button actions, closing the headless-only coverage gap identified in Sprint 278.
+- Cover Validate, Format, Apply, Apply & Save, Reload document, Discard changes, invalid-document rejection and close confirmation.
+- Make editor text and action buttons explicitly keyboard-focusable; verify accessible action labels and focus eligibility.
+- Skip native Tk interaction tests only where Tkinter or a display server is unavailable; use the target Windows desktop run as the primary GUI acceptance gate.
+- Advance the release-manifest builder default sprint to 291.
+- Keep financial calculations, shipped assumptions defaults and golden baselines unchanged.
+- Full local Windows and suite acceptance is pending.
