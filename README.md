@@ -3,7 +3,7 @@
 **Version:** 2.0 RC2
 **Architecture branch:** `rc2-architecture`
 
-**Current RC4 development checkpoint:** Sprint 287 - Release Evidence Reconciliation and Publication Readiness. The recovered Sprint 286 RC4 candidate passes package audit and release-evidence reconciliation. Its recovered SHA-256 matches the earlier verification record; a later recorded hash remains unreproduced. Formal GitHub Release publication remains outstanding. See `PROJECT_STATUS.md` for the evidence and limitations.
+**Current RC4 development checkpoint:** Sprint 289 - Release Candidate Readiness Review. The Sprint 289 candidate passed the Windows test run (1,560 passed, 2 skipped), package audit and release-evidence reconciliation. Its independently checked SHA-256 is recorded with the supporting evidence in `planner/docs/SPRINT289_RELEASE_READINESS.md`. The candidate remains unpublished; formal release approval is separate.
 
 A UK retirement-planning application written in Python. The system projects retirement finances year-by-year, evaluates retirement-age scenarios, produces recommendations, runs sensitivity analysis, and generates professional reports.
 
@@ -474,3 +474,10 @@ See `planner/docs/SPRINT285_RELEASE_READINESS.md` for the preceding release-read
 
 ## Sprint 288
 **Current RC4 development checkpoint:** Sprint 288 - RC4 Hash Investigation Closure. The recovered Sprint 286 candidate has passed package audit and release-evidence reconciliation, and a second build invocation from the reconstructed source produced the same SHA-256 hash. The later historical hash remains unexplained, so equivalence to the original candidate is unconfirmed. Formal GitHub Release publication remains outstanding. See `PROJECT_STATUS.md` for the evidence and limitations.
+
+
+## Sprint 289 — RC4 Release Candidate Readiness
+
+The Sprint 289 candidate was built from committed source revision `b0042eb`. The Windows full suite passed with **1,560 passed and 2 known symlink-related skips**; compilation and assumptions JSON validation passed. The 476-file manifest reconciled against the candidate ZIP with zero errors, and the package audit passed. The archive SHA-256 was independently verified. This confirms technical candidate readiness only: the archive and evidence remain local, and no release tag or GitHub Release has been created.
+
+See [Sprint 289 release-readiness evidence](planner/docs/SPRINT289_RELEASE_READINESS.md) for the full results, artifact locations and limitations.

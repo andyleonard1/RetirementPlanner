@@ -1,3 +1,22 @@
+# Current Checkpoint - Sprint 289 RC4 Release Candidate Readiness
+
+- Sprint 289 completed a documentation-only release-candidate readiness review on branch `integration/sprint-285-source-import`, based on source commit `b0042eb4c63bd57c440df3ecefc6bafe5e5543f7`.
+- Full Windows test suite: **1,560 passed, 2 skipped, 0 failed** (`python -m pytest -ra`) in 80.12 seconds. The two skips are the known Windows symlink-creation limitations in `tests/test_sprint267_manifest_schema_hardening.py:134` and `:148`.
+- Test collection report: **1,562 collected test items across 180 test files**. This is a collection count, not an execution pass count.
+- `python -m compileall -q .` passed, and `data/assumptions.json` parsed as valid JSON.
+- The candidate staging tree was exported from the committed source revision, excluding Git metadata. Its Sprint 289 manifest contains **476 files** and no temporary `.tmp` paths.
+- All **16 zero-byte manifest entries** were traced through Git history. Each was already empty at its earliest recorded introduction/import; no content changes were made to these files.
+- The deterministic ZIP builder completed successfully. `scripts/package_audit.py` passed package structure, required-file, assumptions-JSON and ZIP-integrity checks.
+- Release-evidence reconciliation returned **PASS**, with **zero errors**, 1,562 collected tests, 180 test files and 476 manifest entries. The report records `test_execution_status: NOT_VERIFIED_BY_THIS_REPORT`; the pytest execution result above is separate evidence.
+- Candidate archive: `C:\\Temp\\RetirementPlanner_Sprint289_RC4_b0042eb.zip`.
+- SHA-256: `a1f87eec108fc48e899bc07bddaa72d40ee0b941b7b4d4a88574c33c82f3cce0`. An independent `Get-FileHash -Algorithm SHA256` check matched the reconciliation report.
+- Supporting local files: `C:\\Temp\\sprint289_collection_report.json` and `C:\\Temp\\sprint289_release_evidence.json`. These files and the candidate ZIP were not added to the repository.
+- Final Git verification before this documentation update showed a clean working tree at source commit `b0042eb`, synced with origin.
+
+**Readiness recommendation:** the Sprint 289 candidate passes the technical checks performed in the target Windows environment. This is a release-candidate readiness outcome, not formal release approval. The ZIP and evidence remain local; no release tag or GitHub Release has been created. Publication requires separate explicit authorisation.
+
+No production financial calculation logic, assumptions defaults or golden baseline values were changed.
+
 # Current Checkpoint - Sprint 288 RC4 Hash Investigation Closure
 
 - Sprint 288 investigated the discrepancy between the two SHA-256 values recorded for the Sprint 286 RC4 candidate.

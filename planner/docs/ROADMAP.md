@@ -94,3 +94,14 @@ Longer-term expansion into a broader financial-planning platform.
 - Confirm repeatability of the recovered archive in the current build environment.
 - Record the unresolved historical hash discrepancy and retain the recovered evidence.
 - Keep formal release publication on hold pending a fresh, explicitly authorised release candidate.
+
+
+## Sprint 289 - RC4 Release Candidate Readiness Review
+
+- Run the full Windows test suite: 1,560 passed, 2 known symlink-creation skips.
+- Verify Python compilation and assumptions JSON parsing.
+- Export the committed source revision to a clean staging directory and build a 476-file Sprint 289 manifest.
+- Trace all 16 zero-byte manifest entries to their historical introduction/import; leave the pre-existing empty files unchanged.
+- Build the deterministic ZIP, pass the package audit and reconcile the archive against the staged source and collection report with zero errors.
+- Independently verify the archive SHA-256: `a1f87eec108fc48e899bc07bddaa72d40ee0b941b7b4d4a88574c33c82f3cce0`.
+- Record the candidate as technically ready but unpublished. Formal release approval, tagging and GitHub Release publication remain separate authorised actions.
