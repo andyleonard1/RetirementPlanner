@@ -1,3 +1,21 @@
+# Current Checkpoint - Sprint 290 RC4 Release Candidate Readiness
+
+- Sprint 290 verified committed source revision `e79bf1cbc251bd6df9f4c1b1dce31bfa2506ee70` on branch `integration/sprint-285-source-import`.
+- Full Windows test suite: **1,560 passed, 2 skipped, 0 failed** (`python -m pytest -ra`) in 134.55 seconds. The two skips are the known Windows symlink-creation limitations in `tests/test_sprint267_manifest_schema_hardening.py:134` and `:148`.
+- Test collection report: **1,562 collected test items across 180 test files** using Python 3.14.6 and pytest 9.1.1. Collection count is not an execution pass count.
+- `python -m compileall -q .` passed, and `data/assumptions.json` parsed as valid JSON.
+- The clean staging export contained 479 files. The Sprint 290 release manifest contains **477 files**.
+- Both protected golden-baseline SHA-256 values matched before and after packaging: `tests/golden/baseline.json` = `A9C51CB9161E0874B42F5A4B62C92C8EDC845AA83D8EB49B977BCB18475F6EB6`; `tests/golden/sprint284_scenarios.json` = `F1981FDD7C9CA12F90A72D3A34C8037BB6103C013A76D171109F1A22769F5A34`.
+- The deterministic ZIP builder completed successfully. `scripts/package_audit.py` passed package structure, required-file, assumptions-JSON and ZIP-integrity checks.
+- Release-evidence reconciliation returned **PASS**, with **zero errors**, 1,562 collected tests, 180 test files and 477 manifest entries. The report records `test_execution_status: NOT_VERIFIED_BY_THIS_REPORT`; the pytest execution result above is separate evidence.
+- Candidate archive: `C:\\Temp\\RetirementPlanner_Sprint290_RC4_e79bf1c.zip`.
+- SHA-256: `8664d190167a6c245574db5a433cc8456a08149e30eb77725553ad414859aea8`. An independent PowerShell `Get-FileHash -Algorithm SHA256` check matched the reconciliation report.
+- Supporting local files: `C:\\Temp\\sprint290_collection_report.json` and `C:\\Temp\\sprint290_release_evidence.json`. These files and the candidate ZIP were not added to the repository.
+
+**Readiness recommendation:** the Sprint 290 candidate passes the technical release-candidate readiness checks performed in the target Windows environment. This is not formal release approval. The ZIP and evidence remain local; no release tag or GitHub Release has been created. Publication requires separate explicit authorisation.
+
+No production financial calculation logic, assumptions defaults or golden baseline values were changed.
+
 # Current Checkpoint - Sprint 289 RC4 Release Candidate Readiness
 
 - Sprint 289 completed a documentation-only release-candidate readiness review on branch `integration/sprint-285-source-import`, based on source commit `b0042eb4c63bd57c440df3ecefc6bafe5e5543f7`.
