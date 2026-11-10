@@ -122,7 +122,7 @@ class Sprint291TkAssumptionsEditorTests(unittest.TestCase):
     def test_editor_opens_real_widgets_with_named_actions_and_focus_support(self) -> None:
         self.assertTrue(self.editor.winfo_exists())
         self.assertEqual(self.editor.title(), "Edit all assumptions")
-        self.assertEqual(self.text.get("1.0", "end-1c"), self.window.controller.assumptions_json().rstrip("\n"))
+        self.assertEqual(self.text.get("1.0", "end-1c"), self.window.controller.assumptions_json())
 
         expected = {
             "Validate", "Format", "Apply", "Apply & Save",
@@ -204,7 +204,7 @@ class Sprint291TkAssumptionsEditorTests(unittest.TestCase):
     def test_discard_button_restores_saved_baseline_and_refreshes_editor_text(self) -> None:
         before = deepcopy(self.application.assumptions.data)
         edited = deepcopy(before)
-        edited["goals"][0]["target"] += 4321
+        edited["goals"][2]["target"] += 4321
         self._set_document(edited)
         self._button("Apply").invoke()
         self.root.update_idletasks()
