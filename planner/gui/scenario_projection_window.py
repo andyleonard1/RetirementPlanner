@@ -426,7 +426,7 @@ class ScenarioProjectionWindow:
         results_current = self.results_are_current
         if not results_current and self._report_preview_window is not None:
             self._close_report_preview(
-                status_message="Preview closed: projection inputs changed; run projection to refresh."
+                status_message="Preview closed: results are stale because projection inputs changed; run projection to refresh."
             )
         if self._results_status_var is not None:
             self._results_status_var.set(
