@@ -163,9 +163,7 @@ class Sprint297ReportPreviewUsabilityTests(unittest.TestCase):
 
         close_command = preview.protocol("WM_DELETE_WINDOW")
         self.assertTrue(close_command)
-        preview.event_generate("<Escape>") if preview.bind("<Escape>") else None
-        if preview.winfo_exists():
-            self.window._close_report_preview()
+        preview.tk.call(close_command)
         self.root.update_idletasks()
 
         self.assertFalse(preview.winfo_exists())
