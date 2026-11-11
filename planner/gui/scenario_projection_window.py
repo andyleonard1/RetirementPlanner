@@ -1248,6 +1248,15 @@ class ScenarioProjectionWindow:
                 pass
         self._assumptions_editor = None
         self._assumptions_text = None
+        preview = self._report_preview_window
+        if preview is not None:
+            try:
+                if preview.winfo_exists():
+                    preview.destroy()
+            except Exception:
+                pass
+        self._report_preview_window = None
+        self._report_preview_text = None
         root = self._root
         if root is not None and hasattr(root, "destroy"):
             root.destroy()
