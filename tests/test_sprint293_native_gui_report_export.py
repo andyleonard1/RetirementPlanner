@@ -218,8 +218,8 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
 
         # Stale results disable both native controls, so invoking them is a
         # no-op: no directory picker, exporter, or error dialog is required.
-        self.assertEqual(self._reports_button().cget("state"), "disabled")
-        self.assertEqual(self._report_pack_button().cget("state"), "disabled")
+        self.assertEqual(str(self._reports_button().cget("state")), "disabled")
+        self.assertEqual(str(self._report_pack_button().cget("state")), "disabled")
         self.assertFalse(self.file_dialog.calls)
         self.assertFalse(suite_calls)
         self.assertFalse(pack_calls)
