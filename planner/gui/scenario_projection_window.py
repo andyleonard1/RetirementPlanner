@@ -123,6 +123,8 @@ class ScenarioProjectionWindow:
         self._event_service = event_service
         self._report_suite_exporter = report_suite_exporter
         self._report_pack_exporter = report_pack_exporter
+        self._report_preview_window = None
+        self._report_preview_text = None
         self._keyboard_shortcuts_bound_service = None
         self._owns_root = root is None
         self._cards_frame = None
@@ -148,6 +150,8 @@ class ScenarioProjectionWindow:
         self._reload_button = None
         self._reports_button = None
         self._report_pack_button = None
+        self._report_preview_button = None
+        self._report_status_var = None
         self._assumptions_editor = None
         self._assumptions_text = None
         self._built = False
@@ -616,6 +620,9 @@ class ScenarioProjectionWindow:
             button = bindings[action].button
             if button is not None:
                 button.configure(state="normal" if enabled else "disabled")
+        report_enabled = bool(self.application is not None and self.results_are_current and not validation_message)
+        if self._report_preview_button is not None and callable(getattr(self._report_preview_button, "configure", None)):
+            self._report_preview_button.configure(state="normal" if report_enabled else "disabled")
         if self._reports_button is not None and callable(getattr(self._reports_button, "configure", None)):
             report_enabled = bool(self.application is not None and self.results_are_current and not validation_message)
             self._reports_button.configure(state="normal" if report_enabled else "disabled")
@@ -954,6 +961,59 @@ class ScenarioProjectionWindow:
             messagebox.showerror("Invalid projection inputs", str(exc), parent=self._root)
 
 
+    def _set_report_status(self, message: str) -> None:
+        """Publish concise feedback beside the report actions."""
+        if self._report_status_var is not None:
+            self._report_status_var.set(message)
+
+    def _preview_report(self) -> bool:
+        """Open a read-only preview of the currently published report."""
+        if self._closed or self.application is None:
+            return False
+        try:
+            report_text = self.current_result_report_text()
+        except (RuntimeError, ValueError, TypeError) as exc:
+            self._set_report_status(f"Preview unavailable: {exc}")
+            return False
+
+        import tkinter as tk
+        from tkinter import ttk
+
+        existing = self._report_preview_window
+        if existing is not None:
+            try:
+                if existing.winfo_exists():
+                    existing.deiconify()
+                    existing.lift()
+                    self._set_report_status("Report preview opened for current results.")
+                    return True
+            except (tk.TclError, AttributeError):
+                pass
+
+        preview = tk.Toplevel(self._root)
+        preview.title("Retirement report preview")
+        preview.geometry("820x620")
+        preview.minsize(560, 360)
+        frame = ttk.Frame(preview, padding=10)
+        frame.pack(fill="both", expand=True)
+        frame.rowconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=1)
+        text = tk.Text(frame, wrap="word", height=30, width=90, takefocus=True)
+        scrollbar = ttk.Scrollbar(frame, orient="vertical", command=text.yview)
+        text.configure(yscrollcommand=scrollbar.set)
+        text.grid(row=0, column=0, sticky="nsew")
+        scrollbar.grid(row=0, column=1, sticky="ns")
+        text.insert("1.0", report_text)
+        text.configure(state="disabled")
+        ttk.Button(frame, text="Close", command=preview.destroy).grid(
+            row=1, column=0, sticky="e", pady=(8, 0)
+        )
+        self._report_preview_window = preview
+        self._report_preview_text = text
+        preview.protocol("WM_DELETE_WINDOW", preview.destroy)
+        self._set_report_status("Report preview opened for current results.")
+        return True
+
     def _export_pdf_reports(self) -> bool:
         """Export the complete professional PDF report suite from current GUI state."""
         messagebox = self._dialog or __import__("tkinter.messagebox", fromlist=["messagebox"])
@@ -1241,10 +1301,20 @@ class ScenarioProjectionWindow:
         advanced = ttk.Frame(controls)
         advanced.grid(row=6, column=0, columnspan=3, sticky="w", pady=(10, 0))
         ttk.Button(advanced, text="Edit all assumptions…", command=self._open_assumptions_editor, takefocus=True).pack(side="left")
+        self._report_preview_button = ttk.Button(
+            advanced, text="Preview report…", command=self._preview_report, takefocus=True
+        )
+        self._report_preview_button.pack(side="left", padx=(8, 0))
         self._reports_button = ttk.Button(advanced, text="Export PDF reports…", command=self._export_pdf_reports, takefocus=True)
         self._reports_button.pack(side="left", padx=(8, 0))
         self._report_pack_button = ttk.Button(advanced, text="Export PDF report pack…", command=self._export_pdf_report_pack, takefocus=True)
         self._report_pack_button.pack(side="left", padx=(8, 0))
+        self._report_status_var = tk.StringVar(
+            value="Reports: ready to preview or export current results."
+        )
+        ttk.Label(
+            advanced, textvariable=self._report_status_var, wraplength=760, takefocus=True
+        ).pack(side="left", padx=(12, 0))
 
         buttons = ttk.Frame(controls)
         buttons.grid(row=7, column=0, columnspan=3, sticky="w", pady=(8, 0))
