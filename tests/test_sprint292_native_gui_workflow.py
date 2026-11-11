@@ -134,8 +134,8 @@ class Sprint292NativeProjectionWorkflowTests(unittest.TestCase):
         self.assertEqual(self.window.view_model.scenario_names, self.initial_inputs.scenarios)
 
     def test_scenario_checkbuttons_change_selection_and_projection_results(self) -> None:
-        self.window._scenario_vars["optimistic"].set(False)
-        self.window._scenario_vars["conservative"].set(False)
+        self.window._scenario_checkbuttons["optimistic"].invoke()
+        self.window._scenario_checkbuttons["conservative"].invoke()
         self.root.update_idletasks()
 
         self.assertEqual(self.window.pending_selected_scenarios, ("central",))
@@ -183,7 +183,9 @@ class Sprint292NativeProjectionWorkflowTests(unittest.TestCase):
         self._run_button().invoke()
         self.root.update_idletasks()
 
-        self.assertNotEqual(self.path.read_bytes(), self.disk_baseline)
+        # Run applies the new value in memory; persistence remains explicit.
+        self.assertEqual(self.path.read_bytes(), self.disk_baseline)
+        self.assertEqual(self.application.inputs().starting_pension, 720000.0)
         self.assertTrue(self.application.assumptions.has_changes())
         self.assertTrue(self.window.workflow_state.save_enabled)
 
