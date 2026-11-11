@@ -84,6 +84,13 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
 
     def _run_projection(self) -> None:
         self.assertIsInstance(self.window._run_button, ttk.Button)
+        # Run is intentionally disabled until the user changes an input.
+        # Create a valid pending edit, then exercise the real native button.
+        self.window._pension_var.set(
+            str(self.initial_inputs.starting_pension + 1000)
+        )
+        self.root.update_idletasks()
+        self.assertTrue(self.window.workflow_state.run_enabled)
         self.window._run_button.invoke()
         self.root.update_idletasks()
         self.assertTrue(self.window.results_are_current)
