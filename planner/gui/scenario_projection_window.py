@@ -1020,10 +1020,12 @@ class ScenarioProjectionWindow:
         file_dialog = self._file_dialog or __import__("tkinter.filedialog", fromlist=["filedialog"])
 
         if self._closed or self.application is None:
+            self._set_report_status("Export unavailable: the projection window is closed.")
             return False
         try:
             workflow_result = self._current_workflow_result()
         except (RuntimeError, ValueError, TypeError) as exc:
+            self._set_report_status(f"Export unavailable: {exc}")
             messagebox.showerror("Reports unavailable", str(exc), parent=self._root)
             return False
 
@@ -1032,6 +1034,7 @@ class ScenarioProjectionWindow:
             parent=self._root,
         )
         if not directory:
+            self._set_report_status("PDF report export cancelled.")
             return False
 
         from planner.reporting import export_report_suite
@@ -1046,11 +1049,13 @@ class ScenarioProjectionWindow:
                 directory=directory,
             )
         except (ValueError, OSError, TypeError) as exc:
+            self._set_report_status(f"PDF report export failed: {exc}")
             messagebox.showerror("Could not export PDF reports", str(exc), parent=self._root)
             return False
 
         paths = getattr(result, "paths", result)
         message = "PDF reports exported to:\n" + "\n".join(str(path) for path in paths.values())
+        self._set_report_status("PDF reports exported: " + ", ".join(str(path) for path in paths.values()))
         messagebox.showinfo("PDF reports exported", message, parent=self._root)
         return True
 
@@ -1060,10 +1065,12 @@ class ScenarioProjectionWindow:
         file_dialog = self._file_dialog or __import__("tkinter.filedialog", fromlist=["filedialog"])
 
         if self._closed or self.application is None:
+            self._set_report_status("Report pack export unavailable: the projection window is closed.")
             return False
         try:
             workflow_result = self._current_workflow_result()
         except (RuntimeError, ValueError, TypeError) as exc:
+            self._set_report_status(f"Report pack export unavailable: {exc}")
             messagebox.showerror("Reports unavailable", str(exc), parent=self._root)
             return False
 
@@ -1072,10 +1079,12 @@ class ScenarioProjectionWindow:
             parent=self._root,
         )
         if not directory:
+            self._set_report_status("PDF report pack export cancelled.")
             return False
 
         pack_path = Path(directory) / "RetirementPlanner_Report_Pack.pdf"
         if pack_path.exists():
+            self._set_report_status(f"PDF report pack export blocked: file already exists at {pack_path}")
             messagebox.showerror(
                 "Could not export PDF report pack",
                 f"Report pack already exists: {pack_path}",
@@ -1097,6 +1106,7 @@ class ScenarioProjectionWindow:
             )
             pack_result = pack_exporter(suite_result, pack_path)
         except (ValueError, FileExistsError, OSError, TypeError) as exc:
+            self._set_report_status(f"PDF report pack export failed: {exc}")
             messagebox.showerror("Could not export PDF report pack", str(exc), parent=self._root)
             return False
 
@@ -1104,6 +1114,7 @@ class ScenarioProjectionWindow:
         generated = list(suite_paths.values()) if hasattr(suite_paths, "values") else list(suite_paths)
         generated.append(getattr(pack_result, "path", pack_result))
         message = "PDF report pack exported:\n" + "\n".join(str(path) for path in generated)
+        self._set_report_status("PDF report pack exported: " + ", ".join(str(path) for path in generated))
         messagebox.showinfo("PDF report pack exported", message, parent=self._root)
         return True
 
