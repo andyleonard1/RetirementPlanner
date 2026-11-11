@@ -8,11 +8,16 @@ from __future__ import annotations
 
 import shutil
 import tempfile
-import tkinter as tk
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from tkinter import ttk
+
+try:
+    import tkinter as tk
+    from tkinter import ttk
+except ImportError:
+    tk = None
+    ttk = None
 
 from planner.assumptions import Assumptions
 from planner.gui.scenario_projection_application import ScenarioProjectionApplication
@@ -37,6 +42,9 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
         self.assumptions_path = self.directory / "assumptions.json"
         shutil.copy2(ROOT / "data" / "assumptions.json", self.assumptions_path)
 
+        if tk is None or ttk is None:
+            self.tempdir.cleanup()
+            self.skipTest("Tkinter is not installed in this Python environment")
         try:
             self.root = tk.Tk()
         except (tk.TclError, RuntimeError) as exc:
@@ -68,7 +76,7 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         try:
-            if getattr(self, "root", None) is not None:
+            if tk is not None and getattr(self, "root", None) is not None:
                 self.root.destroy()
         except tk.TclError:
             pass
