@@ -423,9 +423,14 @@ class ScenarioProjectionWindow:
             self._validation_var.set(
                 "Input check: " + validation_message if validation_message else "Input check: ready"
             )
+        results_current = self.results_are_current
+        if not results_current and self._report_preview_window is not None:
+            self._close_report_preview(
+                status_message="Preview closed: projection inputs changed; run projection to refresh."
+            )
         if self._results_status_var is not None:
             self._results_status_var.set(
-                "Results: current projection" if self.results_are_current else "Results: stale — run projection to refresh"
+                "Results: current projection" if results_current else "Results: stale — run projection to refresh"
             )
         if self._selection_var is not None:
             names = self.pending_selected_scenarios
@@ -966,6 +971,26 @@ class ScenarioProjectionWindow:
         if self._report_status_var is not None:
             self._report_status_var.set(message)
 
+    def _close_report_preview(self, status_message: str | None = None) -> None:
+        """Destroy the preview and release references when its source becomes stale."""
+        preview = self._report_preview_window
+        self._report_preview_window = None
+        self._report_preview_text = None
+        if preview is not None:
+            try:
+                if preview.winfo_exists():
+                    preview.destroy()
+            except Exception:
+                pass
+        if status_message:
+            self._set_report_status(status_message)
+
+    def _on_report_preview_destroy(self, event: Any) -> None:
+        """Clear preview references when the native window is closed by the user."""
+        if event.widget is self._report_preview_window:
+            self._report_preview_window = None
+            self._report_preview_text = None
+
     def _preview_report(self) -> bool:
         """Open a read-only preview of the currently published report."""
         if self._closed or self.application is None:
@@ -1005,12 +1030,13 @@ class ScenarioProjectionWindow:
         scrollbar.grid(row=0, column=1, sticky="ns")
         text.insert("1.0", report_text)
         text.configure(state="disabled")
-        ttk.Button(frame, text="Close", command=preview.destroy).grid(
+        ttk.Button(frame, text="Close", command=self._close_report_preview).grid(
             row=1, column=0, sticky="e", pady=(8, 0)
         )
         self._report_preview_window = preview
         self._report_preview_text = text
-        preview.protocol("WM_DELETE_WINDOW", preview.destroy)
+        preview.bind("<Destroy>", self._on_report_preview_destroy, add="+")
+        preview.protocol("WM_DELETE_WINDOW", self._close_report_preview)
         self._set_report_status("Report preview opened for current results.")
         return True
 
@@ -1248,15 +1274,7 @@ class ScenarioProjectionWindow:
                 pass
         self._assumptions_editor = None
         self._assumptions_text = None
-        preview = self._report_preview_window
-        if preview is not None:
-            try:
-                if preview.winfo_exists():
-                    preview.destroy()
-            except Exception:
-                pass
-        self._report_preview_window = None
-        self._report_preview_text = None
+        self._close_report_preview()
         root = self._root
         if root is not None and hasattr(root, "destroy"):
             root.destroy()
