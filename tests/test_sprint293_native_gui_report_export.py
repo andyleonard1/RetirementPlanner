@@ -28,8 +28,8 @@ from planner.gui.testability import RecordingDialog, RecordingFileDialog
 ROOT = Path(__file__).resolve().parents[1]
 ALLOCATIONS = {"Aviva": 0.75, "Sky": 0.25}
 FUND_RETURNS = {
-    "Aviva": [0.10, 0.02, 0.08],
-    "Sky": [0.20, 0.04, 0.16],
+    "Aviva": (0.10, 0.02, 0.08),
+    "Sky": (0.20, 0.04, 0.16),
 }
 
 
@@ -216,11 +216,14 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
         self._report_pack_button().invoke()
         self.root.update_idletasks()
 
+        # Stale results disable both native controls, so invoking them is a
+        # no-op: no directory picker, exporter, or error dialog is required.
+        self.assertEqual(self._reports_button().cget("state"), "disabled")
+        self.assertEqual(self._report_pack_button().cget("state"), "disabled")
         self.assertFalse(self.file_dialog.calls)
         self.assertFalse(suite_calls)
         self.assertFalse(pack_calls)
-        self.assertEqual(len(self.dialog.errors), 2)
-        self.assertTrue(all(title == "Reports unavailable" for title, _ in self.dialog.errors))
+        self.assertFalse(self.dialog.errors)
         self.assertFalse(self.dialog.infos)
 
     def test_existing_report_pack_is_not_overwritten(self) -> None:
