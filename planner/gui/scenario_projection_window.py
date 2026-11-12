@@ -1001,6 +1001,10 @@ class ScenarioProjectionWindow:
             self._set_report_status(f"Preview unavailable: {exc}")
             return False
 
+        if not isinstance(report_text, str) or not report_text.strip():
+            self._set_report_status("Preview unavailable: the current report is empty.")
+            return False
+
         import tkinter as tk
         from tkinter import ttk
 
@@ -1036,7 +1040,13 @@ class ScenarioProjectionWindow:
         self._report_preview_window = preview
         self._report_preview_text = text
         preview.bind("<Destroy>", self._on_report_preview_destroy, add="+")
+        preview.bind(
+            "<Escape>",
+            lambda _event: (self._close_report_preview(), "break")[1],
+            add="+",
+        )
         preview.protocol("WM_DELETE_WINDOW", self._close_report_preview)
+        preview.after_idle(text.focus_set)
         self._set_report_status("Report preview opened for current results.")
         return True
 
