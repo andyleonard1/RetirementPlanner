@@ -138,8 +138,14 @@ class Sprint297ReportPreviewUsabilityTests(unittest.TestCase):
         self._run_projection()
         preview = self._open_preview()
 
-        preview.event_generate("<Escape>")
-        self.root.update_idletasks()
+        # Tk does not dispatch synthetic key events to an unmapped window.
+        # Map the test root and preview, then deliver Escape through Tk's event loop.
+        self.root.deiconify()
+        preview.deiconify()
+        self.root.update()
+        preview.focus_force()
+        preview.event_generate("<Escape>", when="tail")
+        self.root.update()
 
         self.assertFalse(preview.winfo_exists())
         self.assertIsNone(self.window._report_preview_window)
