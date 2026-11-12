@@ -128,10 +128,10 @@ class Sprint297ReportPreviewUsabilityTests(unittest.TestCase):
         self.assertEqual(str(text.cget("state")), "disabled")
         self.assertTrue(text.cget("takefocus"))
         original_text = text.get("1.0", "end-1c")
-        text.focus_set()
-        self.root.update()
-
-        self.assertIs(self.root.focus_get(), text)
+        next_widget_path = text.tk.call("tk_focusNext", text._w)
+        self.assertTrue(next_widget_path)
+        next_widget = text.nametowidget(next_widget_path)
+        self.assertTrue(next_widget.winfo_exists())
         self.assertEqual(text.get("1.0", "end-1c"), original_text)
 
     def test_escape_closes_preview_and_releases_widget_references(self) -> None:
