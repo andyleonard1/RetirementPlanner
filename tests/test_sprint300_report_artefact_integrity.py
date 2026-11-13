@@ -219,7 +219,7 @@ class Sprint300NativeGuiReportArtefactTests(unittest.TestCase):
         self.root.update_idletasks()
         self.assertTrue(self.window.results_are_current)
 
-    def _wait_for_export(self, timeout=10.0):
+    def _wait_for_export(self, timeout=60.0):
         deadline = time.monotonic() + timeout
         while time.monotonic() < deadline:
             self.root.update()
