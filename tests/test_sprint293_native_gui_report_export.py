@@ -77,6 +77,8 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         try:
+            if getattr(self, "window", None) is not None:
+                self.window.close()
             if tk is not None and getattr(self, "root", None) is not None:
                 self.root.destroy()
         except tk.TclError:
@@ -269,6 +271,7 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
 
         self.window._report_suite_exporter = failing_suite
         self._reports_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertEqual(self.dialog.errors[-1][0], "Could not export PDF reports")
@@ -283,6 +286,7 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
         self.window._report_suite_exporter = successful_suite
         self.window._report_pack_exporter = failing_pack
         self._report_pack_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertEqual(self.dialog.errors[-1][0], "Could not export PDF report pack")
