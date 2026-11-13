@@ -11,6 +11,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import Any, Mapping, Sequence
 
+from pypdf import PdfReader
+from pypdf.errors import PdfReadError
+
 from planner.adviser_engine import AdviserEngine
 from planner.assumptions import Assumptions
 from planner.goal_engine import GoalEngine
@@ -178,6 +181,7 @@ def _publish_pdf_bundle(
             staged = staged_paths[key]
             if not staged.exists():
                 raise FileNotFoundError(f"staged report was not created: {staged}")
+            _validate_staged_pdf(staged)
             if overwrite and destination.exists():
                 backup = parent / f".{destination.name}.backup"
                 suffix = 1
@@ -203,6 +207,23 @@ def _publish_pdf_bundle(
         for staged in staged_paths.values():
             staged.unlink(missing_ok=True)
 
+
+
+def _validate_staged_pdf(path: Path) -> None:
+    """Reject empty, unreadable, or page-less PDFs before publishing a bundle."""
+    if path.stat().st_size == 0:
+        raise PdfReadError(f"staged report is empty: {path}")
+    try:
+        reader = PdfReader(str(path))
+        if not reader.pages:
+            raise PdfReadError(f"staged report contains no pages: {path}")
+        # Force each page's content stream to be resolved before publication.
+        for page in reader.pages:
+            page.get_contents()
+    except PdfReadError:
+        raise
+    except Exception as exc:
+        raise PdfReadError(f"staged report is not a valid PDF: {path}") from exc
 
 def build_scenarios(
     assumptions: Assumptions,
