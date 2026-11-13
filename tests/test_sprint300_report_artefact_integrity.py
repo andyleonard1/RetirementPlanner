@@ -1,5 +1,6 @@
 import shutil
 import tempfile
+import time
 import unittest
 from types import SimpleNamespace
 
@@ -218,6 +219,15 @@ class Sprint300NativeGuiReportArtefactTests(unittest.TestCase):
         self.root.update_idletasks()
         self.assertTrue(self.window.results_are_current)
 
+    def _wait_for_export(self, timeout=10.0):
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            self.root.update()
+            if not self.window._report_export_in_progress:
+                return
+            time.sleep(0.01)
+        self.fail("Timed out waiting for asynchronous report export")
+
     def tearDown(self):
         try:
             self.root.destroy()
@@ -231,6 +241,7 @@ class Sprint300NativeGuiReportArtefactTests(unittest.TestCase):
         self.file_dialog.directory = str(blocked_directory)
 
         self.window._report_pack_button.invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertEqual(len(self.dialog.errors), 1)
