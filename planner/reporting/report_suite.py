@@ -9,7 +9,7 @@ import copy
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
@@ -75,6 +75,7 @@ def export_report_suite(
     monte_carlo_iterations: int = 5000,
     monte_carlo_seed: int | None = None,
     overwrite: bool = False,
+    progress_callback: Callable[[str], None] | None = None,
 ) -> ReportSuiteExportResult:
     """Generate all professional PDFs from the current application state.
 
@@ -115,16 +116,24 @@ def export_report_suite(
             retirement_goals=staging_dir / paths.retirement_goals.name,
         )
 
+        if progress_callback is not None:
+            progress_callback("Generating report 1 of 5: scenario projection…")
         ScenarioProjectionPDFReport().create(scenario_result, staged_paths.scenario_projection)
 
+        if progress_callback is not None:
+            progress_callback("Generating report 2 of 5: strategy comparison…")
         comparison_results = ScenarioEngine(assumptions=copy.deepcopy(assumptions)).compare_strategies()
         StrategyComparisonPDFReport().create(comparison_results, staged_paths.strategy_comparison)
 
+        if progress_callback is not None:
+            progress_callback("Generating report 3 of 5: recommendation…")
         recommendation_report, recommended_assumptions, result, decision, recommendations, risk = _build_recommendation(
             assumptions
         )
         RecommendationPDFReport().create(recommendation_report, staged_paths.recommendation)
 
+        if progress_callback is not None:
+            progress_callback("Generating report 4 of 5: health check…")
         monte_carlo = MonteCarloEngine(copy.deepcopy(recommended_assumptions)).run(
             iterations=monte_carlo_iterations,
             seed=monte_carlo_seed,
@@ -142,8 +151,12 @@ def export_report_suite(
             result.summary,
             staged_paths.health_check,
         )
+        if progress_callback is not None:
+            progress_callback("Generating report 5 of 5: retirement goals…")
         GoalPDFReport().create(goals, staged_paths.retirement_goals)
 
+        if progress_callback is not None:
+            progress_callback("Validating and publishing the five-report suite…")
         _publish_pdf_bundle(staged_paths.paths, final_paths, overwrite=overwrite)
 
     return paths
