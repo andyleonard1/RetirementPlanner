@@ -2,6 +2,8 @@
 from __future__ import annotations
 
 import json
+import queue
+import threading
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
@@ -152,6 +154,10 @@ class ScenarioProjectionWindow:
         self._report_pack_button = None
         self._report_preview_button = None
         self._report_status_var = None
+        self._report_export_in_progress = False
+        self._report_export_queue = queue.Queue()
+        self._report_export_thread = None
+        self._report_export_poll_id = None
         self._assumptions_editor = None
         self._assumptions_text = None
         self._built = False
@@ -625,6 +631,9 @@ class ScenarioProjectionWindow:
             button = bindings[action].button
             if button is not None:
                 button.configure(state="normal" if enabled else "disabled")
+        if self._report_export_in_progress:
+            self._refresh_report_export_controls()
+            return
         report_enabled = bool(self.application is not None and self.results_are_current and not validation_message)
         if self._report_preview_button is not None and callable(getattr(self._report_preview_button, "configure", None)):
             self._report_preview_button.configure(state="normal" if report_enabled else "disabled")
@@ -1051,12 +1060,21 @@ class ScenarioProjectionWindow:
         return True
 
     def _export_pdf_reports(self) -> bool:
-        """Export the complete professional PDF report suite from current GUI state."""
+        """Start the complete professional PDF report suite on a worker thread."""
+        return self._begin_report_export("suite")
+
+    def _export_pdf_report_pack(self) -> bool:
+        """Start the report suite and consolidated pack on a worker thread."""
+        return self._begin_report_export("pack")
+
+    def _begin_report_export(self, export_kind: str) -> bool:
+        """Validate and launch one export without blocking Tk's event loop."""
         messagebox = self._dialog or __import__("tkinter.messagebox", fromlist=["messagebox"])
         file_dialog = self._file_dialog or __import__("tkinter.filedialog", fromlist=["filedialog"])
 
         if self._closed or self.application is None:
-            self._set_report_status("Export unavailable: the projection window is closed.")
+            return False
+        if self._report_export_in_progress:
             return False
         try:
             workflow_result = self._current_workflow_result()
@@ -1065,61 +1083,18 @@ class ScenarioProjectionWindow:
             messagebox.showerror("Reports unavailable", str(exc), parent=self._root)
             return False
 
-        directory = file_dialog.askdirectory(
-            title="Choose folder for Retirement Planner PDF reports",
-            parent=self._root,
+        title = (
+            "Choose folder for Retirement Planner PDF reports"
+            if export_kind == "suite"
+            else "Choose folder for Retirement Planner PDF report pack"
         )
+        directory = file_dialog.askdirectory(title=title, parent=self._root)
         if not directory:
             self._set_report_status("PDF report export cancelled.")
             return False
 
-        from planner.reporting import export_report_suite
-
-        exporter = self._report_suite_exporter or export_report_suite
-        try:
-            result = exporter(
-                assumptions=self.application.assumptions,
-                scenario_result=workflow_result,
-                allocations=self.allocations,
-                fund_returns=self.fund_returns,
-                directory=directory,
-            )
-        except (ValueError, OSError, TypeError) as exc:
-            self._set_report_status(f"PDF report export failed: {exc}")
-            messagebox.showerror("Could not export PDF reports", str(exc), parent=self._root)
-            return False
-
-        paths = getattr(result, "paths", result)
-        message = "PDF reports exported to:\n" + "\n".join(str(path) for path in paths.values())
-        self._set_report_status("PDF reports exported: " + ", ".join(str(path) for path in paths.values()))
-        messagebox.showinfo("PDF reports exported", message, parent=self._root)
-        return True
-
-    def _export_pdf_report_pack(self) -> bool:
-        """Export the complete professional PDF report suite and consolidated pack."""
-        messagebox = self._dialog or __import__("tkinter.messagebox", fromlist=["messagebox"])
-        file_dialog = self._file_dialog or __import__("tkinter.filedialog", fromlist=["filedialog"])
-
-        if self._closed or self.application is None:
-            self._set_report_status("Report pack export unavailable: the projection window is closed.")
-            return False
-        try:
-            workflow_result = self._current_workflow_result()
-        except (RuntimeError, ValueError, TypeError) as exc:
-            self._set_report_status(f"Report pack export unavailable: {exc}")
-            messagebox.showerror("Reports unavailable", str(exc), parent=self._root)
-            return False
-
-        directory = file_dialog.askdirectory(
-            title="Choose folder for Retirement Planner PDF report pack",
-            parent=self._root,
-        )
-        if not directory:
-            self._set_report_status("PDF report pack export cancelled.")
-            return False
-
         pack_path = Path(directory) / "RetirementPlanner_Report_Pack.pdf"
-        if pack_path.exists():
+        if export_kind == "pack" and pack_path.exists():
             self._set_report_status(f"PDF report pack export blocked: file already exists at {pack_path}")
             messagebox.showerror(
                 "Could not export PDF report pack",
@@ -1132,27 +1107,127 @@ class ScenarioProjectionWindow:
 
         suite_exporter = self._report_suite_exporter or export_report_suite
         pack_exporter = self._report_pack_exporter or export_report_pack
-        try:
-            suite_result = suite_exporter(
-                assumptions=self.application.assumptions,
-                scenario_result=workflow_result,
-                allocations=self.allocations,
-                fund_returns=self.fund_returns,
-                directory=directory,
-            )
-            pack_result = pack_exporter(suite_result, pack_path)
-        except (ValueError, FileExistsError, OSError, TypeError) as exc:
-            self._set_report_status(f"PDF report pack export failed: {exc}")
-            messagebox.showerror("Could not export PDF report pack", str(exc), parent=self._root)
-            return False
+        assumptions = self.application.assumptions
+        allocations = dict(self.allocations)
+        fund_returns = dict(self.fund_returns)
+        self._report_export_in_progress = True
+        self._set_report_status(
+            "Exporting five-report suite…" if export_kind == "suite"
+            else "Exporting five-report suite for report pack…"
+        )
+        self._refresh_report_export_controls()
 
-        suite_paths = getattr(suite_result, "paths", suite_result)
-        generated = list(suite_paths.values()) if hasattr(suite_paths, "values") else list(suite_paths)
-        generated.append(getattr(pack_result, "path", pack_result))
-        message = "PDF report pack exported:\n" + "\n".join(str(path) for path in generated)
-        self._set_report_status("PDF report pack exported: " + ", ".join(str(path) for path in generated))
-        messagebox.showinfo("PDF report pack exported", message, parent=self._root)
+        def worker() -> None:
+            try:
+                progress = lambda message: self._report_export_queue.put(("progress", message))
+                suite_kwargs = {
+                    "assumptions": assumptions,
+                    "scenario_result": workflow_result,
+                    "allocations": allocations,
+                    "fund_returns": fund_returns,
+                    "directory": directory,
+                }
+                if self._report_suite_exporter is None:
+                    suite_kwargs["progress_callback"] = progress
+                suite_result = suite_exporter(**suite_kwargs)
+                if export_kind == "suite":
+                    self._report_export_queue.put(("success", ("suite", suite_result)))
+                    return
+                self._report_export_queue.put(("progress", "Creating consolidated report pack…"))
+                pack_result = pack_exporter(suite_result, pack_path)
+                self._report_export_queue.put(("success", ("pack", (suite_result, pack_result))))
+            except Exception as exc:
+                self._report_export_queue.put(("error", (export_kind, exc)))
+
+        self._report_export_thread = threading.Thread(
+            target=worker,
+            name="retirement-planner-report-export",
+            daemon=True,
+        )
+        self._report_export_thread.start()
+        self._schedule_report_export_poll()
         return True
+
+    def _refresh_report_export_controls(self) -> None:
+        """Keep both export actions locked while one background export is active."""
+        if self._closed:
+            return
+        if self._report_export_in_progress:
+            for button in (self._reports_button, self._report_pack_button):
+                if button is not None:
+                    button.configure(state="disabled")
+            return
+        validation_message = self._pending_validation_message()
+        enabled = bool(
+            self.application is not None
+            and self.results_are_current
+            and not validation_message
+        )
+        for button in (self._reports_button, self._report_pack_button):
+            if button is not None:
+                button.configure(state="normal" if enabled else "disabled")
+
+    def _schedule_report_export_poll(self) -> None:
+        """Poll worker messages on Tk's main thread only."""
+        if self._closed or self._root is None or self._report_export_poll_id is not None:
+            return
+        try:
+            self._report_export_poll_id = self._root.after(40, self._poll_report_export)
+        except Exception:
+            self._report_export_poll_id = None
+
+    def _poll_report_export(self) -> None:
+        """Apply worker progress and completion messages on the Tk thread."""
+        self._report_export_poll_id = None
+        if self._closed:
+            return
+        try:
+            while True:
+                kind, payload = self._report_export_queue.get_nowait()
+                if kind == "progress":
+                    self._set_report_status(str(payload))
+                elif kind == "success":
+                    export_kind, result = payload
+                    self._report_export_in_progress = False
+                    self._report_export_thread = None
+                    if export_kind == "suite":
+                        paths = getattr(result, "paths", result)
+                        generated = list(paths.values()) if hasattr(paths, "values") else list(paths)
+                        title = "PDF reports exported"
+                        status = "PDF reports exported: " + ", ".join(str(path) for path in generated)
+                        message = "PDF reports exported to:\n" + "\n".join(str(path) for path in generated)
+                    else:
+                        suite_result, pack_result = result
+                        suite_paths = getattr(suite_result, "paths", suite_result)
+                        generated = list(suite_paths.values()) if hasattr(suite_paths, "values") else list(suite_paths)
+                        generated.append(getattr(pack_result, "path", pack_result))
+                        title = "PDF report pack exported"
+                        status = "PDF report pack exported: " + ", ".join(str(path) for path in generated)
+                        message = "PDF report pack exported:\n" + "\n".join(str(path) for path in generated)
+                    self._set_report_status(status)
+                    self._refresh_report_export_controls()
+                    (self._dialog or __import__("tkinter.messagebox", fromlist=["messagebox"])).showinfo(
+                        title, message, parent=self._root
+                    )
+                elif kind == "error":
+                    export_kind, exc = payload
+                    self._report_export_in_progress = False
+                    self._report_export_thread = None
+                    if export_kind == "pack":
+                        title = "Could not export PDF report pack"
+                        status = f"PDF report pack export failed: {exc}"
+                    else:
+                        title = "Could not export PDF reports"
+                        status = f"PDF report export failed: {exc}"
+                    self._set_report_status(status)
+                    self._refresh_report_export_controls()
+                    (self._dialog or __import__("tkinter.messagebox", fromlist=["messagebox"])).showerror(
+                        title, str(exc), parent=self._root
+                    )
+        except queue.Empty:
+            pass
+        if self._report_export_in_progress:
+            self._schedule_report_export_poll()
 
     def _save_assumptions(self) -> None:
         """Persist the current validated assumptions only after an explicit click."""
@@ -1262,6 +1337,13 @@ class ScenarioProjectionWindow:
         if self._closed:
             return
         self._closed = True
+        self._report_export_in_progress = False
+        if self._report_export_poll_id is not None and self._root is not None:
+            try:
+                self._root.after_cancel(self._report_export_poll_id)
+            except Exception:
+                pass
+            self._report_export_poll_id = None
         self._workflow_state = self._workflow_state.after_close()
         # A closed presentation must not retain the last published result
         # snapshot. Export consumers must re-establish a live presentation
