@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import shutil
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -82,6 +83,15 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
             pass
         self.tempdir.cleanup()
 
+    def _wait_for_export(self, timeout: float = 5.0) -> None:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            self.root.update()
+            if not self.window._report_export_in_progress:
+                return
+            time.sleep(0.01)
+        self.fail("Timed out waiting for asynchronous report export")
+
     def _run_projection(self) -> None:
         self.assertIsInstance(self.window._run_button, ttk.Button)
         # Run is intentionally disabled until the user changes an input.
@@ -133,6 +143,7 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
         self.window._report_suite_exporter = exporter
 
         self._reports_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertEqual(len(calls), 1)
@@ -168,6 +179,7 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
         self.window._report_pack_exporter = pack_exporter
 
         self._report_pack_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertEqual(len(suite_calls), 1)
