@@ -65,6 +65,8 @@ class Sprint301ReportExportResilienceTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         try:
+            if getattr(self, "window", None) is not None:
+                self.window.close()
             if getattr(self, "root", None) is not None:
                 self.root.destroy()
         except (tk.TclError, AttributeError):
