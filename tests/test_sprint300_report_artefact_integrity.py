@@ -2,6 +2,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
+from unittest import mock
 
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
@@ -94,6 +95,43 @@ class Sprint300ReportArtefactIntegrityTests(unittest.TestCase):
                 export_report_pack(suite, output)
             self.assertFalse(output.exists())
             self.assertFalse(output.with_name(f".{output.name}.tmp").exists())
+
+    def test_report_suite_rejects_invalid_staged_pdf_and_preserves_existing_bundle(self):
+        from reports.goal_pdf_report import GoalPDFReport
+
+        with tempfile.TemporaryDirectory() as directory:
+            suite = self._suite(directory)
+            old_contents = {
+                path: f"previous {path.name}".encode()
+                for path in suite.paths.values()
+            }
+            for path, data in old_contents.items():
+                path.write_bytes(data)
+
+            workflow = ScenarioProjectionApplication(Assumptions()).run_report_workflow(
+                allocations={"Aviva": 1.0},
+                fund_returns={"Aviva": [0.05, 0.05, 0.05]},
+            )
+
+            def write_corrupt_pdf(self, data, filename):
+                Path(filename).write_bytes(b"corrupt PDF artefact")
+
+            with mock.patch.object(GoalPDFReport, "create", new=write_corrupt_pdf):
+                with self.assertRaises(PdfReadError):
+                    export_report_suite(
+                        assumptions=Assumptions(),
+                        scenario_result=workflow,
+                        allocations={"Aviva": 1.0},
+                        fund_returns={"Aviva": [0.05, 0.05, 0.05]},
+                        directory=directory,
+                        monte_carlo_iterations=2,
+                        monte_carlo_seed=1,
+                        overwrite=True,
+                    )
+
+            for path, data in old_contents.items():
+                self.assertEqual(path.read_bytes(), data)
+            self.assertEqual(list(Path(directory).glob(".retirement-planner-report-suite-*")), [])
 
     def test_empty_source_pdf_prevents_report_pack_publication(self):
         with tempfile.TemporaryDirectory() as directory:
