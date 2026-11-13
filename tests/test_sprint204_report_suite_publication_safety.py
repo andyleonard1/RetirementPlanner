@@ -1,5 +1,7 @@
 import tempfile
 import unittest
+
+from pypdf import PdfWriter
 from pathlib import Path
 from unittest import mock
 
@@ -78,7 +80,9 @@ class Sprint204ReportSuitePublicationSafetyTests(unittest.TestCase):
             staged = {key: staging / f"{key}.pdf" for key in keys}
             final = {key: Path(directory) / f"{key}.pdf" for key in keys}
             for path in staged.values():
-                path.write_bytes((path.name + " new").encode())
+                writer = PdfWriter()
+                writer.add_blank_page(width=72, height=72)
+                writer.write(path)
             for key, path in final.items():
                 path.write_bytes(f"old {key}".encode())
 
