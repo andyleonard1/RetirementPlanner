@@ -1,6 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
@@ -40,7 +41,6 @@ class Sprint300ReportArtefactIntegrityTests(unittest.TestCase):
         }
         with tempfile.TemporaryDirectory() as directory:
             suite = self._suite(directory)
-
             self.assertEqual(tuple(suite.paths), tuple(expected))
             for key, filename in expected.items():
                 with self.subTest(report=key):
@@ -49,7 +49,6 @@ class Sprint300ReportArtefactIntegrityTests(unittest.TestCase):
                     self.assertTrue(path.is_file())
                     self.assertGreater(path.stat().st_size, 1000)
                     self.assertTrue(path.read_bytes().startswith(b"%PDF-"))
-
                     reader = PdfReader(path)
                     self.assertGreater(len(reader.pages), 0)
                     extracted = self._normalise(
@@ -76,7 +75,6 @@ class Sprint300ReportArtefactIntegrityTests(unittest.TestCase):
             self.assertTrue(output.is_file())
             self.assertGreater(output.stat().st_size, 1000)
             self.assertTrue(output.read_bytes().startswith(b"%PDF-"))
-
             packed = PdfReader(output)
             self.assertEqual(len(packed.pages), source_pages + 1)
             packed_text = self._normalise(
@@ -84,23 +82,54 @@ class Sprint300ReportArtefactIntegrityTests(unittest.TestCase):
             )
             for key, text in source_text.items():
                 with self.subTest(report=key):
-                    # The first 100 extracted characters are a stable content
-                    # fingerprint without coupling the test to full report wording.
                     self.assertIn(text[:100], packed_text)
-
             self.assertFalse(output.with_name(f".{output.name}.tmp").exists())
 
     def test_corrupt_source_pdf_prevents_report_pack_publication(self):
         with tempfile.TemporaryDirectory() as directory:
             suite = self._suite(directory)
             suite.paths["health_check"].write_bytes(b"not a valid PDF")
-
             output = Path(directory) / "must_not_be_published.pdf"
             with self.assertRaises(PdfReadError):
                 export_report_pack(suite, output)
-
             self.assertFalse(output.exists())
             self.assertFalse(output.with_name(f".{output.name}.tmp").exists())
+
+    def test_empty_source_pdf_prevents_report_pack_publication(self):
+        with tempfile.TemporaryDirectory() as directory:
+            suite = self._suite(directory)
+            suite.paths["recommendation"].write_bytes(b"")
+            output = Path(directory) / "empty_source_pack.pdf"
+            with self.assertRaises(PdfReadError):
+                export_report_pack(suite, output)
+            self.assertFalse(output.exists())
+            self.assertFalse(output.with_name(f".{output.name}.tmp").exists())
+
+    def test_interrupted_pack_publication_preserves_existing_file_and_retry_succeeds(self):
+        with tempfile.TemporaryDirectory() as directory:
+            suite = self._suite(directory)
+            output = Path(directory) / "RetirementPlanner_Report_Pack.pdf"
+            output.write_bytes(b"existing approved pack")
+            temporary = output.with_name(f".{output.name}.tmp")
+            original_replace = Path.replace
+
+            def fail_pack_replace(path, target):
+                if path == temporary:
+                    raise OSError("simulated interrupted publication")
+                return original_replace(path, target)
+
+            with mock.patch.object(Path, "replace", new=fail_pack_replace):
+                with self.assertRaisesRegex(OSError, "simulated interrupted publication"):
+                    export_report_pack(suite, output, overwrite=True)
+
+            self.assertEqual(output.read_bytes(), b"existing approved pack")
+            self.assertFalse(temporary.exists())
+
+            result = export_report_pack(suite, output, overwrite=True)
+            self.assertEqual(result.path, output)
+            self.assertTrue(output.read_bytes().startswith(b"%PDF-"))
+            self.assertGreater(len(PdfReader(output).pages), 1)
+            self.assertFalse(temporary.exists())
 
 
 if __name__ == "__main__":
