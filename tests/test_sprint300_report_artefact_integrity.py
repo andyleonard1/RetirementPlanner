@@ -230,6 +230,8 @@ class Sprint300NativeGuiReportArtefactTests(unittest.TestCase):
 
     def tearDown(self):
         try:
+            if getattr(self, "window", None) is not None:
+                self.window.close()
             self.root.destroy()
         except (tk.TclError, AttributeError):
             pass
@@ -253,6 +255,7 @@ class Sprint300NativeGuiReportArtefactTests(unittest.TestCase):
         output_directory.mkdir()
         self.file_dialog.directory = str(output_directory)
         self.window._report_pack_button.invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         expected_names = (
