@@ -94,7 +94,11 @@ class Sprint206GuiReportPackTests(unittest.TestCase):
             self.assertFalse(window._export_pdf_report_pack())
             self.assertEqual(called, [])
             self.assertEqual(pack_path.read_bytes(), b"existing")
-            self.assertEqual(len(dialog.errors), 1)
+            self.assertFalse(dialog.errors)
+            self.assertEqual(len(dialog.questions), 1)
+            self.assertEqual(dialog.questions[0][0], "Confirm report replacement")
+            self.assertIn("RetirementPlanner_Report_Pack.pdf", dialog.questions[0][1])
+            self.assertEqual(dialog.questions[0][2]["default"], "no")
 
     def test_gui_report_pack_button_tracks_current_result_state(self):
         window = self._window()
