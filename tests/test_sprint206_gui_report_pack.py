@@ -32,6 +32,14 @@ class Sprint206GuiReportPackTests(unittest.TestCase):
         window._run_projection()
         return window
 
+    def _wait_for_export(self, window):
+        thread = window._report_export_thread
+        if thread is not None:
+            thread.join(timeout=10)
+            self.assertFalse(thread.is_alive(), "report export worker did not finish")
+        window._poll_report_export()
+        self.assertFalse(window._report_export_in_progress)
+
     def test_gui_report_pack_reuses_current_workflow_result_and_publishes_pack(self):
         window = self._window()
         dialog = RecordingDialog()
@@ -57,6 +65,7 @@ class Sprint206GuiReportPackTests(unittest.TestCase):
             )
 
             self.assertTrue(window._export_pdf_report_pack())
+            self._wait_for_export(window)
 
             self.assertIs(captured["scenario_result"].view_model, window.view_model)
             self.assertEqual(captured["pack_output"], Path(directory) / "RetirementPlanner_Report_Pack.pdf")
