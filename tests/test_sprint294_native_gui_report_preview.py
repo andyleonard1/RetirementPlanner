@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import shutil
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -72,11 +73,22 @@ class Sprint294NativeGuiReportPreviewTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         try:
+            if getattr(self, "window", None) is not None:
+                self.window.close()
             if tk is not None and getattr(self, "root", None) is not None:
                 self.root.destroy()
         except tk.TclError:
             pass
         self.tempdir.cleanup()
+
+    def _wait_for_export(self, timeout: float = 10.0) -> None:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            self.root.update()
+            if not self.window._report_export_in_progress:
+                return
+            time.sleep(0.01)
+        self.fail("Timed out waiting for asynchronous report export")
 
     def _run_projection(self) -> None:
         self.window._pension_var.set(
@@ -158,6 +170,7 @@ class Sprint294NativeGuiReportPreviewTests(unittest.TestCase):
         self.window._report_suite_exporter = lambda **kwargs: {"scenario": report_path}
 
         self._reports_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertIn("exported", self._feedback().lower())
@@ -173,6 +186,7 @@ class Sprint294NativeGuiReportPreviewTests(unittest.TestCase):
         self.window._report_pack_exporter = lambda suite, destination: destination
 
         self._report_pack_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertIn("exported", self._feedback().lower())
@@ -202,6 +216,7 @@ class Sprint294NativeGuiReportPreviewTests(unittest.TestCase):
 
         self.window._report_suite_exporter = failing_exporter
         self._reports_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertIn("failed", self._feedback().lower())
