@@ -185,5 +185,74 @@ class Sprint301ReportExportResilienceTests(unittest.TestCase):
         self.assertFalse(self.dialog.errors)
 
 
+    def test_existing_report_suite_requires_explicit_overwrite_confirmation(self) -> None:
+        existing = self.directory / "retirement_scenario_projection.pdf"
+        existing.write_bytes(b"previous successful report")
+        attempts = []
+
+        def suite_exporter(**kwargs):
+            attempts.append(kwargs)
+            return {"scenario": existing}
+
+        self.window._report_suite_exporter = suite_exporter
+        self.window._reports_button.invoke()
+
+        self.assertEqual(attempts, [])
+        self.assertEqual(existing.read_bytes(), b"previous successful report")
+        self.assertEqual(len(self.dialog.questions), 1)
+        self.assertEqual(self.dialog.questions[0][2]["default"], "no")
+        self.assertIn(str(existing), self.dialog.questions[0][1])
+        self.assertIn("cancelled", self.window._report_status_var.get().lower())
+
+        self.dialog.confirm_overwrite = True
+        self.window._reports_button.invoke()
+        self._wait_for(lambda: not self.window._report_export_in_progress)
+
+        self.assertEqual(len(attempts), 1)
+        self.assertIs(attempts[0]["overwrite"], True)
+        self.assertEqual(existing.read_bytes(), b"previous successful report")
+        self.assertEqual(len(self.dialog.infos), 1)
+
+    def test_existing_report_pack_requires_confirmation_and_forwards_overwrite(self) -> None:
+        existing_pack = self.directory / "RetirementPlanner_Report_Pack.pdf"
+        existing_pack.write_bytes(b"previous successful pack")
+        suite_result = {"scenario": self.directory / "scenario.pdf"}
+        suite_calls = []
+        pack_calls = []
+
+        def suite_exporter(**kwargs):
+            suite_calls.append(kwargs)
+            return suite_result
+
+        def pack_exporter(suite, destination, *, overwrite=False):
+            pack_calls.append((suite, destination, overwrite))
+            destination.write_bytes(b"replacement pack")
+            return destination
+
+        self.window._report_suite_exporter = suite_exporter
+        self.window._report_pack_exporter = pack_exporter
+        self.window._report_pack_button.invoke()
+
+        self.assertEqual(suite_calls, [])
+        self.assertEqual(pack_calls, [])
+        self.assertEqual(existing_pack.read_bytes(), b"previous successful pack")
+        self.assertEqual(len(self.dialog.questions), 1)
+        self.assertEqual(self.dialog.questions[0][2]["default"], "no")
+
+        self.dialog.confirm_overwrite = True
+        self.window._report_pack_button.invoke()
+        self._wait_for(lambda: not self.window._report_export_in_progress)
+
+        self.assertEqual(len(suite_calls), 1)
+        self.assertIs(suite_calls[0]["overwrite"], True)
+        self.assertEqual(len(pack_calls), 1)
+        self.assertIs(pack_calls[0][0], suite_result)
+        self.assertEqual(pack_calls[0][1], existing_pack)
+        self.assertIs(pack_calls[0][2], True)
+        self.assertEqual(existing_pack.read_bytes(), b"replacement pack")
+        self.assertEqual(len(self.dialog.infos), 1)
+        self.assertFalse(self.dialog.errors)
+
+
 if __name__ == "__main__":
     unittest.main()
