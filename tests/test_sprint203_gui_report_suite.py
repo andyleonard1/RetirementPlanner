@@ -41,6 +41,14 @@ class Sprint203GuiReportSuiteTests(unittest.TestCase):
             fund_returns={"Aviva": [0.10, 0.02, 0.08], "Sky": [0.20, 0.04, 0.16]},
         )
 
+    def _wait_for_export(self, window):
+        thread = window._report_export_thread
+        if thread is not None:
+            thread.join(timeout=10)
+            self.assertFalse(thread.is_alive(), "report export worker did not finish")
+        window._poll_report_export()
+        self.assertFalse(window._report_export_in_progress)
+
     def test_gui_report_export_consumes_current_workflow_result(self):
         window = self._window()
         dialog = RecordingDialog()
@@ -60,6 +68,7 @@ class Sprint203GuiReportSuiteTests(unittest.TestCase):
             )
 
             self.assertTrue(window._export_pdf_reports())
+            self._wait_for_export(window)
 
         self.assertIn("scenario_result", captured)
         self.assertIs(captured["scenario_result"].view_model, window.view_model)
