@@ -256,11 +256,15 @@ class Sprint293NativeGuiReportExportTests(unittest.TestCase):
         self.assertFalse(suite_calls)
         self.assertFalse(pack_calls)
         self.assertEqual(existing_pack.read_bytes(), original_bytes)
-        self.assertEqual(len(self.dialog.errors), 1)
+        self.assertFalse(self.dialog.errors)
+        self.assertEqual(len(self.dialog.questions), 1)
         self.assertEqual(
-            self.dialog.errors[0][0],
-            "Could not export PDF report pack",
+            self.dialog.questions[0][0],
+            "Confirm report replacement",
         )
+        self.assertIn("RetirementPlanner_Report_Pack.pdf", self.dialog.questions[0][1])
+        self.assertEqual(self.dialog.questions[0][2]["default"], "no")
+        self.assertIn("existing files were left unchanged", self.window._report_status_var.get())
         self.assertFalse(self.dialog.infos)
 
     def test_exporter_failures_are_reported_without_success_dialogs(self) -> None:
