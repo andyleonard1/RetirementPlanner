@@ -1094,14 +1094,33 @@ class ScenarioProjectionWindow:
             return False
 
         pack_path = Path(directory) / "RetirementPlanner_Report_Pack.pdf"
-        if export_kind == "pack" and pack_path.exists():
-            self._set_report_status(f"PDF report pack export blocked: file already exists at {pack_path}")
-            messagebox.showerror(
-                "Could not export PDF report pack",
-                f"Report pack already exists: {pack_path}",
+        suite_paths = (
+            Path(directory) / "retirement_scenario_projection.pdf",
+            Path(directory) / "retirement_strategy_comparison.pdf",
+            Path(directory) / "retirement_recommendation.pdf",
+            Path(directory) / "retirement_health_check.pdf",
+            Path(directory) / "retirement_goals.pdf",
+        )
+        destinations = suite_paths + ((pack_path,) if export_kind == "pack" else ())
+        existing = tuple(path for path in destinations if path.exists())
+        overwrite = False
+        if existing:
+            existing_list = "\\n".join(str(path) for path in existing)
+            prompt = (
+                "The following report files already exist:\\n\\n"
+                f"{existing_list}\\n\\n"
+                "Do you want to replace them?"
+            )
+            confirmed = messagebox.askyesno(
+                "Confirm report replacement",
+                prompt,
+                default="no",
                 parent=self._root,
             )
-            return False
+            if not confirmed:
+                self._set_report_status("PDF report export cancelled; existing files were left unchanged.")
+                return False
+            overwrite = True
 
         from planner.reporting import export_report_pack, export_report_suite
 
@@ -1127,6 +1146,8 @@ class ScenarioProjectionWindow:
                     "fund_returns": fund_returns,
                     "directory": directory,
                 }
+                if overwrite:
+                    suite_kwargs["overwrite"] = True
                 if self._report_suite_exporter is None:
                     suite_kwargs["progress_callback"] = progress
                 suite_result = suite_exporter(**suite_kwargs)
@@ -1134,7 +1155,8 @@ class ScenarioProjectionWindow:
                     self._report_export_queue.put(("success", ("suite", suite_result)))
                     return
                 self._report_export_queue.put(("progress", "Creating consolidated report pack…"))
-                pack_result = pack_exporter(suite_result, pack_path)
+                pack_kwargs = {"overwrite": True} if overwrite else {}
+                pack_result = pack_exporter(suite_result, pack_path, **pack_kwargs)
                 self._report_export_queue.put(("success", ("pack", (suite_result, pack_result))))
             except Exception as exc:
                 self._report_export_queue.put(("error", (export_kind, exc)))
