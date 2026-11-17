@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import shutil
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
@@ -73,11 +74,22 @@ class Sprint299GuiReportWorkflowConsistencyTests(unittest.TestCase):
 
     def tearDown(self) -> None:
         try:
+            if getattr(self, "window", None) is not None:
+                self.window.close()
             if tk is not None and getattr(self, "root", None) is not None:
                 self.root.destroy()
         except tk.TclError:
             pass
         self.tempdir.cleanup()
+
+    def _wait_for_export(self, timeout: float = 10.0) -> None:
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            self.root.update()
+            if not self.window._report_export_in_progress:
+                return
+            time.sleep(0.01)
+        self.fail("Timed out waiting for asynchronous report export")
 
     def _run_projection(self):
         self.window._pension_var.set(str(self.initial_inputs.starting_pension + 1000))
@@ -130,6 +142,7 @@ class Sprint299GuiReportWorkflowConsistencyTests(unittest.TestCase):
             or {"scenario": self.directory / "scenario.pdf"}
         )
         self._reports_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertEqual(len(export_calls), 1)
@@ -164,6 +177,7 @@ class Sprint299GuiReportWorkflowConsistencyTests(unittest.TestCase):
             or SimpleNamespace(path=destination)
         )
         self._report_pack_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertEqual(len(suite_calls), 1)
@@ -198,7 +212,9 @@ class Sprint299GuiReportWorkflowConsistencyTests(unittest.TestCase):
         self.assertIs(self.window._report_preview_window, preview)
 
         self._reports_button().invoke()
+        self._wait_for_export()
         self._reports_button().invoke()
+        self._wait_for_export()
         self.root.update_idletasks()
 
         self.assertEqual(len(export_calls), 2)
