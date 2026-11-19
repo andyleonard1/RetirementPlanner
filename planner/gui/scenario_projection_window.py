@@ -1122,7 +1122,7 @@ class ScenarioProjectionWindow:
             overwrite = True
 
         from planner.reporting import export_report_pack, export_report_suite
-        from planner.reporting.report_suite import ReportExportCancelled
+        from planner.reporting.export_control import ReportExportCancelled
 
         suite_exporter = self._report_suite_exporter or export_report_suite
         pack_exporter = self._report_pack_exporter or export_report_pack
@@ -1167,8 +1167,6 @@ class ScenarioProjectionWindow:
 
                 if export_kind == "suite":
                     suite_result = suite_exporter(**suite_kwargs)
-                    if cancellation_event.is_set():
-                        raise ReportExportCancelled("Report export cancelled before publication.")
                     self._report_export_queue.put(("success", ("suite", suite_result)))
                     return
 
@@ -1193,8 +1191,6 @@ class ScenarioProjectionWindow:
                         if accepts_keyword(pack_exporter, "cancellation_event"):
                             pack_kwargs["cancellation_event"] = cancellation_event
                         pack_result = pack_exporter(suite_result, pack_path, **pack_kwargs)
-                        if cancellation_event.is_set():
-                            raise ReportExportCancelled("Report pack export cancelled before completion.")
                     except Exception:
                         for path, backup in previous_suite.items():
                             if backup is None:
