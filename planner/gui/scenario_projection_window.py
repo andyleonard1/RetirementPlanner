@@ -1,11 +1,13 @@
 """Tkinter presentation for the scenario projection view model and inputs."""
 from __future__ import annotations
 
+import inspect
 import json
 import queue
 import threading
 from pathlib import Path
-from tempfile import NamedTemporaryFile
+from shutil import copy2
+from tempfile import NamedTemporaryFile, TemporaryDirectory
 
 from math import isfinite
 from dataclasses import dataclass
@@ -152,11 +154,13 @@ class ScenarioProjectionWindow:
         self._reload_button = None
         self._reports_button = None
         self._report_pack_button = None
+        self._report_cancel_button = None
         self._report_preview_button = None
         self._report_status_var = None
         self._report_export_in_progress = False
         self._report_export_queue = queue.Queue()
         self._report_export_thread = None
+        self._report_cancel_event = None
         self._report_export_poll_id = None
         self._assumptions_editor = None
         self._assumptions_text = None
@@ -1359,6 +1363,8 @@ class ScenarioProjectionWindow:
         if self._closed:
             return
         self._closed = True
+        if self._report_cancel_event is not None:
+            self._report_cancel_event.set()
         self._report_export_in_progress = False
         if self._report_export_poll_id is not None and self._root is not None:
             try:
@@ -1461,6 +1467,11 @@ class ScenarioProjectionWindow:
         self._reports_button.pack(side="left", padx=(8, 0))
         self._report_pack_button = ttk.Button(advanced, text="Export PDF report pack…", command=self._export_pdf_report_pack, takefocus=True)
         self._report_pack_button.pack(side="left", padx=(8, 0))
+        self._report_cancel_button = ttk.Button(
+            advanced, text="Cancel export", command=self._request_report_export_cancel,
+            state="disabled", takefocus=True,
+        )
+        self._report_cancel_button.pack(side="left", padx=(8, 0))
         self._report_status_var = tk.StringVar(
             value="Reports: ready to preview or export current results."
         )
