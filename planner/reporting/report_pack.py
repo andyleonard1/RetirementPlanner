@@ -7,7 +7,8 @@ from threading import Event
 
 from reports.professional_report_pack import ProfessionalReportPackPDFReport
 
-from .report_suite import REPORT_SUITE_KEYS, ReportExportCancelled, ReportSuiteExportResult
+from .export_control import ReportExportCancelled, raise_if_cancelled
+from .report_suite import REPORT_SUITE_KEYS, ReportSuiteExportResult
 
 
 @dataclass(frozen=True)
@@ -29,8 +30,7 @@ def export_report_pack(
         raise TypeError("report_suite must be ReportSuiteExportResult")
     if tuple(report_suite.paths) != REPORT_SUITE_KEYS:
         raise ValueError("report_suite paths must use the canonical report-suite order")
-    if cancellation_event is not None and cancellation_event.is_set():
-        raise ReportExportCancelled("Report pack export cancelled before generation.")
+    raise_if_cancelled(cancellation_event, "Report pack export cancelled before generation.")
     path = ProfessionalReportPackPDFReport().create(
         report_suite.paths,
         output_path,
