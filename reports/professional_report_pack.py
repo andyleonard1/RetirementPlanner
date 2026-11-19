@@ -4,6 +4,7 @@ from __future__ import annotations
 from datetime import date
 from io import BytesIO
 from pathlib import Path
+from threading import Event
 from typing import Mapping
 
 from pypdf import PdfReader, PdfWriter
@@ -14,6 +15,7 @@ from reportlab.lib.units import mm
 from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle, Paragraph
 
 from planner.version import VERSION
+from planner.reporting.report_suite import ReportExportCancelled
 
 
 REPORT_TITLES = {
@@ -35,8 +37,10 @@ class ProfessionalReportPackPDFReport:
         filename: str | Path = "RetirementPlanner_Report_Pack.pdf",
         *,
         overwrite: bool = False,
+        cancellation_event: Event | None = None,
     ) -> Path:
         _validate_report_paths(report_paths)
+        _raise_if_cancelled(cancellation_event)
         target = Path(filename)
         target.parent.mkdir(parents=True, exist_ok=True)
 
@@ -48,6 +52,7 @@ class ProfessionalReportPackPDFReport:
             raise ValueError("report pack output must not replace a source report")
 
         readers = {key: PdfReader(str(path)) for key, path in resolved_sources.items()}
+        _raise_if_cancelled(cancellation_event)
         cover = _build_cover_pdf(readers)
 
         writer = PdfWriter()
@@ -55,6 +60,7 @@ class ProfessionalReportPackPDFReport:
         writer.append(cover_reader)
         section_pages: dict[str, int] = {}
         for key in REPORT_ORDER:
+            _raise_if_cancelled(cancellation_event)
             section_pages[key] = len(writer.pages)
             writer.append(readers[key])
 
@@ -73,13 +79,22 @@ class ProfessionalReportPackPDFReport:
         if temporary.exists():
             temporary.unlink()
         try:
+            _raise_if_cancelled(cancellation_event)
             with temporary.open("wb") as handle:
                 writer.write(handle)
+            _raise_if_cancelled(cancellation_event)
             temporary.replace(target)
         except Exception:
             temporary.unlink(missing_ok=True)
             raise
         return target
+
+
+
+def _raise_if_cancelled(cancellation_event: Event | None) -> None:
+    """Stop pack generation at safe boundaries, never during a PDF write."""
+    if cancellation_event is not None and cancellation_event.is_set():
+        raise ReportExportCancelled("Report pack export cancelled before publication.")
 
 
 def _validate_report_paths(report_paths: Mapping[str, str | Path]) -> None:
