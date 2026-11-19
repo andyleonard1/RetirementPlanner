@@ -52,7 +52,7 @@ class ProfessionalReportPackPDFReport:
             raise ValueError("report pack output must not replace a source report")
 
         readers = {key: PdfReader(str(path)) for key, path in resolved_sources.items()}
-        _raise_if_cancelled(cancellation_event)
+        raise_if_cancelled(cancellation_event, "Report pack export cancelled before publication.")
         cover = _build_cover_pdf(readers)
 
         writer = PdfWriter()
@@ -60,7 +60,7 @@ class ProfessionalReportPackPDFReport:
         writer.append(cover_reader)
         section_pages: dict[str, int] = {}
         for key in REPORT_ORDER:
-            _raise_if_cancelled(cancellation_event)
+            raise_if_cancelled(cancellation_event, "Report pack export cancelled before publication.")
             section_pages[key] = len(writer.pages)
             writer.append(readers[key])
 
@@ -79,10 +79,10 @@ class ProfessionalReportPackPDFReport:
         if temporary.exists():
             temporary.unlink()
         try:
-            _raise_if_cancelled(cancellation_event)
+            raise_if_cancelled(cancellation_event, "Report pack export cancelled before publication.")
             with temporary.open("wb") as handle:
                 writer.write(handle)
-            _raise_if_cancelled(cancellation_event)
+            raise_if_cancelled(cancellation_event, "Report pack export cancelled before publication.")
             temporary.replace(target)
         except Exception:
             temporary.unlink(missing_ok=True)
