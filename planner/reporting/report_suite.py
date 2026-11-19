@@ -35,9 +35,7 @@ from reports.recommendation_pdf_report import RecommendationPDFReport
 from reports.scenario_projection_pdf_report import ScenarioProjectionPDFReport
 from reports.strategy_comparison_pdf_report import StrategyComparisonPDFReport
 
-
-class ReportExportCancelled(Exception):
-    """Raised when a cooperative report-export cancellation is observed."""
+from .export_control import ReportExportCancelled, raise_if_cancelled
 
 
 REPORT_SUITE_KEYS = (
@@ -98,7 +96,7 @@ def export_report_suite(
     if monte_carlo_iterations <= 0:
         raise ValueError("monte_carlo_iterations must be greater than zero")
 
-    _raise_if_cancelled(cancellation_event)
+    raise_if_cancelled(cancellation_event, "Report export cancelled before publication.")
     target_dir = Path(directory)
     target_dir.mkdir(parents=True, exist_ok=True)
 
@@ -163,12 +161,6 @@ def export_report_suite(
 
     return paths
 
-
-
-def _raise_if_cancelled(cancellation_event: Event | None) -> None:
-    """Stop at a safe boundary; never interrupt a PDF renderer mid-write."""
-    if cancellation_event is not None and cancellation_event.is_set():
-        raise ReportExportCancelled("Report export cancelled before publication.")
 
 
 def _report_progress(
