@@ -1196,7 +1196,8 @@ class ScenarioProjectionWindow:
                             if backup is None:
                                 path.unlink(missing_ok=True)
                             elif backup.exists():
-                                copy2(backup, path)
+                                path.unlink(missing_ok=True)
+                                backup.replace(path)
                         raise
                 self._report_export_queue.put(("success", ("pack", (suite_result, pack_result))))
             except ReportExportCancelled as exc:
@@ -1268,7 +1269,12 @@ class ScenarioProjectionWindow:
             while True:
                 kind, payload = self._report_export_queue.get_nowait()
                 if kind == "progress":
-                    self._set_report_status(str(payload))
+                    progress_message = str(payload)
+                    self._set_report_status(progress_message)
+                    if progress_message.lower().startswith("validating and publishing"):
+                        # Bundle publication is the non-interruptible commit boundary.
+                        if self._report_cancel_button is not None:
+                            self._report_cancel_button.configure(state="disabled")
                 elif kind == "success":
                     export_kind, result = payload
                     self._report_export_in_progress = False
