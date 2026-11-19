@@ -15,7 +15,7 @@ from reportlab.lib.units import mm
 from reportlab.platypus import SimpleDocTemplate, Spacer, Table, TableStyle, Paragraph
 
 from planner.version import VERSION
-from planner.reporting.report_suite import ReportExportCancelled
+from planner.reporting.export_control import raise_if_cancelled
 
 
 REPORT_TITLES = {
@@ -40,7 +40,7 @@ class ProfessionalReportPackPDFReport:
         cancellation_event: Event | None = None,
     ) -> Path:
         _validate_report_paths(report_paths)
-        _raise_if_cancelled(cancellation_event)
+        raise_if_cancelled(cancellation_event, "Report pack export cancelled before publication.")
         target = Path(filename)
         target.parent.mkdir(parents=True, exist_ok=True)
 
@@ -89,12 +89,6 @@ class ProfessionalReportPackPDFReport:
             raise
         return target
 
-
-
-def _raise_if_cancelled(cancellation_event: Event | None) -> None:
-    """Stop pack generation at safe boundaries, never during a PDF write."""
-    if cancellation_event is not None and cancellation_event.is_set():
-        raise ReportExportCancelled("Report pack export cancelled before publication.")
 
 
 def _validate_report_paths(report_paths: Mapping[str, str | Path]) -> None:
