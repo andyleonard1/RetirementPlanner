@@ -1238,6 +1238,9 @@ class ScenarioProjectionWindow:
             for button in (self._reports_button, self._report_pack_button):
                 if button is not None:
                     button.configure(state="disabled")
+            if self._report_cancel_button is not None:
+                cancel_pending = self._report_cancel_event is not None and self._report_cancel_event.is_set()
+                self._report_cancel_button.configure(state="disabled" if cancel_pending else "normal")
             return
         validation_message = self._pending_validation_message()
         enabled = bool(
@@ -1248,6 +1251,8 @@ class ScenarioProjectionWindow:
         for button in (self._reports_button, self._report_pack_button):
             if button is not None:
                 button.configure(state="normal" if enabled else "disabled")
+        if self._report_cancel_button is not None:
+            self._report_cancel_button.configure(state="disabled")
 
     def _schedule_report_export_poll(self) -> None:
         """Poll worker messages on Tk's main thread only."""
@@ -1272,6 +1277,7 @@ class ScenarioProjectionWindow:
                     export_kind, result = payload
                     self._report_export_in_progress = False
                     self._report_export_thread = None
+                    self._report_cancel_event = None
                     if export_kind == "suite":
                         paths = getattr(result, "paths", result)
                         generated = list(paths.values()) if hasattr(paths, "values") else list(paths)
@@ -1291,10 +1297,19 @@ class ScenarioProjectionWindow:
                     (self._dialog or __import__("tkinter.messagebox", fromlist=["messagebox"])).showinfo(
                         title, message, parent=self._root
                     )
+                elif kind == "cancelled":
+                    self._report_export_in_progress = False
+                    self._report_export_thread = None
+                    self._report_cancel_event = None
+                    self._set_report_status(
+                        "PDF report export cancelled; previously published reports were preserved."
+                    )
+                    self._refresh_report_export_controls()
                 elif kind == "error":
                     export_kind, exc = payload
                     self._report_export_in_progress = False
                     self._report_export_thread = None
+                    self._report_cancel_event = None
                     if export_kind == "pack":
                         title = "Could not export PDF report pack"
                         status = f"PDF report pack export failed: {exc}"
