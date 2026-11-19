@@ -21,7 +21,8 @@ from planner.gui.scenario_projection_window import ScenarioProjectionWindow
 from planner.gui.testability import RecordingDialog, RecordingFileDialog
 from planner.projection.scenario_projection_workflow import ScenarioProjectionApplication as WorkflowApplication
 from planner.reporting.report_pack import export_report_pack
-from planner.reporting.report_suite import ReportExportCancelled, ReportSuiteExportResult, export_report_suite
+from planner.reporting.export_control import ReportExportCancelled
+from planner.reporting.report_suite import ReportSuiteExportResult, export_report_suite
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -146,6 +147,43 @@ class Sprint302GuiCancellationTests(unittest.TestCase):
                 return
             time.sleep(0.01)
         self.fail("Timed out waiting for report export cancellation")
+
+    def test_cancelled_report_pack_restores_previous_suite_and_pack(self) -> None:
+        suite_file = self.directory / "retirement_scenario_projection.pdf"
+        suite_file.write_bytes(b"previous successful scenario report")
+        pack_file = self.directory / "RetirementPlanner_Report_Pack.pdf"
+        pack_file.write_bytes(b"previous successful report pack")
+        previous_suite = suite_file.read_bytes()
+        previous_pack = pack_file.read_bytes()
+        self.dialog.confirm_overwrite = True
+        suite_entered = threading.Event()
+        pack_entered = threading.Event()
+
+        def suite_exporter(**kwargs):
+            suite_entered.set()
+            suite_file.write_bytes(b"replacement scenario report")
+            return {"scenario_projection": suite_file}
+
+        def pack_exporter(suite, destination, *, cancellation_event, overwrite=False):
+            pack_entered.set()
+            if not cancellation_event.wait(5):
+                raise TimeoutError("pack cancellation was not requested")
+            raise ReportExportCancelled("Report pack export cancelled before publication.")
+
+        self.window._report_suite_exporter = suite_exporter
+        self.window._report_pack_exporter = pack_exporter
+        self.window._report_pack_button.invoke()
+        self.assertTrue(suite_entered.wait(2))
+        self.assertTrue(pack_entered.wait(2))
+        self.root.update()
+        self.window._report_cancel_button.invoke()
+        self._wait_for(lambda: not self.window._report_export_in_progress)
+
+        self.assertEqual(suite_file.read_bytes(), previous_suite)
+        self.assertEqual(pack_file.read_bytes(), previous_pack)
+        self.assertIn("cancelled", self.window._report_status_var.get().lower())
+        self.assertFalse(self.dialog.errors)
+        self.assertFalse(self.dialog.infos)
 
     def test_gui_cancel_requests_cooperative_stop_and_restores_controls(self) -> None:
         entered = threading.Event()
