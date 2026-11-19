@@ -1145,7 +1145,7 @@ class ScenarioProjectionWindow:
             except (TypeError, ValueError):
                 return False
             return any(
-                parameter.name == keyword or parameter.kind is inspect.Parameter.VAR_KEYWORD
+                parameter.name == keyword
                 for parameter in parameters
             )
 
