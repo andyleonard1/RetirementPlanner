@@ -189,9 +189,9 @@ class Sprint302GuiCancellationTests(unittest.TestCase):
         entered = threading.Event()
         observed = threading.Event()
 
-        def slow_exporter(**kwargs):
+        def slow_exporter(*, cancellation_event, **kwargs):
             entered.set()
-            cancellation = kwargs["cancellation_event"]
+            cancellation = cancellation_event
             if not cancellation.wait(5):
                 raise TimeoutError("cancel was not requested")
             observed.set()
