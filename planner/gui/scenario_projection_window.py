@@ -1076,9 +1076,7 @@ class ScenarioProjectionWindow:
         messagebox = self._dialog or __import__("tkinter.messagebox", fromlist=["messagebox"])
         file_dialog = self._file_dialog or __import__("tkinter.filedialog", fromlist=["filedialog"])
 
-        if self._closed or self.application is None:
-            return False
-        if self._report_export_in_progress:
+        if self._closed or self.application is None or self._report_export_in_progress:
             return False
         try:
             workflow_result = self._current_workflow_result()
@@ -1109,17 +1107,14 @@ class ScenarioProjectionWindow:
         existing = tuple(path for path in destinations if path.exists())
         overwrite = False
         if existing:
-            existing_list = "\\n".join(str(path) for path in existing)
+            existing_list = "\n".join(str(path) for path in existing)
             prompt = (
-                "The following report files already exist:\\n\\n"
-                f"{existing_list}\\n\\n"
+                "The following report files already exist:\n\n"
+                f"{existing_list}\n\n"
                 "Do you want to replace them?"
             )
             confirmed = messagebox.askyesno(
-                "Confirm report replacement",
-                prompt,
-                default="no",
-                parent=self._root,
+                "Confirm report replacement", prompt, default="no", parent=self._root
             )
             if not confirmed:
                 self._set_report_status("PDF report export cancelled; existing files were left unchanged.")
@@ -1127,22 +1122,35 @@ class ScenarioProjectionWindow:
             overwrite = True
 
         from planner.reporting import export_report_pack, export_report_suite
+        from planner.reporting.report_suite import ReportExportCancelled
 
         suite_exporter = self._report_suite_exporter or export_report_suite
         pack_exporter = self._report_pack_exporter or export_report_pack
         assumptions = self.application.assumptions
         allocations = dict(self.allocations)
         fund_returns = dict(self.fund_returns)
+        cancellation_event = threading.Event()
+        self._report_cancel_event = cancellation_event
         self._report_export_in_progress = True
         self._set_report_status(
-            "Exporting five-report suite…" if export_kind == "suite"
-            else "Exporting five-report suite for report pack…"
+            "Exporting five-report suite… (cancellation is available at safe checkpoints)"
+            if export_kind == "suite"
+            else "Exporting five-report suite for report pack… (cancellation is available at safe checkpoints)"
         )
         self._refresh_report_export_controls()
 
+        def accepts_keyword(callable_object: Any, keyword: str) -> bool:
+            try:
+                parameters = inspect.signature(callable_object).parameters.values()
+            except (TypeError, ValueError):
+                return False
+            return any(
+                parameter.name == keyword or parameter.kind is inspect.Parameter.VAR_KEYWORD
+                for parameter in parameters
+            )
+
         def worker() -> None:
             try:
-                progress = lambda message: self._report_export_queue.put(("progress", message))
                 suite_kwargs = {
                     "assumptions": assumptions,
                     "scenario_result": workflow_result,
@@ -1153,15 +1161,50 @@ class ScenarioProjectionWindow:
                 if overwrite:
                     suite_kwargs["overwrite"] = True
                 if self._report_suite_exporter is None:
-                    suite_kwargs["progress_callback"] = progress
-                suite_result = suite_exporter(**suite_kwargs)
+                    suite_kwargs["progress_callback"] = lambda message: self._report_export_queue.put(("progress", message))
+                if accepts_keyword(suite_exporter, "cancellation_event"):
+                    suite_kwargs["cancellation_event"] = cancellation_event
+
                 if export_kind == "suite":
+                    suite_result = suite_exporter(**suite_kwargs)
+                    if cancellation_event.is_set():
+                        raise ReportExportCancelled("Report export cancelled before publication.")
                     self._report_export_queue.put(("success", ("suite", suite_result)))
                     return
-                self._report_export_queue.put(("progress", "Creating consolidated report pack…"))
-                pack_kwargs = {"overwrite": True} if overwrite else {}
-                pack_result = pack_exporter(suite_result, pack_path, **pack_kwargs)
+
+                # Keep the old suite so a cancelled/failed pack can roll back
+                # all five report files as one logical export operation.
+                with TemporaryDirectory(prefix=".retirement-planner-report-pack-", dir=directory) as backup_name:
+                    backup_dir = Path(backup_name)
+                    previous_suite: dict[Path, Path | None] = {}
+                    for path in suite_paths:
+                        if path.exists():
+                            backup = backup_dir / path.name
+                            copy2(path, backup)
+                            previous_suite[path] = backup
+                        else:
+                            previous_suite[path] = None
+                    try:
+                        suite_result = suite_exporter(**suite_kwargs)
+                        if cancellation_event.is_set():
+                            raise ReportExportCancelled("Report pack export cancelled before pack generation.")
+                        self._report_export_queue.put(("progress", "Creating consolidated report pack…"))
+                        pack_kwargs = {"overwrite": True} if overwrite else {}
+                        if accepts_keyword(pack_exporter, "cancellation_event"):
+                            pack_kwargs["cancellation_event"] = cancellation_event
+                        pack_result = pack_exporter(suite_result, pack_path, **pack_kwargs)
+                        if cancellation_event.is_set():
+                            raise ReportExportCancelled("Report pack export cancelled before completion.")
+                    except Exception:
+                        for path, backup in previous_suite.items():
+                            if backup is None:
+                                path.unlink(missing_ok=True)
+                            elif backup.exists():
+                                copy2(backup, path)
+                        raise
                 self._report_export_queue.put(("success", ("pack", (suite_result, pack_result))))
+            except ReportExportCancelled as exc:
+                self._report_export_queue.put(("cancelled", str(exc)))
             except Exception as exc:
                 self._report_export_queue.put(("error", (export_kind, exc)))
 
@@ -1172,6 +1215,19 @@ class ScenarioProjectionWindow:
         )
         self._report_export_thread.start()
         self._schedule_report_export_poll()
+        return True
+
+    def _request_report_export_cancel(self) -> bool:
+        """Request cancellation; the worker stops only at a safe stage boundary."""
+        event = self._report_cancel_event
+        if not self._report_export_in_progress or event is None or event.is_set():
+            return False
+        event.set()
+        if self._report_cancel_button is not None:
+            self._report_cancel_button.configure(state="disabled")
+        self._set_report_status(
+            "Cancellation requested; finishing the current PDF stage before stopping…"
+        )
         return True
 
     def _refresh_report_export_controls(self) -> None:
