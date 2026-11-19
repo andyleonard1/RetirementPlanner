@@ -9,6 +9,7 @@ import copy
 from dataclasses import dataclass
 from pathlib import Path
 from tempfile import TemporaryDirectory
+from threading import Event
 from typing import Any, Callable, Mapping, Sequence
 
 from pypdf import PdfReader
@@ -33,6 +34,10 @@ from reports.health_check_pdf_report import HealthCheckPDFReport
 from reports.recommendation_pdf_report import RecommendationPDFReport
 from reports.scenario_projection_pdf_report import ScenarioProjectionPDFReport
 from reports.strategy_comparison_pdf_report import StrategyComparisonPDFReport
+
+
+class ReportExportCancelled(Exception):
+    """Raised when a cooperative report-export cancellation is observed."""
 
 
 REPORT_SUITE_KEYS = (
@@ -76,6 +81,7 @@ def export_report_suite(
     monte_carlo_seed: int | None = None,
     overwrite: bool = False,
     progress_callback: Callable[[str], None] | None = None,
+    cancellation_event: Event | None = None,
 ) -> ReportSuiteExportResult:
     """Generate all professional PDFs from the current application state.
 
@@ -92,6 +98,7 @@ def export_report_suite(
     if monte_carlo_iterations <= 0:
         raise ValueError("monte_carlo_iterations must be greater than zero")
 
+    _raise_if_cancelled(cancellation_event)
     target_dir = Path(directory)
     target_dir.mkdir(parents=True, exist_ok=True)
 
@@ -116,24 +123,20 @@ def export_report_suite(
             retirement_goals=staging_dir / paths.retirement_goals.name,
         )
 
-        if progress_callback is not None:
-            progress_callback("Generating report 1 of 5: scenario projection…")
+        _report_progress(progress_callback, "Generating report 1 of 5: scenario projection…", cancellation_event)
         ScenarioProjectionPDFReport().create(scenario_result, staged_paths.scenario_projection)
 
-        if progress_callback is not None:
-            progress_callback("Generating report 2 of 5: strategy comparison…")
+        _report_progress(progress_callback, "Generating report 2 of 5: strategy comparison…", cancellation_event)
         comparison_results = ScenarioEngine(assumptions=copy.deepcopy(assumptions)).compare_strategies()
         StrategyComparisonPDFReport().create(comparison_results, staged_paths.strategy_comparison)
 
-        if progress_callback is not None:
-            progress_callback("Generating report 3 of 5: recommendation…")
+        _report_progress(progress_callback, "Generating report 3 of 5: recommendation…", cancellation_event)
         recommendation_report, recommended_assumptions, result, decision, recommendations, risk = _build_recommendation(
             assumptions
         )
         RecommendationPDFReport().create(recommendation_report, staged_paths.recommendation)
 
-        if progress_callback is not None:
-            progress_callback("Generating report 4 of 5: health check…")
+        _report_progress(progress_callback, "Generating report 4 of 5: health check…", cancellation_event)
         monte_carlo = MonteCarloEngine(copy.deepcopy(recommended_assumptions)).run(
             iterations=monte_carlo_iterations,
             seed=monte_carlo_seed,
@@ -151,16 +154,32 @@ def export_report_suite(
             result.summary,
             staged_paths.health_check,
         )
-        if progress_callback is not None:
-            progress_callback("Generating report 5 of 5: retirement goals…")
+        _report_progress(progress_callback, "Generating report 5 of 5: retirement goals…", cancellation_event)
         GoalPDFReport().create(goals, staged_paths.retirement_goals)
 
-        if progress_callback is not None:
-            progress_callback("Validating and publishing the five-report suite…")
+        _report_progress(progress_callback, "Validating and publishing the five-report suite…", cancellation_event)
+        _raise_if_cancelled(cancellation_event)
         _publish_pdf_bundle(staged_paths.paths, final_paths, overwrite=overwrite)
 
     return paths
 
+
+
+def _raise_if_cancelled(cancellation_event: Event | None) -> None:
+    """Stop at a safe boundary; never interrupt a PDF renderer mid-write."""
+    if cancellation_event is not None and cancellation_event.is_set():
+        raise ReportExportCancelled("Report export cancelled before publication.")
+
+
+def _report_progress(
+    callback: Callable[[str], None] | None,
+    message: str,
+    cancellation_event: Event | None,
+) -> None:
+    _raise_if_cancelled(cancellation_event)
+    if callback is not None:
+        callback(message)
+    _raise_if_cancelled(cancellation_event)
 
 def _validate_suite_destinations(paths: Mapping[str, Path], *, overwrite: bool) -> None:
     """Reject destination collisions before any report calculation or PDF write."""
