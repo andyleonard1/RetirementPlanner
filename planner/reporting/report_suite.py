@@ -156,7 +156,7 @@ def export_report_suite(
         GoalPDFReport().create(goals, staged_paths.retirement_goals)
 
         _report_progress(progress_callback, "Validating and publishing the five-report suite…", cancellation_event)
-        _raise_if_cancelled(cancellation_event)
+        raise_if_cancelled(cancellation_event, "Report export cancelled before publication.")
         _publish_pdf_bundle(staged_paths.paths, final_paths, overwrite=overwrite)
 
     return paths
@@ -168,10 +168,10 @@ def _report_progress(
     message: str,
     cancellation_event: Event | None,
 ) -> None:
-    _raise_if_cancelled(cancellation_event)
+    raise_if_cancelled(cancellation_event, "Report export cancelled before publication.")
     if callback is not None:
         callback(message)
-    _raise_if_cancelled(cancellation_event)
+    raise_if_cancelled(cancellation_event, "Report export cancelled before publication.")
 
 def _validate_suite_destinations(paths: Mapping[str, Path], *, overwrite: bool) -> None:
     """Reject destination collisions before any report calculation or PDF write."""
