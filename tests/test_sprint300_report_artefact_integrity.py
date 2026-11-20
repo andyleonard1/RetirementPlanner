@@ -101,7 +101,7 @@ class Sprint300ReportArtefactIntegrityTests(unittest.TestCase):
             suite = self._suite(directory)
             suite.paths["health_check"].write_bytes(b"not a valid PDF")
             output = Path(directory) / "must_not_be_published.pdf"
-            with self.assertRaises(PdfReadError):
+            with self.assertRaisesRegex(ValueError, "invalid or unreadable"):
                 export_report_pack(suite, output)
             self.assertFalse(output.exists())
             self.assertFalse(output.with_name(f".{output.name}.tmp").exists())
@@ -148,7 +148,7 @@ class Sprint300ReportArtefactIntegrityTests(unittest.TestCase):
             suite = self._suite(directory)
             suite.paths["recommendation"].write_bytes(b"")
             output = Path(directory) / "empty_source_pack.pdf"
-            with self.assertRaises(PdfReadError):
+            with self.assertRaisesRegex(ValueError, "empty"):
                 export_report_pack(suite, output)
             self.assertFalse(output.exists())
             self.assertFalse(output.with_name(f".{output.name}.tmp").exists())
