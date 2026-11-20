@@ -105,6 +105,20 @@ def _validate_report_paths(report_paths: Mapping[str, str | Path]) -> None:
             raise FileNotFoundError(f"report source does not exist: {path}")
         if path.suffix.lower() != ".pdf":
             raise ValueError(f"report source must be a PDF: {path}")
+        if not path.is_file():
+            raise ValueError(f"report source must be a regular file: {path}")
+        if path.stat().st_size == 0:
+            raise ValueError(f"report source PDF is empty: {path}")
+        try:
+            reader = PdfReader(str(path), strict=True)
+            pages = reader.pages
+            if not pages:
+                raise ValueError("PDF contains no pages")
+            for page in pages:
+                _ = page.mediabox
+                _ = page.get_contents()
+        except Exception as exc:
+            raise ValueError(f"report source PDF is invalid or unreadable: {path} ({exc})") from exc
 
 
 def _build_cover_pdf(readers: Mapping[str, PdfReader]) -> BytesIO:
